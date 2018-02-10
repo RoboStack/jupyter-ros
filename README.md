@@ -12,6 +12,8 @@ notebook, trying to promote a rich, interactive experience
 for Robotics developers utilizing the power of the jupyter 
 notebook.
 
+![](https://raw.githubusercontent.com/wolfv/jupyter-ros/master/docs/assets/screenshot.png)
+
 With jupyter-ros, it's possible to easily create widgets for 
 custom message types to send messages. 
 
