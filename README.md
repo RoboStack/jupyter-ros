@@ -22,3 +22,17 @@ If you find this initial package useful, don't hesitate to
 contribute!
 You can also always reach out to w.vollprecht@gmail.com or 
 on twitter: https://twitter.com/wuoulf
+
+## Installation and Dependencies
+
+You need a ROS environment with rospy, obviously.
+Also required are `numpy` and `bqplot` for the live-plotting.
+The easiest way to install `jupyter` and `bqplot` is with
+conda. My recommendation is to set up a Miniconda 2 
+environment, and then run:
+
+```
+conda install jupyter bqplot pyyaml
+```
+
+`pyyaml` is necessary for rospy.

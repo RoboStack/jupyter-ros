@@ -1,6 +1,9 @@
 import rospy
 import std_msgs
+import bqplot as bq
 import ipywidgets as widgets
+import numpy as np
+
 
 def _add_widgets(msg_type, form_list, widget_list):
     """
@@ -60,3 +63,31 @@ def widget_for_msg(msg_type, publish_to):
     vbox = widgets.VBox(children=widget_list)
     
     return vbox
+
+def live_plot(plot_string, topic_type, history=100, title=None):
+    topic = plot_string[:plot_string.find(':') - 1]
+    title = title if title else topic
+    fields = plot_string.split(':')[1:]
+    x_sc = bq.LinearScale()
+    y_sc = bq.LinearScale()
+
+    ax_x = bq.Axis(label='X', scale=x_sc, grid_lines='solid')
+    ax_y = bq.Axis(label='Y', scale=y_sc, orientation='vertical', grid_lines='solid')
+
+    lines = bq.Lines(x=np.array([]), y=np.array([]), scales={'x': x_sc, 'y': y_sc})
+    fig = bq.Figure(axes=[ax_x, ax_y], marks=[lines], labels=fields, display_legend=True, title=title)
+    data = []
+
+    def cb(msg, data=data):
+        data_el = []
+        for f in fields:
+            data_el.append(getattr(msg, f))
+        data.append(data_el)
+        data = data[-history:]
+        ndat = np.asarray(data).T
+        if lines:
+            lines.y = ndat
+            lines.x = np.arange(len(data))
+
+    rospy.Subscriber(topic, topic_type, cb)
+    return fig
