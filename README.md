@@ -38,3 +38,7 @@ conda install jupyter bqplot pyyaml
 ```
 
 `pyyaml` is necessary for rospy.
+
+## Troubleshooting
+
+1- If you got the following error when you run a cell ```failed to display Jupyter Widget of type VBox```, you can solve it by running the following command ```jupyter nbextension enable --py --sys-prefix widgetsnbextension```
