@@ -3,21 +3,21 @@ import std_msgs
 import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
+from genpy import Message
 
-
-def _add_widgets(msg_type, form_list, widget_list):
+def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     """
     Adds widgets.
     
     @param msg_type The message type
-    @param form_list The form list
+    @param widget_dict The form list
     @param widget_list The widget list
     
-    @return form_list and widget_list
+    @return widget_dict and widget_list
     """
-    for idx, slot in enumerate(msg_type.__slots__):
-        attr = getattr(msg_type, slot)
-        s_t = msg_type._slot_types[idx]
+    for idx, slot in enumerate(msg_instance.__slots__):
+        attr = getattr(msg_instance, slot)
+        s_t = msg_instance._slot_types[idx]
         w = None
 
         if s_t in ['float32', 'float64']:
@@ -26,40 +26,61 @@ def _add_widgets(msg_type, form_list, widget_list):
             w = widgets.IntSlider()
         if s_t in ['string']:
             w = widgets.Text()
-        if w == None:
-            add_widgets(s_t, form_list, widget_list)
-        form_list.append(w)
-        w_box = widgets.HBox([widgets.Label(value=slot), w])
-        widget_list.append(w_box)
-    return form_list, widget_list
 
-def widget_for_msg(msg_type, publish_to):
+        if isinstance(attr, Message):
+            widget_list.append(widgets.Label(value=slot))
+            widget_dict[slot] = {}
+            add_widgets(attr, widget_dict[slot], widget_list, slot)
+
+        if w:
+            widget_dict[slot] = w
+            w_box = widgets.HBox([widgets.Label(value=slot), w])
+            widget_list.append(w_box)
+
+    return widget_dict, widget_list
+
+def widget_dict_to_msg(msg_instance, d):
+    for key in d:
+        if isinstance(d[key], widgets.Widget):
+            setattr(msg_instance, key, d[key].value)
+        else:
+            submsg = getattr(msg_instance, key)
+            widget_dict_to_msg(submsg, d[key])
+
+def publish(topic, msg_type):
     """
     Create a form widget for message type msg_type.
     This function analyzes the fields of msg_type and creates
     an appropriate widget.
     A publisher is automatically created which publishes to the
-    topic given as publish_to parameter. This allows pressing the 
+    topic given as topic parameter. This allows pressing the 
     "Send Message" button to send the message to ROS.
     
     @param msg_type The message type
-    @param publish_to The topic name to publish to
+    @param topic The topic name to publish to
     
     @return jupyter widget for display
     """
-    widget_list, form_list = [], []
-    publisher = rospy.Publisher(publish_to, msg_type, queue_size=10)
+    publisher = rospy.Publisher(topic, msg_type, queue_size=10)
 
-    form_list, widget_list = _add_widgets(msg_type, [], [])
+    widget_list = []
+    widget_dict = {}
+
+    add_widgets(msg_type(), widget_dict, widget_list)
     send_btn = widgets.Button(description="Send Message")
     
     def send_msg(arg):
-        arg_list = [wdg.value for wdg in form_list]
-        msg = msg_type(*arg_list)
-        publisher.publish(msg)
-    
+        msg_to_send = msg_type()
+        widget_dict_to_msg(msg_to_send, widget_dict)
+        publisher.publish(msg_to_send)
+
     send_btn.on_click(send_msg)
-    widget_list.append(send_btn)
+    latch_check = widgets.Checkbox(description="Latch Message")
+    rate_field = widgets.IntText(description="Rate")
+    stop_btn = widgets.Button(description="Stop")
+
+    btm_box = widgets.HBox((send_btn, latch_check, rate_field, stop_btn))
+    widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
     
     return vbox
