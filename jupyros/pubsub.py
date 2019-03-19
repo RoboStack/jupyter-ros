@@ -41,26 +41,23 @@ def subscribe(topic, msg_type, callback):
     if subscriber_registry.get(topic):
         raise Error("Already registerd...")
 
-    out = widgets.Output(layout={'border': '1px solid black'})
+    out = widgets.Output(layout={'border': '1px solid gray'})
     subscriber_registry[topic] = rospy.Subscriber(topic, msg_type, callback)
     output_registry[topic] = out
 
-    btn_stop = widgets.Button(description="Stop")
+    btn = widgets.Button(description='Stop')
 
-    def stop_subscriber(x):
-        subscriber_registry[topic].unregister()
-        del output_registry[topic]
+    def stop_start_subscriber(x):
+        if output_registry.get(topic) is not None:
+            subscriber_registry[topic].unregister()
+            del output_registry[topic]
+            btn.description = 'Start'
+        else:
+            output_registry[topic] = out
+            subscriber_registry[topic] = rospy.Subscriber(topic, msg_type, callback)
+            btn.description = 'Stop'
 
-    btn_stop.on_click(stop_subscriber)
-
-    btn_start = widgets.Button(description="Start")
-
-    def start_subscriber(x):
-        output_registry[topic] = out
-        subscriber_registry[topic] = rospy.Subscriber(topic, msg_type, callback)
-
-    btn_start.on_click(start_subscriber)
-
-    btns = widgets.HBox((btn_stop, btn_start))
+    btn.on_click(stop_start_subscriber)
+    btns = widgets.HBox((btn, ))
     vbox = widgets.VBox((btns, out))
     return vbox
