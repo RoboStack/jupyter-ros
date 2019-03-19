@@ -3,6 +3,7 @@ import std_msgs
 import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
+import threading
 from genpy import Message
 
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
@@ -47,6 +48,8 @@ def widget_dict_to_msg(msg_instance, d):
             submsg = getattr(msg_instance, key)
             widget_dict_to_msg(submsg, d[key])
 
+thread_map = {}
+
 def publish(topic, msg_type):
     """
     Create a form widget for message type msg_type.
@@ -66,6 +69,15 @@ def publish(topic, msg_type):
     widget_list = []
     widget_dict = {}
 
+    latch_check = widgets.Checkbox(description="Latch Message")
+    rate_field = widgets.IntText(description="Rate", value=5)
+    stop_btn = widgets.Button(description="Start")
+
+    def latch_value_change(arg):
+        publisher.impl.is_latch = arg['new']
+
+    latch_check.observe(latch_value_change, 'value')
+
     add_widgets(msg_type(), widget_dict, widget_list)
     send_btn = widgets.Button(description="Send Message")
     
@@ -75,9 +87,25 @@ def publish(topic, msg_type):
         publisher.publish(msg_to_send)
 
     send_btn.on_click(send_msg)
-    latch_check = widgets.Checkbox(description="Latch Message")
-    rate_field = widgets.IntText(description="Rate")
-    stop_btn = widgets.Button(description="Stop")
+
+    thread_map[topic] = False
+    def thread_target():
+        d = rospy.Duration(1.0 / float(rate_field.value))
+        while thread_map[topic]:
+            send_msg(None)
+            rospy.sleep(d)
+
+    def start_thread(click_args):
+        thread_map[topic] = not thread_map[topic]
+        if thread_map[topic]:
+            local_thread = threading.Thread(target=thread_target)
+            local_thread.start()
+            stop_btn.description = "Stop"
+        else:
+            stop_btn.description = "Start"
+
+    stop_btn.on_click(start_thread)
+
 
     btm_box = widgets.HBox((send_btn, latch_check, rate_field, stop_btn))
     widget_list.append(btm_box)
