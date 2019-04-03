@@ -39,6 +39,36 @@ conda install jupyter bqplot pyyaml
 
 `pyyaml` is necessary for rospy.
 
+To install use pip:
+
+    $ pip install jupyter-ros
+    $ jupyter nbextension enable --py --sys-prefix jupyros
+
+
+NOTE: you might see a warning like "The rospy package is not found in your $PYTHONPATH. 
+Subscribe and publish are not going to work. Do you need to activate your ROS environment?"
+
+This is harmless during installation, but if you see this warning in a notebook, you should
+check that your ROS environment is activated. You can also set the path from inside the notebook
+using 
+
+```
+import sys
+sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages/')
+
+# The next line should now work!
+import jupyros
+```
+
+For a development installation (requires npm),
+
+    $ git clone https://github.com/wolfv/jupyter-ros.git
+    $ cd jupyter-ros
+    $ pip install -e .
+    $ jupyter nbextension install --py --symlink --sys-prefix jupyros
+    $ jupyter nbextension enable --py --sys-prefix jupyros
+
+
 ## Troubleshooting
 
 1- If you got the following error when you run a cell ```failed to display Jupyter Widget of type VBox```, you can solve it by running the following command ```jupyter nbextension enable --py --sys-prefix widgetsnbextension```

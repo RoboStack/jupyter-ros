@@ -1,0 +1,2 @@
+recursive-include ros3d/static *.*
+include jupyter-ros.json

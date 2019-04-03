@@ -1,5 +1,9 @@
-import rospy
-import std_msgs
+try:
+    import rospy
+except:
+    print("The rospy package is not found in your $PYTHONPATH. Subscribe and publish are not going to work.")
+    print("Do you need to activate your ROS environment?")
+
 import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
@@ -16,6 +20,8 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     
     @return widget_dict and widget_list
     """
+    from genpy import Message
+
     for idx, slot in enumerate(msg_instance.__slots__):
         attr = getattr(msg_instance, slot)
         s_t = msg_instance._slot_types[idx]

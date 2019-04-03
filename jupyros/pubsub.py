@@ -2,7 +2,11 @@ import threading
 import time
 import ipywidgets as widgets
 import sys
-import rospy
+try:
+    import rospy
+except:
+    pass
+
 import inspect
 
 output_registry = {}
