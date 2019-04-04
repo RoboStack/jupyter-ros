@@ -25,9 +25,13 @@ class OutputRedirector:
             output_registry[threading.currentThread().getName()].append_stdout(msg)
         else:
             self.original.write(msg)
-            
+
     def flush(self):
         self.original.flush()
+
+    # necessary for ipython, but **not** for xeus-python!
+    def set_parent(self, parent):
+        self.original.set_parent(parent)
 
 sys.stdout = OutputRedirector(sys.stdout)
 
