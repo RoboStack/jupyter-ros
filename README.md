@@ -29,21 +29,15 @@ on twitter: https://twitter.com/wuoulf
 
 You need a ROS environment with rospy, obviously.
 Also required are `numpy` and `bqplot` for the live-plotting.
-The easiest way to install `jupyter` and `bqplot` is with
-conda. My recommendation is to set up a Miniconda 2 
-environment, and then run:
 
-```
-conda install jupyter bqplot pyyaml
-```
+    $ pip install jupyter bqplot pyyaml
 
 `pyyaml` is necessary for rospy.
 
 To install use pip:
 
-    $ pip install jupyter-ros
+    $ pip install jupyros
     $ jupyter nbextension enable --py --sys-prefix jupyros
-
 
 NOTE: you might see a warning like "The rospy package is not found in your $PYTHONPATH. 
 Subscribe and publish are not going to work. Do you need to activate your ROS environment?"
