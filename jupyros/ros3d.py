@@ -34,7 +34,8 @@ def _quick_widget(package_name, version, has_view=True):
 
 register = _quick_widget('jupyter-ros', '^0.1.0')
 register_noview = _quick_widget('jupyter-ros', '^0.1.0', False)
-sync_widget = {'sync': True, **widgets.widget_serialization}
+sync_widget = {'sync': True}
+sync_widget.update(widgets.widget_serialization)
 
 @register_noview
 class ROSConnection(widgets.Widget):
