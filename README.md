@@ -12,7 +12,7 @@ notebook, trying to promote a rich, interactive experience
 for Robotics developers utilizing the power of the jupyter 
 notebook.
 
-[![Video of jupyter-ros in JupyterLab](https://img.youtube.com/vi/mPvYZango2E/0.jpg)](https://www.youtube.com/watch?v=mPvYZango2E)
+[![Video of jupyter-ros in JupyterLab](https://raw.githubusercontent.com/wolfv/jupyter-ros/master/docs/assets/jupyterlab-with-ros.gif)](https://www.youtube.com/watch?v=mPvYZango2E)
 
 ![](https://raw.githubusercontent.com/wolfv/jupyter-ros/master/docs/assets/screenshot.png)
 
