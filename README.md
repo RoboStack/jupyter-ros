@@ -12,6 +12,8 @@ notebook, trying to promote a rich, interactive experience
 for Robotics developers utilizing the power of the jupyter 
 notebook.
 
+[![Video of jupyter-ros in JupyterLab](https://img.youtube.com/vi/mPvYZango2E/0.jpg)](https://www.youtube.com/watch?v=mPvYZango2E)
+
 ![](https://raw.githubusercontent.com/wolfv/jupyter-ros/master/docs/assets/screenshot.png)
 
 With jupyter-ros, it's possible to easily create widgets for 
@@ -39,7 +41,24 @@ To install use pip:
     $ pip install jupyros
     $ jupyter nbextension enable --py --sys-prefix jupyros
 
-NOTE: you might see a warning like "The rospy package is not found in your $PYTHONPATH. 
+To install the extension for **jupyterlab**, you also need to execute the following:
+
+    $ jupyter labextension install jupyter-ros 
+
+##### Development installation
+
+For a development installation (requires npm),
+
+    $ git clone https://github.com/wolfv/jupyter-ros.git
+    $ cd jupyter-ros
+    $ pip install -e .
+    $ jupyter nbextension install --py --symlink --sys-prefix jupyros
+    $ jupyter nbextension enable --py --sys-prefix jupyros
+
+
+## Troubleshooting
+
+You might see a warning like "The rospy package is not found in your $PYTHONPATH. 
 Subscribe and publish are not going to work. Do you need to activate your ROS environment?"
 
 This is harmless during installation, but if you see this warning in a notebook, you should
@@ -54,15 +73,5 @@ sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages/')
 import jupyros
 ```
 
-For a development installation (requires npm),
-
-    $ git clone https://github.com/wolfv/jupyter-ros.git
-    $ cd jupyter-ros
-    $ pip install -e .
-    $ jupyter nbextension install --py --symlink --sys-prefix jupyros
-    $ jupyter nbextension enable --py --sys-prefix jupyros
-
-
-## Troubleshooting
-
-1- If you got the following error when you run a cell ```failed to display Jupyter Widget of type VBox```, you can solve it by running the following command ```jupyter nbextension enable --py --sys-prefix widgetsnbextension```
+If you got the following error when you run a cell ```failed to display Jupyter Widget of type VBox```, 
+you can solve it by running the following command ```jupyter nbextension enable --py --sys-prefix widgetsnbextension```

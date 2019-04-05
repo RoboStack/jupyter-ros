@@ -6,7 +6,7 @@ build/
 node_modules/
 
 # Compiled javascript
-ros3d/static/
-
+jupyros/static/
+*.map
 # OS X
 .DS_Store

@@ -6,7 +6,7 @@
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wolfv/ros3d-jupyter.git"
+    "url": "https://github.com/wolfv/jupyter-ros.git"
   },
   "keywords": [
     "jupyter",
