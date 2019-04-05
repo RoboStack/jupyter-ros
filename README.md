@@ -32,14 +32,14 @@ on twitter: https://twitter.com/wuoulf
 You need a ROS environment with rospy, obviously.
 Also required are `numpy` and `bqplot` for the live-plotting.
 
-    $ pip install jupyter bqplot pyyaml
+    pip install jupyter bqplot pyyaml
 
 `pyyaml` is necessary for rospy.
 
 To install use pip:
 
-    $ pip install jupyros
-    $ jupyter nbextension enable --py --sys-prefix jupyros
+    pip install jupyros
+    jupyter nbextension enable --py --sys-prefix jupyros
 
 To install the extension for **jupyterlab**, you also need to execute the following:
 
@@ -49,11 +49,11 @@ To install the extension for **jupyterlab**, you also need to execute the follow
 
 For a development installation (requires npm),
 
-    $ git clone https://github.com/wolfv/jupyter-ros.git
-    $ cd jupyter-ros
-    $ pip install -e .
-    $ jupyter nbextension install --py --symlink --sys-prefix jupyros
-    $ jupyter nbextension enable --py --sys-prefix jupyros
+    git clone https://github.com/wolfv/jupyter-ros.git
+    cd jupyter-ros
+    pip install -e .
+    jupyter nbextension install --py --symlink --sys-prefix jupyros
+    jupyter nbextension enable --py --sys-prefix jupyros
 
 
 ## Troubleshooting
