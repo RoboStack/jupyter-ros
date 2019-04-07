@@ -8,7 +8,6 @@ import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
 import threading
-from genpy import Message
 
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     """
@@ -20,6 +19,7 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     
     @return widget_dict and widget_list
     """
+    # import only here so non ros env doesn't block installation
     from genpy import Message
 
     for idx, slot in enumerate(msg_instance.__slots__):
