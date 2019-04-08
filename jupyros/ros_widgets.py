@@ -3,7 +3,13 @@ try:
 except:
     print("The rospy package is not found in your $PYTHONPATH. Subscribe and publish are not going to work.")
     print("Do you need to activate your ROS environment?")
-
+try:
+    from cv_bridge import CvBridge, CvBridgeError
+    import cv2
+    bridge = CvBridge()
+except:
+    print("CV Brdige is not installed, please install it to publish Images ")
+    print("sudo apt-get install ros-$(rosversion -d)-cv-bridge")
 import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
@@ -21,6 +27,12 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     """
     # import only here so non ros env doesn't block installation
     from genpy import Message
+    if msg_instance._type.split('/')[-1] == 'Image':
+        w = widgets.Text()
+        widget_dict['img'] = w
+        w_box = widgets.HBox([widgets.Label(value='image path:'), w])
+        widget_list.append(w_box)
+        return widget_dict, widget_list
 
     for idx, slot in enumerate(msg_instance.__slots__):
         attr = getattr(msg_instance, slot)
@@ -43,19 +55,32 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
             widget_dict[slot] = w
             w_box = widgets.HBox([widgets.Label(value=slot), w])
             widget_list.append(w_box)
-
     return widget_dict, widget_list
 
 def widget_dict_to_msg(msg_instance, d):
     for key in d:
         if isinstance(d[key], widgets.Widget):
-            setattr(msg_instance, key, d[key].value)
+            if key == 'img':
+                img_msg = img_to_msg(d[key].value)
+                for slot in img_msg.__slots__:
+                    setattr(msg_instance, slot, getattr(img_msg, slot))
+                return
+            else:
+                setattr(msg_instance, key, d[key].value)
         else:
             submsg = getattr(msg_instance, key)
             widget_dict_to_msg(submsg, d[key])
 
 thread_map = {}
 
+def img_to_msg(imgpath):
+    img = cv2.imread(imgpath)
+    if img is None:
+        raise FileNotFoundError('Image File Not Found')
+    else:
+        imgmsg = bridge.cv2_to_imgmsg(img)
+        return imgmsg
+    
 def publish(topic, msg_type):
     """
     Create a form widget for message type msg_type.
