@@ -47,7 +47,7 @@ def subscribe(topic, msg_type, callback):
     """
 
     if subscriber_registry.get(topic):
-        raise Error("Already registerd...")
+        raise RuntimeError("Already registerd...")
 
     out = widgets.Output(layout={'border': '1px solid gray'})
     subscriber_registry[topic] = rospy.Subscriber(topic, msg_type, callback)
