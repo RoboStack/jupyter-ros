@@ -8,7 +8,7 @@ try:
     import cv2
     bridge = CvBridge()
 except:
-    print("CV Brdige is not installed, please install it to publish Images ")
+    print("CV Bridge is not installed, please install it to publish Images ")
     print("sudo apt-get install ros-$(rosversion -d)-cv-bridge")
 import bqplot as bq
 import ipywidgets as widgets
@@ -30,7 +30,7 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     if msg_instance._type.split('/')[-1] == 'Image':
         w = widgets.Text()
         widget_dict['img'] = w
-        w_box = widgets.HBox([widgets.Label(value='image path:'), w])
+        w_box = widgets.HBox([widgets.Label(value='Image path:'), w])
         widget_list.append(w_box)
         return widget_dict, widget_list
 
