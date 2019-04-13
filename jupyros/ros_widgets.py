@@ -171,3 +171,43 @@ def live_plot(plot_string, topic_type, history=100, title=None):
 
     rospy.Subscriber(topic, topic_type, cb)
     return fig
+
+def bag_player():
+    import subprocess, yaml, os
+    widget_list = []
+    bag_player.sp = None
+    bgpath_txt = widgets.Text()
+    bgpath_txt.description = "Bag file path:"
+    play_btn = widgets.Button(description="Play")
+    ibox = widgets.Checkbox(description="Immediate")
+    lbox = widgets.Checkbox(description="Loop")
+    clockbox = widgets.Checkbox(description="Clock")
+    hzbox = widgets.Checkbox(description="Hz")
+    que_int = widgets.IntText(value=100, description="Queue size")
+    factor_int = widgets.IntText(value=1)
+    factor_box = widgets.HBox([widgets.Label("Multiply the publish rate by"), factor_int]) 
+    def ply_clk(arg):
+        if play_btn.description == "Play":
+            info_dict = yaml.load(subprocess.Popen(['rosbag', 'info', '--yaml', bgpath_txt.value],
+                stdout=subprocess.PIPE).communicate()[0])
+            if info_dict is None:
+                raise FileNotFoundError("Can't load Bag!")
+            else:
+                play_btn.description = "Stop"
+                bag_player.sp = subprocess.Popen(['rosbag', 'play', bgpath_txt.value], stdin=subprocess.PIPE)
+                print("Bag summary:")
+                for key, val in info_dict.items():
+                    print(key, ":", val)
+        else:
+            try:
+                os.killpg(os.getpgid(bag_player.sp.pid), subprocess.signal.SIGINT)
+            except KeyboardInterrupt:
+                pass
+            play_btn.description = "Play"
+    play_btn.on_click(ply_clk)
+    options_hbox = widgets.HBox([ibox, lbox, clockbox, hzbox])
+    btm_box = widgets.VBox([bgpath_txt, options_hbox, que_int, factor_box, play_btn])
+    widget_list.append(btm_box)
+    vbox = widgets.VBox(children=widget_list)
+    return vbox
+
