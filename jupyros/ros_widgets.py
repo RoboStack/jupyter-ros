@@ -203,8 +203,24 @@ def bag_player():
             if info_dict is None:
                 raise FileNotFoundError("Bag file not found!")
             else:
+                
+                cmd = ['rosbag', 'play', bgpath_txt.value]
+                if ibox.value:
+                    cmd.append('-i')
+                if lbox.value:
+                    cmd.append('-l')
+                if kabox.value:
+                    cmd.append('-k')
+                if clockbox.value:
+                    cmd.append('--clock')
+                if dzbox.value:
+                    cmd.append("--duration={}".format(max(0, duration_float.value)))
+                cmd.append("--rate={}".format(max(0, factor_float.value)))
+                cmd.append("--start={}".format(max(0, start_float.value)))
+                cmd.append("--queue={}".format(max(0, que_int.value)))
+                cmd.append("--delay={}".format(max(0, delay_float.value)))
                 play_btn.description = "Stop"
-                bag_player.sp = subprocess.Popen(['rosbag', 'play', bgpath_txt.value], stdin=subprocess.PIPE)
+                bag_player.sp = subprocess.Popen(cmd, stdin=subprocess.PIPE)
                 print("Bag summary:")
                 for key, val in info_dict.items():
                     print(key, ":", val)
