@@ -176,22 +176,32 @@ def bag_player():
     import subprocess, yaml, os
     widget_list = []
     bag_player.sp = None
+    ###### Fields #########################################################
     bgpath_txt = widgets.Text()
-    bgpath_txt.description = "Bag file path:"
+    bgpath_box = widgets.HBox([widgets.Label("Bag file path:"), bgpath_txt])
     play_btn = widgets.Button(description="Play")
     ibox = widgets.Checkbox(description="Immediate")
     lbox = widgets.Checkbox(description="Loop")
     clockbox = widgets.Checkbox(description="Clock")
-    hzbox = widgets.Checkbox(description="Hz")
-    que_int = widgets.IntText(value=100, description="Queue size")
-    factor_int = widgets.IntText(value=1)
-    factor_box = widgets.HBox([widgets.Label("Multiply the publish rate by"), factor_int]) 
+    dzbox = widgets.Checkbox(description="Duration")
+    kabox = widgets.Checkbox(description="Keep alive")
+    start_float = widgets.FloatText(value=0)
+    start_box = widgets.HBox([widgets.Label("Start time:"), start_float]) 
+    que_int = widgets.IntText(value=100)
+    que_box = widgets.HBox([widgets.Label("Queue size:"), que_int]) 
+    factor_float = widgets.FloatText(value=1)
+    factor_box = widgets.HBox([widgets.Label("Multiply the publish rate by:"), factor_float])
+    delay_float = widgets.FloatText(value=0)
+    delay_box = widgets.HBox([widgets.Label("Delay after every advertise call:"), delay_float])
+    duration_float = widgets.FloatText(value=0)
+    duration_box = widgets.HBox([dzbox, widgets.Label("Duration in secs:"), duration_float])
+    ######## This Ends here ################################################## 
     def ply_clk(arg):
         if play_btn.description == "Play":
             info_dict = yaml.load(subprocess.Popen(['rosbag', 'info', '--yaml', bgpath_txt.value],
                 stdout=subprocess.PIPE).communicate()[0])
             if info_dict is None:
-                raise FileNotFoundError("Can't load Bag!")
+                raise FileNotFoundError("Bag file not found!")
             else:
                 play_btn.description = "Stop"
                 bag_player.sp = subprocess.Popen(['rosbag', 'play', bgpath_txt.value], stdin=subprocess.PIPE)
@@ -205,9 +215,8 @@ def bag_player():
                 pass
             play_btn.description = "Play"
     play_btn.on_click(ply_clk)
-    options_hbox = widgets.HBox([ibox, lbox, clockbox, hzbox])
-    btm_box = widgets.VBox([bgpath_txt, options_hbox, que_int, factor_box, play_btn])
+    options_hbox = widgets.HBox([ibox, lbox, clockbox, kabox])
+    btm_box = widgets.VBox([bgpath_box, options_hbox, duration_box, start_box, que_box, factor_box, delay_box, play_btn])
     widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
     return vbox
-
