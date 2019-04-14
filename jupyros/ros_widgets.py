@@ -179,7 +179,9 @@ def bag_player():
     ###### Fields #########################################################
     bgpath_txt = widgets.Text()
     bgpath_box = widgets.HBox([widgets.Label("Bag file path:"), bgpath_txt])
-    play_btn = widgets.Button(description="Play")
+    play_btn = widgets.Button(description="Play", icon='play')
+    pause_btn = widgets.Button(description="Pause", icon='pause', disabled=True)
+    step_btn = widgets.Button(description="Step", icon='step-forward', disabled=True)
     ibox = widgets.Checkbox(description="Immediate")
     lbox = widgets.Checkbox(description="Loop")
     clockbox = widgets.Checkbox(description="Clock")
@@ -195,7 +197,8 @@ def bag_player():
     delay_box = widgets.HBox([widgets.Label("Delay after every advertise call:"), delay_float])
     duration_float = widgets.FloatText(value=0)
     duration_box = widgets.HBox([dzbox, widgets.Label("Duration in secs:"), duration_float])
-    ######## This Ends here ################################################## 
+    out_box = widgets.Output(layout={'border': '1px solid black'})
+    ######## Play Button ################################################## 
     def ply_clk(arg):
         if play_btn.description == "Play":
             info_dict = yaml.load(subprocess.Popen(['rosbag', 'info', '--yaml', bgpath_txt.value],
@@ -220,19 +223,46 @@ def bag_player():
                 cmd.append("--queue={}".format(max(0, que_int.value)))
                 cmd.append("--delay={}".format(max(0, delay_float.value)))
                 play_btn.description = "Stop"
+                play_btn.icon = 'stop'
+                pause_btn.disabled = False
                 bag_player.sp = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-                print("Bag summary:")
-                for key, val in info_dict.items():
-                    print(key, ":", val)
+                with out_box:
+                    print("Bag summary:")
+                    for key, val in info_dict.items():
+                        print(key, ":", val)
         else:
             try:
                 os.killpg(os.getpgid(bag_player.sp.pid), subprocess.signal.SIGINT)
             except KeyboardInterrupt:
                 pass
             play_btn.description = "Play"
+            play_btn.icon = 'play'
+            pause_btn.disabled = True
+            pause_btn.description = 'Pause'
+            pause_btn.icon = 'pause'
+            step_btn.disabled = True
     play_btn.on_click(ply_clk)
+    ###################### Pause Button #########################
+    def pause_clk(arg):
+        bag_player.sp.stdin.write(b' \n')
+        bag_player.sp.stdin.flush()
+        if pause_btn.description == 'Pause':
+            pause_btn.description = 'Continue'
+            pause_btn.icon = 'play'
+            step_btn.disabled = False
+        else:
+            pause_btn.description = 'Pause'
+            pause_btn.icon = 'pause'
+            step_btn.disabled = True
+    pause_btn.on_click(pause_clk)
+    ################## step Button ###############################
+    def step_clk(arg):
+        bag_player.sp.stdin.write(b's\n')
+        bag_player.sp.stdin.flush()
+    step_btn.on_click(step_clk)
     options_hbox = widgets.HBox([ibox, lbox, clockbox, kabox])
-    btm_box = widgets.VBox([bgpath_box, options_hbox, duration_box, start_box, que_box, factor_box, delay_box, play_btn])
+    buttons_hbox = widgets.HBox([play_btn, pause_btn, step_btn])
+    btm_box = widgets.VBox([bgpath_box, options_hbox, duration_box, start_box, que_box, factor_box, delay_box, buttons_hbox, out_box])
     widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
     return vbox
