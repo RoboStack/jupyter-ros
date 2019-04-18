@@ -14,7 +14,7 @@ import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
 import threading
-
+import subprocess, yaml, os
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     """
     Adds widgets.
@@ -171,3 +171,107 @@ def live_plot(plot_string, topic_type, history=100, title=None):
 
     rospy.Subscriber(topic, topic_type, cb)
     return fig
+
+def bag_player(bagfile=''):
+    """
+    Create a form widget for playing ROS bags.
+    This function takes the bag file path, extracts the bag summary 
+    and play the bag with the given arguments.
+    
+    @param bagfile The ROS bag file path
+    
+    @return jupyter widget for display
+    """
+    widget_list = []
+    bag_player.sp = None
+    ###### Fields #########################################################
+    bgpath_txt = widgets.Text()
+    bgpath_box = widgets.HBox([widgets.Label("Bag file path:"), bgpath_txt])
+    bgpath_txt.value = bagfile
+    play_btn = widgets.Button(description="Play", icon='play')
+    pause_btn = widgets.Button(description="Pause", icon='pause', disabled=True)
+    step_btn = widgets.Button(description="Step", icon='step-forward', disabled=True)
+    ibox = widgets.Checkbox(description="Immediate")
+    lbox = widgets.Checkbox(description="Loop")
+    clockbox = widgets.Checkbox(description="Clock")
+    dzbox = widgets.Checkbox(description="Duration")
+    kabox = widgets.Checkbox(description="Keep alive")
+    start_float = widgets.FloatText(value=0)
+    start_box = widgets.HBox([widgets.Label("Start time:"), start_float]) 
+    que_int = widgets.IntText(value=100)
+    que_box = widgets.HBox([widgets.Label("Queue size:"), que_int]) 
+    factor_float = widgets.FloatText(value=1)
+    factor_box = widgets.HBox([widgets.Label("Multiply the publish rate by:"), factor_float])
+    delay_float = widgets.FloatText(value=0)
+    delay_box = widgets.HBox([widgets.Label("Delay after every advertise call:"), delay_float])
+    duration_float = widgets.FloatText(value=0)
+    duration_box = widgets.HBox([dzbox, widgets.Label("Duration in secs:"), duration_float])
+    out_box = widgets.Output(layout={'border': '1px solid black'})
+    ######## Play Button ################################################## 
+    def ply_clk(arg):
+        if play_btn.description == "Play":
+            info_dict = yaml.load(subprocess.Popen(['rosbag', 'info', '--yaml', bgpath_txt.value],
+                stdout=subprocess.PIPE).communicate()[0])
+            if info_dict is None:
+                raise FileNotFoundError("Bag file not found!")
+            else:
+                
+                cmd = ['rosbag', 'play', bgpath_txt.value]
+                if ibox.value:
+                    cmd.append('-i')
+                if lbox.value:
+                    cmd.append('-l')
+                if kabox.value:
+                    cmd.append('-k')
+                if clockbox.value:
+                    cmd.append('--clock')
+                if dzbox.value:
+                    cmd.append("--duration={}".format(max(0, duration_float.value)))
+                cmd.append("--rate={}".format(max(0, factor_float.value)))
+                cmd.append("--start={}".format(max(0, start_float.value)))
+                cmd.append("--queue={}".format(max(0, que_int.value)))
+                cmd.append("--delay={}".format(max(0, delay_float.value)))
+                play_btn.description = "Stop"
+                play_btn.icon = 'stop'
+                pause_btn.disabled = False
+                bag_player.sp = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+                with out_box:
+                    print("Bag summary:")
+                    for key, val in info_dict.items():
+                        print(key, ":", val)
+        else:
+            try:
+                os.killpg(os.getpgid(bag_player.sp.pid), subprocess.signal.SIGINT)
+            except KeyboardInterrupt:
+                pass
+            play_btn.description = "Play"
+            play_btn.icon = 'play'
+            pause_btn.disabled = True
+            pause_btn.description = 'Pause'
+            pause_btn.icon = 'pause'
+            step_btn.disabled = True
+    play_btn.on_click(ply_clk)
+    ###################### Pause Button #########################
+    def pause_clk(arg):
+        bag_player.sp.stdin.write(b' \n')
+        bag_player.sp.stdin.flush()
+        if pause_btn.description == 'Pause':
+            pause_btn.description = 'Continue'
+            pause_btn.icon = 'play'
+            step_btn.disabled = False
+        else:
+            pause_btn.description = 'Pause'
+            pause_btn.icon = 'pause'
+            step_btn.disabled = True
+    pause_btn.on_click(pause_clk)
+    ################## step Button ###############################
+    def step_clk(arg):
+        bag_player.sp.stdin.write(b's\n')
+        bag_player.sp.stdin.flush()
+    step_btn.on_click(step_clk)
+    options_hbox = widgets.HBox([ibox, lbox, clockbox, kabox])
+    buttons_hbox = widgets.HBox([play_btn, pause_btn, step_btn])
+    btm_box = widgets.VBox([bgpath_box, options_hbox, duration_box, start_box, que_box, factor_box, delay_box, buttons_hbox, out_box])
+    widget_list.append(btm_box)
+    vbox = widgets.VBox(children=widget_list)
+    return vbox
