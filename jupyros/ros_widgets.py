@@ -14,7 +14,7 @@ import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
 import threading
-
+import subprocess, yaml, os
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     """
     Adds widgets.
@@ -172,13 +172,22 @@ def live_plot(plot_string, topic_type, history=100, title=None):
     rospy.Subscriber(topic, topic_type, cb)
     return fig
 
-def bag_player():
-    import subprocess, yaml, os
+def bag_player(bagfile=''):
+    """
+    Create a form widget for playing ROS bags.
+    This function takes the bag file path, extracts the bag summary 
+    and play the bag with the given arguments.
+    
+    @param bagfile The ROS bag file path
+    
+    @return jupyter widget for display
+    """
     widget_list = []
     bag_player.sp = None
     ###### Fields #########################################################
     bgpath_txt = widgets.Text()
     bgpath_box = widgets.HBox([widgets.Label("Bag file path:"), bgpath_txt])
+    bgpath_txt.value = bagfile
     play_btn = widgets.Button(description="Play", icon='play')
     pause_btn = widgets.Button(description="Pause", icon='pause', disabled=True)
     step_btn = widgets.Button(description="Step", icon='step-forward', disabled=True)
