@@ -26,7 +26,7 @@ var ROSConnectionModel = widgets.WidgetModel.extend({
     initialize: function() {
         ROSConnectionModel.__super__.initialize.apply(this, arguments);
         this.connection = new ROSLIB.Ros({
-          url : this.get('url') + ':' + this.get('port')
+          url: this.get('url')
         });
     },
     get_connection: function() {
@@ -67,7 +67,7 @@ default_serializers()
 
 var SceneNodeModel = widgets.WidgetModel.extend({
     defaults: _.extend(widgets.WidgetModel.prototype.defaults(), defaults.SceneNodeModelDefaults),
-}, default_serializers(['tf_client']));
+}, default_serializers(['tf_client', 'object']));
 
 var OccupancyGridView = widgets.WidgetView.extend({
     initialize: function(args) {
@@ -369,13 +369,12 @@ var DepthCloudModel = widgets.WidgetModel.extend({
             url: this.get('url'),
             f: this.get('f')
         });
-        this.connection.start_stream();
+        this.connection.startStream();
     },
-    get_client: function() {
-        return this.client;
+    get_threejs_obj: function() {
+        return this.connection;
     },
 });
-
 
 var SceneNodeView = widgets.WidgetView.extend({
     initialize: function(parms) {
@@ -385,10 +384,11 @@ var SceneNodeView = widgets.WidgetView.extend({
     },
     render: function() {
         this.view = new ROS3D.SceneNode({
-            frameId: this.model.get('frameId'),
-            tfClient: this.model.get('tf_client'),
-            object: this.model.get('object')
+            frameID: this.model.get('frame_id'),
+            tfClient: this.model.get('tf_client').get_client(),
+            object: this.model.get('object').get_threejs_obj()
         });
+        this.viewer.scene.add(this.view);
     },
     trigger_rerender: function() {
         this.remove();
@@ -399,11 +399,9 @@ var SceneNodeView = widgets.WidgetView.extend({
     }
 });
 
-
 var GridView = widgets.WidgetView.extend({
     initialize: function(parms) {
         GridView.__super__.initialize.apply(this, arguments);
-        console.log(this.options)
         this.viewer = this.options.viewer;
         this.model.on('change', this.trigger_rerender, this);
     },
@@ -521,6 +519,9 @@ module.exports = {
     PolygonView: PolygonView,
     LaserScanModel: LaserScanModel,
     LaserScanView: LaserScanView,
+    SceneNodeModel: SceneNodeModel,
+    SceneNodeView: SceneNodeView,
+    DepthCloudModel: DepthCloudModel,
     ViewerModel: ViewerModel,
     ViewerView: ViewerView
 };
