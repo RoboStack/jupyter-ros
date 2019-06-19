@@ -39,8 +39,8 @@ sync_widget.update(widgets.widget_serialization)
 
 @register_noview
 class ROSConnection(widgets.Widget):
-    url = Unicode("ws://localhost")
-    port = Unicode("9090")
+    url = Unicode("ws://localhost").tag(sync=True)
+    port = Unicode("9090").tag(sync=true)
 
 @register_noview
 class TFClient(widgets.Widget):
@@ -156,6 +156,17 @@ class Viewer(widgets.DOMWidget):
     alpha = Bool(True).tag(sync=True)
     height = Unicode('100%').tag(sync=True)
     objects = List(Instance(widgets.Widget)).tag(**sync_widget)
+
+@register
+class DepthCloud(widgets.Widget):
+    url = Unicode('').tag(sync=True)
+    f = Float(525.0).tag(sync=True)
+
+@register
+class SceneNode(widgets.Widget):
+    frame_id = Unicode('/base_link').tag(sync=True)
+    tf_client = Instance(TFClient).tag(**sync_widget)
+    object = Instance(DepthCloud).tag(**sync_widget)
 
 def js_formatter(d_in):
     import json

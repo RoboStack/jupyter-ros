@@ -65,6 +65,10 @@ var OccupancyGridModel = widgets.WidgetModel.extend({
 default_serializers()
 );
 
+var SceneNodeModel = widgets.WidgetModel.extend({
+    defaults: _.extend(widgets.WidgetModel.prototype.defaults(), defaults.SceneNodeModelDefaults),
+}, default_serializers(['tf_client']));
+
 var OccupancyGridView = widgets.WidgetView.extend({
     initialize: function(args) {
         OccupancyGridView.__super__.initialize.apply(this, arguments);
@@ -356,6 +360,45 @@ var PointCloudView = widgets.WidgetView.extend({
         this.viewer.scene.remove(this.view);
     }
 });
+
+var DepthCloudModel = widgets.WidgetModel.extend({
+    defaults: _.extend(widget_defaults(), defaults.DepthCloudModelDefaults),
+    initialize: function() {
+        DepthCloudModel.__super__.initialize.apply(this, arguments);
+        this.connection = new ROS3D.DepthCloud({
+            url: this.get('url'),
+            f: this.get('f')
+        });
+        this.connection.start_stream();
+    },
+    get_client: function() {
+        return this.client;
+    },
+});
+
+
+var SceneNodeView = widgets.WidgetView.extend({
+    initialize: function(parms) {
+        SceneNodeView.__super__.initialize.apply(this, arguments);
+        this.viewer = this.options.viewer;
+        this.model.on('change', this.trigger_rerender, this);
+    },
+    render: function() {
+        this.view = new ROS3D.SceneNode({
+            frameId: this.model.get('frameId'),
+            tfClient: this.model.get('tf_client'),
+            object: this.model.get('object')
+        });
+    },
+    trigger_rerender: function() {
+        this.remove();
+        this.render();
+    },
+    remove: function() {
+        this.viewer.scene.remove(this.view);
+    }
+});
+
 
 var GridView = widgets.WidgetView.extend({
     initialize: function(parms) {
