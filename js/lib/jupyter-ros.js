@@ -312,7 +312,7 @@ var URDFView = widgets.WidgetView.extend({
             ros: this.model.get('ros').get_connection(),
             tfClient: this.model.get('tf_client').get_client(),
             rootObject: this.viewer.scene,
-            path: this.model.get('path')
+            path: this.model.get('url')
             // colorsrc: 'z',
             // colormap: function(z) { z=z+2; return new THREE.Color(z,0,1-z); }
         });
