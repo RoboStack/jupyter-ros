@@ -334,7 +334,7 @@ default_serializers(['objects'])
 
 var PointCloudView = widgets.WidgetView.extend({
     initialize: function(parms) {
-        PointCloud2View.__super__.initialize.apply(this, arguments);
+        PointCloudView.__super__.initialize.apply(this, arguments);
         this.viewer = this.options.viewer;
         this.model.on('change', this.trigger_rerender, this);
     },
