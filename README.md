@@ -34,13 +34,14 @@ Also required are `numpy` and `bqplot` for the live-plotting
 and `ipywidgets` for the interactive widgets
 
     pip install jupyter bqplot pyyaml ipywidgets
+    jupyter nbextension enable --py --sys-prefix ipywidgets
 
 `pyyaml` is necessary for rospy.
 
 To install use pip:
 
     pip install jupyros
-    jupyter nbextension enable --py --sys-prefix jupyros ipywidgets
+    jupyter nbextension enable --py --sys-prefix jupyros
 
 To install the extension for **jupyterlab**, you also need to execute the following:
 
