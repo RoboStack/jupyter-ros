@@ -9,7 +9,7 @@ built using Python and QT.
 However, using QT seperates the user away from the code.
 We've built an initial version of the ROS tools for jupyter
 notebook, trying to promote a rich, interactive experience
-for Robotics developers utilizing the power of the jupyter 
+for Robotics developers utilizing the power of the jupyter
 notebook.
 
 [![Video of jupyter-ros in JupyterLab](https://raw.githubusercontent.com/wolfv/jupyter-ros/master/docs/assets/jupyterlab-with-ros.gif)](https://www.youtube.com/watch?v=mPvYZango2E)
@@ -30,16 +30,17 @@ on twitter: https://twitter.com/wuoulf
 ## Installation and Dependencies
 
 You need a ROS environment with rospy, obviously.
-Also required are `numpy` and `bqplot` for the live-plotting.
+Also required are `numpy` and `bqplot` for the live-plotting
+and `ipywidgets` for the interactive widgets
 
-    pip install jupyter bqplot pyyaml
+    pip install jupyter bqplot pyyaml ipywidgets
 
 `pyyaml` is necessary for rospy.
 
 To install use pip:
 
     pip install jupyros
-    jupyter nbextension enable --py --sys-prefix jupyros
+    jupyter nbextension enable --py --sys-prefix jupyros ipywidgets
 
 To install the extension for **jupyterlab**, you also need to execute the following:
 
