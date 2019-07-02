@@ -4,6 +4,8 @@ var _ = require('lodash');
 var ROSLIB = require('roslib');
 var ROS3D = require('ros3d');
 var THREE = require('three');
+window.THREE = THREE;
+require('three/examples/js/controls/TransformControls.js');
 
 var defaults = require('./defaults.js')
 
@@ -72,7 +74,7 @@ var OccupancyGridView = widgets.WidgetView.extend({
     },
     render: function() {
         this.three_color = new THREE.Color(this.model.get('color'));
-        this.rgb_color = {r: this.three_color.r * 255, 
+        this.rgb_color = {r: this.three_color.r * 255,
                           g: this.three_color.g * 255,
                           b: this.three_color.b * 255};
 
@@ -209,7 +211,7 @@ var PolygonView = widgets.WidgetView.extend({
 });
 
 var LaserScanModel = widgets.WidgetModel.extend({
-    defaults: _.extend(widget_defaults(), defaults.LaserScanModelDefaults, 
+    defaults: _.extend(widget_defaults(), defaults.LaserScanModelDefaults,
         {
             material: { size: 0.05, color: 0xff0000 }
         }),
@@ -261,6 +263,34 @@ var MarkerView = widgets.WidgetView.extend({
             lifetime: this.model.get('lifetime'),
             rootObject: this.viewer.scene,
         });
+    }
+});
+
+var SphereMarkerModel = widgets.WidgetModel.extend({
+    defaults: _.extend(widget_defaults(), defaults.SphereMarkerDefaults),
+},
+default_serializers()
+);
+
+var SphereMarkerView = widgets.WidgetView.extend({
+    initialize: function(args) {
+        SphereMarkerView.__super__.initialize.apply(this, arguments);
+        this.viewer = this.options.viewer;
+    },
+    render: function() {
+        var geometry = new THREE.SphereGeometry(1, 32, 32);
+        var material = new THREE.MeshBasicMaterial({color: 0x4555B9});
+        this.sphere = new THREE.Mesh(geometry, material);
+        this.viewer.scene.add(this.sphere);
+
+        var control = new THREE.TransformControls(this.viewer.camera, this.viewer.renderer.domElement);
+        control.attach(this.sphere);
+
+        this.viewer.scene.add(control);
+    },
+
+    remove: function() {
+        this.viewer.scene.remove(this.sphere);
     }
 });
 
@@ -458,6 +488,8 @@ module.exports = {
     PointCloudView: PointCloudView,
     MarkerModel: MarkerModel,
     MarkerView: MarkerView,
+    SphereMarkerModel: SphereMarkerModel,
+    SphereMarkerView: SphereMarkerView,
     MarkerArrayModel: MarkerArrayModel,
     MarkerArrayView: MarkerArrayView,
     OccupancyGridModel: OccupancyGridModel,

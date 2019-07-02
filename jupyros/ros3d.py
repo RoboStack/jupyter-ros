@@ -71,8 +71,8 @@ class OccupancyGrid(widgets.Widget):
     compression = Unicode('cbor')
     color = Unicode('#FFFFFF')
     opacity = Float(1.0)
-    # rootObject = 
-    # offsetPose = 
+    # rootObject =
+    # offsetPose =
 
 @register
 class InteractiveMarker(widgets.Widget):
@@ -80,7 +80,7 @@ class InteractiveMarker(widgets.Widget):
     tf_client = Instance(TFClient).tag(**sync_widget)
     topic = Unicode('/basic_controls').tag(sync=True)
     menu_font_size = Unicode('0.8em').tag(sync=True)
-    # camera = 
+    # camera =
     # rootObject
 
 @register
@@ -90,6 +90,10 @@ class Marker(widgets.Widget):
     topic = Unicode('/visualization_marker').tag(sync=True)
     path = Unicode('/').tag(sync=True)
     lifetime = Float(0.0).tag(sync=True)
+
+@register
+class SphereMarker(widgets.Widget):
+    position = Tuple([0.0, 0.0, 0.0]).tag(sync=True)
 
 @register
 class PoseArray(widgets.Widget):
@@ -126,8 +130,8 @@ class LaserScan(widgets.Widget):
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
     topic = Unicode('/path').tag(sync=True)
-    point_ratio = Float(1.0).tag(sync=True), 
-    message_ratio = Float(1.0).tag(sync=True), 
+    point_ratio = Float(1.0).tag(sync=True),
+    message_ratio = Float(1.0).tag(sync=True),
     max_points = Int(200000).tag(sync=True),
     color_source = Unicode('intensities').tag(sync=True)
     color_map = Unicode('').tag(sync=True)
@@ -145,9 +149,9 @@ class PointCloud(widgets.Widget):
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
     topic = Unicode('').tag(sync=True)
-    message_ratio = Float(2.0).tag(sync=True), 
-    point_ratio = Float(3.0).tag(sync=True), 
-    max_points = Int(200000).tag(sync=True), 
+    message_ratio = Float(2.0).tag(sync=True),
+    point_ratio = Float(3.0).tag(sync=True),
+    max_points = Int(200000).tag(sync=True),
     # material: { size: 0.05, color: 0xff00ff }
 
 @register
