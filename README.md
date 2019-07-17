@@ -1,9 +1,9 @@
 # ROS Support for jupyter notebooks
 
 While the Jupyter ecosystem has been widely adopted by
-the Data Science and Machine Learning community, the 
-robotics community has not jumped on the band wagon yet! 
-Most tools around ROS, the Robot Operating System, are 
+the Data Science and Machine Learning community, the
+robotics community has not jumped on the band wagon yet!
+Most tools around ROS, the Robot Operating System, are
 built using Python and QT.
 
 However, using QT seperates the user away from the code.
@@ -16,15 +16,15 @@ notebook.
 
 ![](https://raw.githubusercontent.com/wolfv/jupyter-ros/master/docs/assets/screenshot.png)
 
-With jupyter-ros, it's possible to easily create widgets for 
-custom message types to send messages. 
+With jupyter-ros, it's possible to easily create widgets for
+custom message types to send messages.
 
 In the future, we plan to bring simple and fast real-time
 plotting from ROS topics to this library.
 
-If you find this initial package useful, don't hesitate to 
+If you find this initial package useful, don't hesitate to
 contribute!
-You can also always reach out to w.vollprecht@gmail.com or 
+You can also always reach out to w.vollprecht@gmail.com or
 on twitter: https://twitter.com/wuoulf
 
 ## Installation and Dependencies
@@ -45,7 +45,7 @@ To install use pip:
 
 To install the extension for **jupyterlab**, you also need to execute the following:
 
-    $ jupyter labextension install jupyter-ros 
+    $ jupyter labextension install jupyter-ros
 
 ##### Development installation
 
@@ -60,12 +60,12 @@ For a development installation (requires npm),
 
 ## Troubleshooting
 
-You might see a warning like "The rospy package is not found in your $PYTHONPATH. 
+You might see a warning like "The rospy package is not found in your $PYTHONPATH.
 Subscribe and publish are not going to work. Do you need to activate your ROS environment?"
 
 This is harmless during installation, but if you see this warning in a notebook, you should
 check that your ROS environment is activated. You can also set the path from inside the notebook
-using 
+using
 
 ```
 import sys
@@ -75,5 +75,5 @@ sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages/')
 import jupyros
 ```
 
-If you got the following error when you run a cell ```failed to display Jupyter Widget of type VBox```, 
+If you got the following error when you run a cell ```failed to display Jupyter Widget of type VBox```,
 you can solve it by running the following command ```jupyter nbextension enable --py --sys-prefix widgetsnbextension```

@@ -18,11 +18,11 @@ import subprocess, yaml, os
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     """
     Adds widgets.
-    
+
     @param msg_type The message type
     @param widget_dict The form list
     @param widget_list The widget list
-    
+
     @return widget_dict and widget_list
     """
     # import only here so non ros env doesn't block installation
@@ -80,19 +80,19 @@ def img_to_msg(imgpath):
     else:
         imgmsg = bridge.cv2_to_imgmsg(img)
         return imgmsg
-    
+
 def publish(topic, msg_type):
     """
     Create a form widget for message type msg_type.
     This function analyzes the fields of msg_type and creates
     an appropriate widget.
     A publisher is automatically created which publishes to the
-    topic given as topic parameter. This allows pressing the 
+    topic given as topic parameter. This allows pressing the
     "Send Message" button to send the message to ROS.
-    
+
     @param msg_type The message type
     @param topic The topic name to publish to
-    
+
     @return jupyter widget for display
     """
     publisher = rospy.Publisher(topic, msg_type, queue_size=10)
@@ -111,7 +111,7 @@ def publish(topic, msg_type):
 
     add_widgets(msg_type(), widget_dict, widget_list)
     send_btn = widgets.Button(description="Send Message")
-    
+
     def send_msg(arg):
         msg_to_send = msg_type()
         widget_dict_to_msg(msg_to_send, widget_dict)
@@ -141,7 +141,7 @@ def publish(topic, msg_type):
     btm_box = widgets.HBox((send_btn, latch_check, rate_field, stop_btn))
     widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
-    
+
     return vbox
 
 def live_plot(plot_string, topic_type, history=100, title=None):
@@ -175,11 +175,11 @@ def live_plot(plot_string, topic_type, history=100, title=None):
 def bag_player(bagfile=''):
     """
     Create a form widget for playing ROS bags.
-    This function takes the bag file path, extracts the bag summary 
+    This function takes the bag file path, extracts the bag summary
     and play the bag with the given arguments.
-    
+
     @param bagfile The ROS bag file path
-    
+
     @return jupyter widget for display
     """
     widget_list = []
@@ -197,9 +197,9 @@ def bag_player(bagfile=''):
     dzbox = widgets.Checkbox(description="Duration")
     kabox = widgets.Checkbox(description="Keep alive")
     start_float = widgets.FloatText(value=0)
-    start_box = widgets.HBox([widgets.Label("Start time:"), start_float]) 
+    start_box = widgets.HBox([widgets.Label("Start time:"), start_float])
     que_int = widgets.IntText(value=100)
-    que_box = widgets.HBox([widgets.Label("Queue size:"), que_int]) 
+    que_box = widgets.HBox([widgets.Label("Queue size:"), que_int])
     factor_float = widgets.FloatText(value=1)
     factor_box = widgets.HBox([widgets.Label("Multiply the publish rate by:"), factor_float])
     delay_float = widgets.FloatText(value=0)
@@ -207,7 +207,7 @@ def bag_player(bagfile=''):
     duration_float = widgets.FloatText(value=0)
     duration_box = widgets.HBox([dzbox, widgets.Label("Duration in secs:"), duration_float])
     out_box = widgets.Output(layout={'border': '1px solid black'})
-    ######## Play Button ################################################## 
+    ######## Play Button ##################################################
     def ply_clk(arg):
         if play_btn.description == "Play":
             info_dict = yaml.load(subprocess.Popen(['rosbag', 'info', '--yaml', bgpath_txt.value],
@@ -215,7 +215,7 @@ def bag_player(bagfile=''):
             if info_dict is None:
                 raise FileNotFoundError("Bag file not found!")
             else:
-                
+
                 cmd = ['rosbag', 'play', bgpath_txt.value]
                 if ibox.value:
                     cmd.append('-i')

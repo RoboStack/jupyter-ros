@@ -26,7 +26,7 @@ var ROSConnectionModel = widgets.WidgetModel.extend({
     initialize: function() {
         ROSConnectionModel.__super__.initialize.apply(this, arguments);
         this.connection = new ROSLIB.Ros({
-          url : this.get('url') + ':' + this.get('port')
+          url: this.get('url')
         });
     },
     get_connection: function() {
@@ -64,6 +64,10 @@ var OccupancyGridModel = widgets.WidgetModel.extend({
 },
 default_serializers()
 );
+
+var SceneNodeModel = widgets.WidgetModel.extend({
+    defaults: _.extend(widgets.WidgetModel.prototype.defaults(), defaults.SceneNodeModelDefaults),
+}, default_serializers(['tf_client', 'object']));
 
 var OccupancyGridView = widgets.WidgetView.extend({
     initialize: function(args) {
@@ -308,7 +312,7 @@ var URDFView = widgets.WidgetView.extend({
             ros: this.model.get('ros').get_connection(),
             tfClient: this.model.get('tf_client').get_client(),
             rootObject: this.viewer.scene,
-            path: this.model.get('path')
+            path: this.model.get('url')
             // colorsrc: 'z',
             // colormap: function(z) { z=z+2; return new THREE.Color(z,0,1-z); }
         });
@@ -330,7 +334,7 @@ default_serializers(['objects'])
 
 var PointCloudView = widgets.WidgetView.extend({
     initialize: function(parms) {
-        PointCloud2View.__super__.initialize.apply(this, arguments);
+        PointCloudView.__super__.initialize.apply(this, arguments);
         this.viewer = this.options.viewer;
         this.model.on('change', this.trigger_rerender, this);
     },
@@ -357,10 +361,47 @@ var PointCloudView = widgets.WidgetView.extend({
     }
 });
 
+var DepthCloudModel = widgets.WidgetModel.extend({
+    defaults: _.extend(widget_defaults(), defaults.DepthCloudModelDefaults),
+    initialize: function() {
+        DepthCloudModel.__super__.initialize.apply(this, arguments);
+        this.connection = new ROS3D.DepthCloud({
+            url: this.get('url'),
+            f: this.get('f')
+        });
+        this.connection.startStream();
+    },
+    get_threejs_obj: function() {
+        return this.connection;
+    },
+});
+
+var SceneNodeView = widgets.WidgetView.extend({
+    initialize: function(parms) {
+        SceneNodeView.__super__.initialize.apply(this, arguments);
+        this.viewer = this.options.viewer;
+        this.model.on('change', this.trigger_rerender, this);
+    },
+    render: function() {
+        this.view = new ROS3D.SceneNode({
+            frameID: this.model.get('frame_id'),
+            tfClient: this.model.get('tf_client').get_client(),
+            object: this.model.get('object').get_threejs_obj()
+        });
+        this.viewer.scene.add(this.view);
+    },
+    trigger_rerender: function() {
+        this.remove();
+        this.render();
+    },
+    remove: function() {
+        this.viewer.scene.remove(this.view);
+    }
+});
+
 var GridView = widgets.WidgetView.extend({
     initialize: function(parms) {
         GridView.__super__.initialize.apply(this, arguments);
-        console.log(this.options)
         this.viewer = this.options.viewer;
         this.model.on('change', this.trigger_rerender, this);
     },
@@ -478,6 +519,9 @@ module.exports = {
     PolygonView: PolygonView,
     LaserScanModel: LaserScanModel,
     LaserScanView: LaserScanView,
+    SceneNodeModel: SceneNodeModel,
+    SceneNodeView: SceneNodeView,
+    DepthCloudModel: DepthCloudModel,
     ViewerModel: ViewerModel,
     ViewerView: ViewerView
 };
