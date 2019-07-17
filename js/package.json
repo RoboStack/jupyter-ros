@@ -30,7 +30,7 @@
     "rimraf": "^2.6.1"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1.0.0",
+    "@jupyter-widgets/base": "^1.1 || ^2.0",
     "lodash": "^4.17.4",
     "ros3d": "^1.0.0"
   },
