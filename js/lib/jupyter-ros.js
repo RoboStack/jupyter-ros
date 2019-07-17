@@ -1,3 +1,4 @@
+window.ws = window.WebSocket;
 var widgets = require('@jupyter-widgets/base');
 var _ = require('lodash');
 
