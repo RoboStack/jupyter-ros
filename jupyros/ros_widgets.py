@@ -15,7 +15,7 @@ import ipywidgets as widgets
 import numpy as np
 import threading
 import subprocess, yaml, os
-def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
+def add_widgets(msg_instance, widget_dict, widget_list, minval, maxval, step_size, prefix=''):
     """
     Adds widgets.
     
@@ -40,16 +40,16 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
         w = None
 
         if s_t in ['float32', 'float64']:
-            w = widgets.FloatSlider()
+            w = widgets.FloatSlider(min=minval, max=maxval, step=step_size)
         if s_t in ['int8', 'uint8', 'int32', 'uint32', 'int64', 'uint64']:
-            w = widgets.IntSlider()
+            w = widgets.IntSlider(min=minval, max=maxval, step=step_size)
         if s_t in ['string']:
             w = widgets.Text()
 
         if isinstance(attr, Message):
             widget_list.append(widgets.Label(value=slot))
             widget_dict[slot] = {}
-            add_widgets(attr, widget_dict[slot], widget_list, slot)
+            add_widgets(attr, widget_dict[slot], widget_list, minval, maxval, step_size, slot)
 
         if w:
             widget_dict[slot] = w
@@ -81,7 +81,7 @@ def img_to_msg(imgpath):
         imgmsg = bridge.cv2_to_imgmsg(img)
         return imgmsg
     
-def publish(topic, msg_type):
+def publish(topic, msg_type, minval=0, maxval=100, step_size=1):
     """
     Create a form widget for message type msg_type.
     This function analyzes the fields of msg_type and creates
@@ -92,7 +92,10 @@ def publish(topic, msg_type):
     
     @param msg_type The message type
     @param topic The topic name to publish to
-    
+    @param minval minimum value for sliders
+    @param maxval maximum value for sliders
+    @param step_size steps size value for sliders
+
     @return jupyter widget for display
     """
     publisher = rospy.Publisher(topic, msg_type, queue_size=10)
@@ -108,8 +111,7 @@ def publish(topic, msg_type):
         publisher.impl.is_latch = arg['new']
 
     latch_check.observe(latch_value_change, 'value')
-
-    add_widgets(msg_type(), widget_dict, widget_list)
+    add_widgets(msg_type(), widget_dict, widget_list, minval=minval, maxval=maxval, step_size=step_size)
     send_btn = widgets.Button(description="Send Message")
     
     def send_msg(arg):
