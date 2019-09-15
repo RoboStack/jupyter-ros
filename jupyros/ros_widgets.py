@@ -8,13 +8,14 @@ try:
     import cv2
     bridge = CvBridge()
 except:
-    print("CV Bridge is not installed, please install it to publish Images ")
-    print("sudo apt-get install ros-$(rosversion -d)-cv-bridge")
+    pass
 import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
 import threading
 import subprocess, yaml, os
+
+
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     """
     Adds widgets.
@@ -74,6 +75,9 @@ def widget_dict_to_msg(msg_instance, d):
 thread_map = {}
 
 def img_to_msg(imgpath):
+    if not cv2 or not CvBridge:
+        raise RuntimeError("CV Bridge is not installed, please install it to publish Images\nsudo apt-get install ros-$(rosversion -d)-cv-bridge")
+
     img = cv2.imread(imgpath)
     if img is None:
         raise FileNotFoundError('Image File Not Found')

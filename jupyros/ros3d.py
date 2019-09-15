@@ -1,5 +1,6 @@
 import ipywidgets as widgets
 from traitlets import *
+from ._version import version_info
 
 def _quick_widget(package_name, version, has_view=True):
     def quick_widget_decorator(cls):
@@ -32,8 +33,10 @@ def _quick_widget(package_name, version, has_view=True):
 
     return quick_widget_decorator
 
-register = _quick_widget('jupyter-ros', '^0.1.0')
-register_noview = _quick_widget('jupyter-ros', '^0.1.0', False)
+js_version = '^' + '.'.join([str(v) for v in version_info[:3]])
+
+register = _quick_widget('jupyter-ros', js_version)
+register_noview = _quick_widget('jupyter-ros', js_version, False)
 sync_widget = {'sync': True}
 sync_widget.update(widgets.widget_serialization)
 
@@ -130,7 +133,8 @@ class LaserScan(widgets.Widget):
     max_points = Int(200000).tag(sync=True)
     color_source = Unicode('intensities').tag(sync=True)
     color_map = Unicode('').tag(sync=True)
-    # material = {}
+    point_size = Float(0.05).tag(sync=True)
+    static_color = Unicode("#FF0000").tag(sync=True)
 
 @register
 class MarkerArrayClient(widgets.Widget):
@@ -147,7 +151,10 @@ class PointCloud(widgets.Widget):
     message_ratio = Float(2.0).tag(sync=True)
     point_ratio = Float(3.0).tag(sync=True)
     max_points = Int(200000).tag(sync=True)
-    # material: { size: 0.05, color: 0xff00ff }
+    point_size = Float(0.05).tag(sync=True)
+    static_color = Unicode("#FF0000").tag(sync=True)
+    # color_map = Unicode('').tag(sync=True)
+    # color_source = Unicode('').tag(sync=True)
 
 @register
 class Viewer(widgets.DOMWidget):
@@ -189,7 +196,7 @@ def js_formatter(d_in):
         s += '    {}: {},\n'.format(key, val)
     # s = json.dumps(d_in, indent=4)
     s += '}\n'
-    s = s.replace('"##UNDEFINED##"', 'undefined')
+    s = s.replace('"##UNDEFINED##"', 'null')
     return s
 
 

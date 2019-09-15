@@ -18,7 +18,7 @@ def callback_active():
 class OutputRedirector:
     def __init__(self, original):
         self.original = original
-    
+
     def write(self, msg):
         thread_name = threading.currentThread().name
         if thread_name != 'MainThread':
@@ -38,11 +38,11 @@ sys.stdout = OutputRedirector(sys.stdout)
 def subscribe(topic, msg_type, callback):
     """
     Subscribes to a specific topic in another thread, but redirects output!
-    
+
     @param topic The topic
     @param msg_type The message type
     @param callback The callback
-    
+
     @return Jupyter output widget
     """
 
