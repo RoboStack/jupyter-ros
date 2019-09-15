@@ -53,17 +53,12 @@ var TFClientModel = widgets.WidgetModel.extend({
 );
 
 var PointCloudModel = widgets.WidgetModel.extend({
-    defaults: _.extend(widgets.WidgetModel.prototype.defaults(), defaults.PointCloudModelDefaults,
-    {
-        material: { size: 0.05, color: 0xff00ff }
-    }),
+    defaults: _.extend(widgets.WidgetModel.prototype.defaults(), defaults.PointCloudModelDefaults),
 }, default_serializers());
 
 var OccupancyGridModel = widgets.WidgetModel.extend({
     defaults: _.extend(widget_defaults(), defaults.OccupancyGridDefaults),
-},
-default_serializers()
-);
+}, default_serializers());
 
 var SceneNodeModel = widgets.WidgetModel.extend({
     defaults: _.extend(widgets.WidgetModel.prototype.defaults(), defaults.SceneNodeModelDefaults),
@@ -213,18 +208,20 @@ var PolygonView = widgets.WidgetView.extend({
 });
 
 var LaserScanModel = widgets.WidgetModel.extend({
-    defaults: _.extend(widget_defaults(), defaults.LaserScanModelDefaults, 
-        {
-            material: { size: 0.05, color: 0xff0000 }
-        }),
+    defaults: _.extend(widget_defaults(), defaults.LaserScanModelDefaults),
 },
 default_serializers()
 );
+
+var toMaterial = function(pointSize, color) {
+    return { size: pointSize, color: new THREE.Color(color) };
+};
 
 var LaserScanView = widgets.WidgetView.extend({
     initialize: function(args) {
         LaserScanView.__super__.initialize.apply(this, arguments);
         this.viewer = this.options.viewer;
+        this.model.on("change", this.trigger_rerender, this);
     },
     render: function() {
         if (this.model.get('color_map')) {
@@ -238,10 +235,17 @@ var LaserScanView = widgets.WidgetView.extend({
             messageRatio: this.model.get('message_ratio'),
             max_pts: this.model.get('max_points'),
             pointRatio: this.model.get('point_ratio'),
-            material: this.model.get('material'),
+            material: toMaterial(this.model.get('point_size'), this.model.get('static_color')),
             colorsrc: this.model.get('color_source'),
             colormap: this.color_map_function || undefined
         });
+    },
+    remove: function() {
+        this.viewer.scene.remove(this.view.points.sn);
+    },
+    trigger_rerender: function() {
+        this.remove();
+        this.render();
     }
 });
 
@@ -291,8 +295,8 @@ var MarkerArrayView = widgets.WidgetView.extend({
     }
 });
 
-var GridModel = widgets.DOMWidgetModel.extend({
-    defaults: _.extend(widgets.DOMWidgetModel.prototype.defaults(), defaults.GridModelDefaults)
+var GridModel = widgets.WidgetModel.extend({
+    defaults: _.extend(widgets.WidgetModel.prototype.defaults(), defaults.GridModelDefaults)
 });
 
 var URDFModel = widgets.WidgetModel.extend({
@@ -313,8 +317,6 @@ var URDFView = widgets.WidgetView.extend({
             tfClient: this.model.get('tf_client').get_client(),
             rootObject: this.viewer.scene,
             path: this.model.get('url')
-            // colorsrc: 'z',
-            // colormap: function(z) { z=z+2; return new THREE.Color(z,0,1-z); }
         });
     },
     trigger_rerender: function() {
@@ -329,16 +331,24 @@ var URDFView = widgets.WidgetView.extend({
 var ViewerModel = widgets.DOMWidgetModel.extend({
     defaults: _.extend(widgets.DOMWidgetModel.prototype.defaults(), defaults.ViewerModelDefaults)
 },
-default_serializers(['objects'])
+default_serializers(['objects', 'layout'])
 );
 
 var PointCloudView = widgets.WidgetView.extend({
     initialize: function(parms) {
         PointCloudView.__super__.initialize.apply(this, arguments);
         this.viewer = this.options.viewer;
-        this.model.on('change', this.trigger_rerender, this);
     },
     render: function() {
+        // if (this.model.get('color_map')) {
+        //     this.color_map_function = new Function(this.model.get('color_source'), 'THREE', this.model.get('color_map'));
+        //     this.color_map_apply = function() { args = arguments; args.push(THREE); this.color_map_apply.apply(null, args); }
+        //     material = { size: this.model.get('point_size'), sizeAttenuation: false };
+        // }
+        // else {
+        //     material = toMaterial(this.model.get('point_size'), this.model.get('static_color'));
+        // }
+
         this.view = new ROS3D.PointCloud2({
             ros: this.model.get('ros').get_connection(),
             tfClient: this.model.get('tf_client').get_client(),
@@ -347,32 +357,28 @@ var PointCloudView = widgets.WidgetView.extend({
             messageRatio: this.model.get('message_ratio'),
             max_pts: this.model.get('max_points'),
             pointRatio: this.model.get('point_ratio'),
-            material: this.model.get('material')
-            // colorsrc: 'z',
-            // colormap: function(z) { z=z+2; return new THREE.Color(z,0,1-z); }
+            material: toMaterial(this.model.get('point_size'), this.model.get('static_color'))
+            // colorsrc: this.model.get('color_source'),
+            // colormap: this.color_map_apply || undefined
         });
     },
-    trigger_rerender: function() {
-        this.remove();
-        this.render();
-    },
-    remove: function() {
-        this.viewer.scene.remove(this.view);
-    }
+    // remove: function() {
+    //     this.viewer.scene.remove(this.view.points.sn);
+    // }
 });
 
 var DepthCloudModel = widgets.WidgetModel.extend({
     defaults: _.extend(widget_defaults(), defaults.DepthCloudModelDefaults),
     initialize: function() {
         DepthCloudModel.__super__.initialize.apply(this, arguments);
-        this.connection = new ROS3D.DepthCloud({
+        this.depth_cloud = new ROS3D.DepthCloud({
             url: this.get('url'),
             f: this.get('f')
         });
-        this.connection.startStream();
+        this.depth_cloud.startStream();
     },
     get_threejs_obj: function() {
-        return this.connection;
+        return this.depth_cloud;
     },
 });
 
@@ -427,7 +433,6 @@ var ViewerView = widgets.DOMWidgetView.extend({
     render: function() {
         var unique_id = (new Date).getTime().toString() + Math.floor(Math.random() * Math.floor(9999)).toString();
         this.el.id = unique_id + 'ROS_VIEWER';
-        this.el.style.height = this.model.get('height');
 
         this.model.on("change:background_color", this.background_color_change, this);
         this.model.on("change:alpha", this.background_color_change, this);
@@ -461,8 +466,8 @@ var ViewerView = widgets.DOMWidgetView.extend({
         this.viewer.renderer.setClearColor(this.model.get('background_color'), this.model.get('alpha'))
     },
     init_viewer: function() {
-        height = this.model.get('height')
-        if (height == 'auto') {
+        var height = this.model.get('layout').get('height');
+        if (height === null || height == 'auto') {
             height = 400;
         }
         else {
@@ -482,10 +487,6 @@ var ViewerView = widgets.DOMWidgetView.extend({
         });
 
         this.model.on("change:objects", this.objects_changed, this);
-        this.model.on("change:height", () => {
-           this.el.style.height = this.model.get('height');
-           this.trigger_resize();
-        });
         this.object_views = new widgets.ViewList(this.add_object, this.remove_object, this);
         this.object_views.update(this.model.get('objects'));
      }
