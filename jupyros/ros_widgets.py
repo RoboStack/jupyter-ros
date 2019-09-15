@@ -15,6 +15,8 @@ import ipywidgets as widgets
 import numpy as np
 import threading
 import subprocess, yaml, os
+import warnings
+sliders_defaults = {'float':(0,10,0.1), 'int':(0,10,1)}
 def add_widgets(msg_instance, widget_dict, widget_list, minval, maxval, step_size, prefix=''):
     """
     Adds widgets.
@@ -33,15 +35,24 @@ def add_widgets(msg_instance, widget_dict, widget_list, minval, maxval, step_siz
         w_box = widgets.HBox([widgets.Label(value='Image path:'), w])
         widget_list.append(w_box)
         return widget_dict, widget_list
-
+    if msg_instance._type in sliders_defaults:
+        try:
+            minval, maxval, step_size = sliders_defaults[msg_instance._type]
+        except ValueError as err:
+            warnings.warn(err.__str__(), Warning)
+            warnings.warn("Using the default values instead of The message's Defaults. Make sure you have assigned a 3 valued tuple(min,max,step_size) to the slider_defaults dictionary", Warning)
     for idx, slot in enumerate(msg_instance.__slots__):
         attr = getattr(msg_instance, slot)
         s_t = msg_instance._slot_types[idx]
         w = None
 
         if s_t in ['float32', 'float64']:
+            if minval == maxval:
+                minval, maxval, step_size = sliders_defaults['float']
             w = widgets.FloatSlider(min=minval, max=maxval, step=step_size)
         if s_t in ['int8', 'uint8', 'int32', 'uint32', 'int64', 'uint64']:
+            if minval == maxval:
+                minval, maxval, step_size = sliders_defaults['int']
             w = widgets.IntSlider(min=minval, max=maxval, step=step_size)
         if s_t in ['string']:
             w = widgets.Text()
@@ -81,7 +92,7 @@ def img_to_msg(imgpath):
         imgmsg = bridge.cv2_to_imgmsg(img)
         return imgmsg
     
-def publish(topic, msg_type, minval=0, maxval=100, step_size=1):
+def publish(topic, msg_type, minval=0, maxval=0, step_size=1):
     """
     Create a form widget for message type msg_type.
     This function analyzes the fields of msg_type and creates
