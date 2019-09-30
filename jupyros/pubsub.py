@@ -21,7 +21,7 @@ class OutputRedirector:
 
     def write(self, msg):
         thread_name = threading.currentThread().name
-        if thread_name != 'MainThread':
+        if thread_name != 'MainThread' and output_registry.get(threading.currentThread().getName()) is not None:
             output_registry[threading.currentThread().getName()].append_stdout(msg)
         else:
             self.original.write(msg)
