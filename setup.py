@@ -80,9 +80,9 @@ class NPM(Command):
         npmName = 'npm';
         if platform.system() == 'Windows':
             npmName = 'npm.cmd';
-            
+
         return npmName;
-    
+
     def has_npm(self):
         npmName = self.get_npm_name();
         try:
@@ -136,12 +136,14 @@ setup_args = {
             'jupyros/static/index.js',
             'jupyros/static/index.js.map',
         ],),
-        ('etc/jupyter/nbconfig/notebook.d/' ,['jupyter-ros.json'])
+        ('etc/jupyter/nbconfig/notebook.d/' ,['jupyros/etc/jupyros.json']),
+        ('etc/jupyter/jupyter_notebook_config.d/', ['jupyros/etc/jupyros_server_extension.json'])
     ],
     'install_requires': [
         'ipywidgets>=7.0.0',
         'bqplot',
-        'numpy'
+        'numpy',
+        'rospkg'
     ],
     'packages': find_packages(),
     'zip_safe': False,
@@ -151,7 +153,6 @@ setup_args = {
         'sdist': js_prerelease(sdist, strict=True),
         'jsdeps': NPM,
     },
-
     'author': 'Wolf Vollprecht',
     'author_email': 'w.vollprecht@gmail.com',
     'url': 'https://github.com/RoboStack/jupyter-ros',
