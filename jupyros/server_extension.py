@@ -2,12 +2,10 @@ from notebook.utils import url_path_join
 from notebook.base.handlers import IPythonHandler
 import jupyros.version
 
-import rospkg
+from ament_index_python.packages import get_package_prefix
 import os
 
 __version__ = _version.__version__
-
-r = rospkg.RosPack()
 
 class ROSStaticHandler(IPythonHandler):
     def get(self, *args, **kwargs):
@@ -16,7 +14,7 @@ class ROSStaticHandler(IPythonHandler):
         argslist = args[0].split('/')
         package, rest = argslist[0], '/'.join(argslist[1:])
 
-        file = os.path.join(r.get_path(package), rest)
+        file = os.path.join(get_package_prefix(package), rest)
         try:
             with open(file, 'rb') as f:
                 data = f.read()
