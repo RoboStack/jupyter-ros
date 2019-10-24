@@ -58,7 +58,7 @@ def subscribe(node, topic, msg_type, callback):
 
     def stop_start_subscriber(x):
         if output_registry.get(topic) is not None:
-            subscriber_registry[topic].unregister()
+            node.destroy_subscription(subscriber_registry[topic])
             del output_registry[topic]
             btn.description = 'Start'
         else:
