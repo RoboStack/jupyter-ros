@@ -1,5 +1,5 @@
 import rclpy
-from rclpy import Node
+from rclpy.node import Node
 import random
 
 import xml.dom.minidom
@@ -133,11 +133,12 @@ class JointStatePublisher(Node):
         self.delta = self.get_param("delta", 0.0)
         self.timer = self.create_timer(1/hz, self.loop)
 
-        robot = xml.dom.minidom.parseString(description)
-        if robot.getElementsByTagName('COLLADA'):
-            self.init_collada(robot)
-        else:
-            self.init_urdf(robot)
+        # TODO: `robot` returns as NoneType
+        # robot = xml.dom.minidom.parseString(description)
+        # if robot.getElementsByTagName('COLLADA'):
+        #     self.init_collada(robot)
+        # else:
+        #     self.init_urdf(robot)
 
         use_gui = self.get_param("use_gui", False)
 
