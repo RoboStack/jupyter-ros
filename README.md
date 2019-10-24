@@ -33,14 +33,14 @@ You need a ROS environment with rospy, obviously.
 Also required are `numpy` and `bqplot` for the live-plotting
 and `ipywidgets` for the interactive widgets
 
-    pip install jupyter bqplot pyyaml ipywidgets
+    python3 -m pip install jupyter bqplot pyyaml ipywidgets
     jupyter nbextension enable --py --sys-prefix ipywidgets
 
 `pyyaml` is necessary for rospy.
 
 To install use pip:
 
-    pip install jupyros
+    python3 -m pip install jupyros
     jupyter nbextension enable --py --sys-prefix jupyros
 
 To install the extension for **jupyterlab**, you also need to execute the following:
@@ -53,7 +53,7 @@ For a development installation (requires npm),
 
     git clone https://github.com/wolfv/jupyter-ros.git
     cd jupyter-ros
-    pip install -e .
+    python3 -m pip install -e .
     jupyter nbextension install --py --symlink --sys-prefix jupyros
     jupyter nbextension enable --py --sys-prefix jupyros
 
@@ -65,11 +65,21 @@ Subscribe and publish are not going to work. Do you need to activate your ROS en
 
 This is harmless during installation, but if you see this warning in a notebook, you should
 check that your ROS environment is activated. You can also set the path from inside the notebook
-using
+using for Ubuntu 18.04:
 
-```
+```python
 import sys
-sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages/')
+sys.path.append('/opt/ros/dashing/lib/python3.6/site-packages/')
+
+# The next line should now work!
+import jupyros
+```
+
+If you are using macOS, set the path to the directory where your source or binary ros2 installation is located as the following example:
+
+```python
+import sys
+sys.path.append('/Users/some_user/path_to_your_ros2_install/lib/python3.7/site-packages/')
 
 # The next line should now work!
 import jupyros
