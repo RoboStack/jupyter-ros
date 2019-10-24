@@ -1,8 +1,8 @@
 try:
-    import rospy
+    import rclpy
 except:
-    print("The rospy package is not found in your $PYTHONPATH. Subscribe and publish are not going to work.")
-    print("Do you need to activate your ROS environment?")
+    print("The rclpy package is not found in your $PYTHONPATH. Subscribe and publish are not going to work.")
+    print("Do you need to activate your ros2 environment?")
 try:
     from cv_bridge import CvBridge, CvBridgeError
     import cv2
@@ -27,7 +27,7 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     @return widget_dict and widget_list
     """
     # import only here so non ros env doesn't block installation
-    from genpy import Message
+    from genpy.message import Message  # was only available for ros1 not sure about ros2...
     if msg_instance._type.split('/')[-1] == 'Image':
         w = widgets.Text()
         widget_dict['img'] = w
@@ -85,7 +85,7 @@ def img_to_msg(imgpath):
         imgmsg = bridge.cv2_to_imgmsg(img)
         return imgmsg
 
-def publish(topic, msg_type):
+def publish(node, topic, msg_type):
     """
     Create a form widget for message type msg_type.
     This function analyzes the fields of msg_type and creates
@@ -94,12 +94,13 @@ def publish(topic, msg_type):
     topic given as topic parameter. This allows pressing the
     "Send Message" button to send the message to ROS.
 
+    @param node An rclpy node class
     @param msg_type The message type
     @param topic The topic name to publish to
 
     @return jupyter widget for display
     """
-    publisher = rospy.Publisher(topic, msg_type, queue_size=10)
+    publisher = node.create_publisher(msg_type, topic, 10)
 
     widget_list = []
     widget_dict = {}
@@ -125,10 +126,10 @@ def publish(topic, msg_type):
 
     thread_map[topic] = False
     def thread_target():
-        d = rospy.Duration(1.0 / float(rate_field.value))
+        d = node.duration.Duration(1.0 / float(rate_field.value))
         while thread_map[topic]:
             send_msg(None)
-            rospy.sleep(d)
+            node.sleep(d)
 
     def start_thread(click_args):
         thread_map[topic] = not thread_map[topic]
@@ -148,7 +149,7 @@ def publish(topic, msg_type):
 
     return vbox
 
-def live_plot(plot_string, topic_type, history=100, title=None):
+def live_plot(node, plot_string, topic_type, history=100, title=None):
     topic = plot_string[:plot_string.find(':') - 1]
     title = title if title else topic
     fields = plot_string.split(':')[1:]
@@ -173,7 +174,7 @@ def live_plot(plot_string, topic_type, history=100, title=None):
             lines.y = ndat
             lines.x = np.arange(len(data))
 
-    rospy.Subscriber(topic, topic_type, cb)
+    node.create_subscription(topic_type, topic, cb, 10)
     return fig
 
 def bag_player(bagfile=''):
