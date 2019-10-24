@@ -1,5 +1,6 @@
 try:
     import rclpy
+    from sensor_msgs.msg import Image
 except:
     print("The rclpy package is not found in your $PYTHONPATH. Subscribe and publish are not going to work.")
     print("Do you need to activate your ros2 environment?")
@@ -27,17 +28,17 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     @return widget_dict and widget_list
     """
     # import only here so non ros env doesn't block installation
-    from genpy.message import Message  # was only available for ros1 not sure about ros2...
-    if msg_instance._type.split('/')[-1] == 'Image':
+    # from genpy.message import Message  # was only available for ros1 not sure about ros2...
+    if isinstance(msg_instance, Image):
         w = widgets.Text()
         widget_dict['img'] = w
         w_box = widgets.HBox([widgets.Label(value='Image path:'), w])
         widget_list.append(w_box)
         return widget_dict, widget_list
 
-    for idx, slot in enumerate(msg_instance.__slots__):
-        attr = getattr(msg_instance, slot)
-        s_t = msg_instance._slot_types[idx]
+    for field, field_type in msg_instance.get_fields_and_field_types().items():
+        attr = getattr(msg_instance, field)
+        s_t = field_type
         w = None
 
         if s_t in ['float32', 'float64']:
@@ -47,14 +48,14 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
         if s_t in ['string']:
             w = widgets.Text()
 
-        if isinstance(attr, Message):
-            widget_list.append(widgets.Label(value=slot))
-            widget_dict[slot] = {}
-            add_widgets(attr, widget_dict[slot], widget_list, slot)
+        # if isinstance(attr, Message):
+        #     widget_list.append(widgets.Label(value=field))
+        #     widget_dict[field] = {}
+        #     add_widgets(attr, widget_dict[field], widget_list, slot)
 
         if w:
-            widget_dict[slot] = w
-            w_box = widgets.HBox([widgets.Label(value=slot), w])
+            widget_dict[field] = w
+            w_box = widgets.HBox([widgets.Label(value=field), w])
             widget_list.append(w_box)
     return widget_dict, widget_list
 
