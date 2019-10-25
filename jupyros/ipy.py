@@ -1,10 +1,8 @@
-from IPython import get_ipython
-from IPython.core.magic import register_line_magic, register_cell_magic, register_line_cell_magic
+import sys
 from threading import Thread
-import time
+from IPython.core.magic import register_cell_magic
 from jupyros.pubsub import output_registry
 import ipywidgets as widgets
-import sys
 
 def executor(cell, gbls, lcls):
     exec(cell, gbls, lcls)
