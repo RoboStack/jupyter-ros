@@ -1,8 +1,9 @@
 try:
-    import rospy
+    import rclpy
+    from sensor_msgs.msg import Image
 except:
-    print("The rospy package is not found in your $PYTHONPATH. Subscribe and publish are not going to work.")
-    print("Do you need to activate your ROS environment?")
+    print("The rclpy package is not found in your $PYTHONPATH. Subscribe and publish are not going to work.")
+    print("Do you need to activate your ros2 environment?")
 try:
     from cv_bridge import CvBridge, CvBridgeError
     import cv2
@@ -14,6 +15,7 @@ import ipywidgets as widgets
 import numpy as np
 import threading
 import subprocess, yaml, os
+import time
 
 
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
@@ -27,17 +29,17 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     @return widget_dict and widget_list
     """
     # import only here so non ros env doesn't block installation
-    from genpy import Message
-    if msg_instance._type.split('/')[-1] == 'Image':
+    # from genpy.message import Message  # was only available for ros1 not sure about ros2...
+    if isinstance(msg_instance, Image):
         w = widgets.Text()
         widget_dict['img'] = w
         w_box = widgets.HBox([widgets.Label(value='Image path:'), w])
         widget_list.append(w_box)
         return widget_dict, widget_list
 
-    for idx, slot in enumerate(msg_instance.__slots__):
-        attr = getattr(msg_instance, slot)
-        s_t = msg_instance._slot_types[idx]
+    for field, field_type in msg_instance.get_fields_and_field_types().items():
+        attr = getattr(msg_instance, field)
+        s_t = field_type
         w = None
 
         if s_t in ['float32', 'float64']:
@@ -47,14 +49,14 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
         if s_t in ['string']:
             w = widgets.Text()
 
-        if isinstance(attr, Message):
-            widget_list.append(widgets.Label(value=slot))
-            widget_dict[slot] = {}
-            add_widgets(attr, widget_dict[slot], widget_list, slot)
+        # if isinstance(attr, Message):
+        #     widget_list.append(widgets.Label(value=field))
+        #     widget_dict[field] = {}
+        #     add_widgets(attr, widget_dict[field], widget_list, slot)
 
         if w:
-            widget_dict[slot] = w
-            w_box = widgets.HBox([widgets.Label(value=slot), w])
+            widget_dict[field] = w
+            w_box = widgets.HBox([widgets.Label(value=field), w])
             widget_list.append(w_box)
     return widget_dict, widget_list
 
@@ -85,7 +87,7 @@ def img_to_msg(imgpath):
         imgmsg = bridge.cv2_to_imgmsg(img)
         return imgmsg
 
-def publish(topic, msg_type):
+def publish(node, topic, msg_type):
     """
     Create a form widget for message type msg_type.
     This function analyzes the fields of msg_type and creates
@@ -94,12 +96,13 @@ def publish(topic, msg_type):
     topic given as topic parameter. This allows pressing the
     "Send Message" button to send the message to ROS.
 
+    @param node An rclpy node class
     @param msg_type The message type
     @param topic The topic name to publish to
 
     @return jupyter widget for display
     """
-    publisher = rospy.Publisher(topic, msg_type, queue_size=10)
+    publisher = node.create_publisher(msg_type, topic, 10)
 
     widget_list = []
     widget_dict = {}
@@ -125,10 +128,10 @@ def publish(topic, msg_type):
 
     thread_map[topic] = False
     def thread_target():
-        d = rospy.Duration(1.0 / float(rate_field.value))
+        d = 1.0 / float(rate_field.value)
         while thread_map[topic]:
             send_msg(None)
-            rospy.sleep(d)
+            time.sleep(d)
 
     def start_thread(click_args):
         thread_map[topic] = not thread_map[topic]
@@ -148,7 +151,7 @@ def publish(topic, msg_type):
 
     return vbox
 
-def live_plot(plot_string, topic_type, history=100, title=None):
+def live_plot(node, plot_string, topic_type, history=100, title=None):
     topic = plot_string[:plot_string.find(':') - 1]
     title = title if title else topic
     fields = plot_string.split(':')[1:]
@@ -173,7 +176,7 @@ def live_plot(plot_string, topic_type, history=100, title=None):
             lines.y = ndat
             lines.x = np.arange(len(data))
 
-    rospy.Subscriber(topic, topic_type, cb)
+    node.create_subscription(topic_type, topic, cb, 10)
     return fig
 
 def bag_player(bagfile=''):

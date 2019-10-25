@@ -3,7 +3,7 @@ import time
 import ipywidgets as widgets
 import sys
 try:
-    import rospy
+    import rclpy
 except:
     pass
 
@@ -35,10 +35,11 @@ class OutputRedirector:
 
 sys.stdout = OutputRedirector(sys.stdout)
 
-def subscribe(topic, msg_type, callback):
+def subscribe(node, topic, msg_type, callback):
     """
     Subscribes to a specific topic in another thread, but redirects output!
 
+    @param node An rclpy node class
     @param topic The topic
     @param msg_type The message type
     @param callback The callback
@@ -50,19 +51,19 @@ def subscribe(topic, msg_type, callback):
         raise RuntimeError("Already registerd...")
 
     out = widgets.Output(layout={'border': '1px solid gray'})
-    subscriber_registry[topic] = rospy.Subscriber(topic, msg_type, callback)
+    subscriber_registry[topic] = node.create_subscription(msg_type, topic, callback, 10)
     output_registry[topic] = out
 
     btn = widgets.Button(description='Stop')
 
     def stop_start_subscriber(x):
         if output_registry.get(topic) is not None:
-            subscriber_registry[topic].unregister()
+            node.destroy_subscription(subscriber_registry[topic])
             del output_registry[topic]
             btn.description = 'Start'
         else:
             output_registry[topic] = out
-            subscriber_registry[topic] = rospy.Subscriber(topic, msg_type, callback)
+            subscriber_registry[topic] = node.create_subscription(msg_type, topic, callback, 10)
             btn.description = 'Stop'
 
     btn.on_click(stop_start_subscriber)

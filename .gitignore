@@ -10,3 +10,4 @@ jupyros/static/
 *.map
 # OS X
 .DS_Store
+.vscode/
