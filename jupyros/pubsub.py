@@ -1,19 +1,18 @@
-import threading
-import time
-import ipywidgets as widgets
 import sys
+import threading
+import ipywidgets as widgets
 try:
     import rclpy
-except:
-    pass
 
-import inspect
+except ModuleNotFoundError:
+    pass
 
 output_registry = {}
 subscriber_registry = {}
 
 def callback_active():
     return threading.currentThread().name in active_callbacks
+
 
 class OutputRedirector:
     def __init__(self, original):
@@ -34,6 +33,7 @@ class OutputRedirector:
         self.original.set_parent(parent)
 
 sys.stdout = OutputRedirector(sys.stdout)
+
 
 def subscribe(node, topic, msg_type, callback):
     """
