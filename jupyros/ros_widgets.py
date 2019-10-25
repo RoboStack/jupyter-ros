@@ -15,6 +15,7 @@ import ipywidgets as widgets
 import numpy as np
 import threading
 import subprocess, yaml, os
+import time
 
 
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
@@ -127,10 +128,10 @@ def publish(node, topic, msg_type):
 
     thread_map[topic] = False
     def thread_target():
-        d = node.duration.Duration(1.0 / float(rate_field.value))
+        d = 1.0 / float(rate_field.value)
         while thread_map[topic]:
             send_msg(None)
-            node.sleep(d)
+            time.sleep(d)
 
     def start_thread(click_args):
         thread_map[topic] = not thread_map[topic]
