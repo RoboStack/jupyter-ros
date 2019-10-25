@@ -1,21 +1,28 @@
-try:
-    import rclpy
-    from sensor_msgs.msg import Image
-except:
-    print("The rclpy package is not found in your $PYTHONPATH. Subscribe and publish are not going to work.")
-    print("Do you need to activate your ros2 environment?")
-try:
-    from cv_bridge import CvBridge, CvBridgeError
-    import cv2
-    bridge = CvBridge()
-except:
-    pass
+import os
+import threading
+import subprocess
+import yaml
+import time
 import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
-import threading
-import subprocess, yaml, os
-import time
+import cv2
+
+try:
+    import rclpy
+    from sensor_msgs.msg import Image
+except ModuleNotFoundError:
+    print("The rclpy package is not found in your $PYTHONPATH. " +
+          "Subscribe and publish are not going to work.")
+    print("Do you need to activate your ros2 environment?")
+
+try:
+    from cv_bridge import CvBridge
+    from cv_bridge import CvBridgeError
+    bridge = CvBridge()
+except ModuleNotFoundError:
+    print("CvBridge not installed or sourced! Image messages " +
+          "will not work until then!")
 
 
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
