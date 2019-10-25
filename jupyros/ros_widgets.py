@@ -17,6 +17,12 @@ except ModuleNotFoundError:
     print("Do you need to activate your ros2 environment?")
 
 try:
+    import cv2
+except ModuleNotFoundError:
+    print("OpenCV not installed or sourced! Image messages " +
+          "will not work until then!")
+
+try:
     from cv_bridge import CvBridge
     from cv_bridge import CvBridgeError
     bridge = CvBridge()
