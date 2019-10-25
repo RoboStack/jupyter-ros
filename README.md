@@ -1,13 +1,15 @@
-# ROS Support for jupyter notebooks
+# ros2 Support for jupyter notebooks
+
+This is a fork of the `jupyter-ros` project created by Wolf Vollprecht (@wolfv) for `ros2`.
 
 While the Jupyter ecosystem has been widely adopted by
 the Data Science and Machine Learning community, the
 robotics community has not jumped on the band wagon yet!
-Most tools around ROS, the Robot Operating System, are
+Most tools around ros2, the Next-Generation of the Robot Operating System, are
 built using Python and QT.
 
 However, using QT seperates the user away from the code.
-We've built an initial version of the ROS tools for jupyter
+We've built an initial version of the ros2 tools for jupyter
 notebook, trying to promote a rich, interactive experience
 for Robotics developers utilizing the power of the jupyter
 notebook.
@@ -16,47 +18,55 @@ notebook.
 
 ![](https://raw.githubusercontent.com/wolfv/jupyter-ros/master/docs/assets/screenshot.png)
 
-With jupyter-ros, it's possible to easily create widgets for
+With jupyter-ros2, it's possible to easily create widgets for
 custom message types to send messages.
 
 In the future, we plan to bring simple and fast real-time
-plotting from ROS topics to this library.
+plotting from ros2 topics to this library.
 
 If you find this initial package useful, don't hesitate to
 contribute!
-You can also always reach out to w.vollprecht@gmail.com or
-on twitter: https://twitter.com/wuoulf
 
 ## Installation and Dependencies
 
-You need a ROS environment with rospy, obviously.
+Though the orginal ROS project was capable of
+running on Linux, using ros2 allows us to
+expand support to all three major OSs': Linux, macOS, and Windows!
+You need a ros2 environment with `rclpy`, obviously.
 Also required are `numpy` and `bqplot` for the live-plotting
 and `ipywidgets` for the interactive widgets
 
-    python3 -m pip install jupyter bqplot pyyaml ipywidgets
-    jupyter nbextension enable --py --sys-prefix ipywidgets
+```bash
+~$ python3 -m pip install jupyter bqplot pyyaml ipywidgets
+~$ jupyter nbextension enable --py --sys-prefix ipywidgets
+```
 
 `pyyaml` is necessary for rospy.
 
-To install use pip:
+To install using pip:
 
-    python3 -m pip install jupyros
-    jupyter nbextension enable --py --sys-prefix jupyros
+```bash
+~$ python3 -m pip install jupyros
+~$ jupyter nbextension enable --py --sys-prefix jupyros
+```
 
 To install the extension for **jupyterlab**, you also need to execute the following:
 
-    $ jupyter labextension install jupyter-ros
+```bash
+~$ jupyter labextension install jupyter-ros2
+```
 
-##### Development installation
+### Development installation
 
 For a development installation (requires npm),
 
-    git clone https://github.com/wolfv/jupyter-ros.git
-    cd jupyter-ros
-    python3 -m pip install -e .
-    jupyter nbextension install --py --symlink --sys-prefix jupyros
-    jupyter nbextension enable --py --sys-prefix jupyros
-
+```bash
+~$ git clone https://github.com/zmk5/jupyter-ros2.git
+~$ cd jupyter-ros2
+~$ python3 -m pip install -e .
+~$ jupyter nbextension install --py --symlink --sys-prefix jupyros
+~$ jupyter nbextension enable --py --sys-prefix jupyros
+```
 
 ## Troubleshooting
 
