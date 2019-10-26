@@ -81,13 +81,13 @@ def widget_dict_to_msg(msg_instance, d):
                 for slot in img_msg.__slots__:
                     setattr(msg_instance, slot, getattr(img_msg, slot))
                 return
-            else:
-                setattr(msg_instance, key, d[key].value)
-        else:
-            submsg = getattr(msg_instance, key)
-            widget_dict_to_msg(submsg, d[key])
 
-thread_map = {}
+            setattr(msg_instance, key, d[key].value)
+
+        submsg = getattr(msg_instance, key)
+        widget_dict_to_msg(submsg, d[key])
+
+THREAD_MAP = {}
 
 def img_to_msg(imgpath):
     if not cv2 or not CvBridge:
@@ -146,16 +146,16 @@ def publish(node, topic, msg_type):
 
     send_btn.on_click(send_msg)
 
-    thread_map[topic] = False
+    THREAD_MAP[topic] = False
     def thread_target():
         d = 1.0 / float(rate_field.value)
-        while thread_map[topic]:
+        while THREAD_MAP[topic]:
             send_msg(None)
             time.sleep(d)
 
     def start_thread(click_args):
-        thread_map[topic] = not thread_map[topic]
-        if thread_map[topic]:
+        THREAD_MAP[topic] = not THREAD_MAP[topic]
+        if THREAD_MAP[topic]:
             local_thread = threading.Thread(target=thread_target)
             local_thread.start()
             stop_btn.description = "Stop"
@@ -186,12 +186,12 @@ def live_plot(node, plot_string, topic_type, history=100, title=None):
                      scales={'x': x_sc, 'y': y_sc})
     fig = bq.Figure(axes=[ax_x, ax_y], marks=[lines], labels=fields,
                     display_legend=True, title=title)
-    data = []
+    data = None  # was empty list
 
     def live_plot_callback(msg, data=data):
         data_el = []
-        for f in fields:
-            data_el.append(getattr(msg, f))
+        for i in fields:
+            data_el.append(getattr(msg, i))
         data.append(data_el)
         data = data[-history:]
         ndat = np.asarray(data).T
@@ -212,6 +212,7 @@ def bag_player(bagfile=''):
 
     @return jupyter widget for display
     """
+    raise FutureWarning("Bag files have not been implemented fully in ros2!")
     widget_list = []
     bag_player.sp = None
     ###### Fields #########################################################
@@ -263,7 +264,8 @@ def bag_player(bagfile=''):
                 if clockbox.value:
                     cmd.append('--clock')
                 if dzbox.value:
-                    cmd.append("--duration={}".format(max(0, duration_float.value)))
+                    cmd.append("--duration={}".format(
+                        max(0, duration_float.value)))
                 cmd.append("--rate={}".format(max(0, factor_float.value)))
                 cmd.append("--start={}".format(max(0, start_float.value)))
                 cmd.append("--queue={}".format(max(0, que_int.value)))
@@ -278,7 +280,8 @@ def bag_player(bagfile=''):
                         print(key, ":", val)
         else:
             try:
-                os.killpg(os.getpgid(bag_player.sp.pid), subprocess.signal.SIGINT)
+                os.killpg(
+                    os.getpgid(bag_player.sp.pid), subprocess.signal.SIGINT)
             except KeyboardInterrupt:
                 pass
             play_btn.description = "Play"
