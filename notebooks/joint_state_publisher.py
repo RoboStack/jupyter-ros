@@ -45,7 +45,14 @@ class JointStatePublisher(Node):
                     continue
 
                 self.joint_list.append(name)
-                joint = {'min':minval*pi/180.0, 'max':maxval*pi/180.0, 'zero':0, 'position':0, 'velocity':0, 'effort':0}
+                joint = {
+                    'min': minval*pi/180.0,
+                    'max': maxval*pi/180.0,
+                    'zero': 0,
+                    'position': 0,
+                    'velocity': 0,
+                    'effort':0,
+                    }
                 self.free_joints[name] = joint
 
     def init_urdf(self, robot):
@@ -72,7 +79,7 @@ class JointStatePublisher(Node):
                         minval = float(limit.getAttribute('lower'))
                         maxval = float(limit.getAttribute('upper'))
                     except:
-                        self.get_logger().warn("%s is not fixed, nor continuous, but limits are not specified!" % name)
+                        self.get_logger().warn(f"{name} is not fixed, nor continuous, but limits are not specified!")
                         continue
 
                 safety_tags = child.getElementsByTagName('safety_controller')
@@ -218,10 +225,13 @@ class JointStatePublisher(Node):
         for name, joint in self.free_joints.items():
             if not has_position and 'position' in joint:
                 has_position = True
+
             if not has_velocity and 'velocity' in joint:
                 has_velocity = True
+
             if not has_effort and 'effort' in joint:
                 has_effort = True
+
         num_joints = (len(self.free_joints.items()) +
                       len(self.dependent_joints.items()))
         if has_position:
