@@ -91,7 +91,9 @@ thread_map = {}
 
 def img_to_msg(imgpath):
     if not cv2 or not CvBridge:
-        raise RuntimeError("CV Bridge is not installed, please install it to publish Images\nsudo apt-get install ros-$(rosversion -d)-cv-bridge")
+        raise RuntimeError("CV Bridge is not installed, please install it to" +
+                           " publish Images\nsudo apt-get install " +
+                           "ros-$(rosversion -d)-cv-bridge")
 
     img = cv2.imread(imgpath)
     if img is None:
@@ -172,10 +174,13 @@ def live_plot(node, plot_string, topic_type, history=100, title=None):
     y_sc = bq.LinearScale()
 
     ax_x = bq.Axis(label='X', scale=x_sc, grid_lines='solid')
-    ax_y = bq.Axis(label='Y', scale=y_sc, orientation='vertical', grid_lines='solid')
+    ax_y = bq.Axis(label='Y', scale=y_sc, orientation='vertical',
+                   grid_lines='solid')
 
-    lines = bq.Lines(x=np.array([]), y=np.array([]), scales={'x': x_sc, 'y': y_sc})
-    fig = bq.Figure(axes=[ax_x, ax_y], marks=[lines], labels=fields, display_legend=True, title=title)
+    lines = bq.Lines(x=np.array([]), y=np.array([]),
+                     scales={'x': x_sc, 'y': y_sc})
+    fig = bq.Figure(axes=[ax_x, ax_y], marks=[lines], labels=fields,
+                    display_legend=True, title=title)
     data = []
 
     def cb(msg, data=data):
@@ -209,8 +214,10 @@ def bag_player(bagfile=''):
     bgpath_box = widgets.HBox([widgets.Label("Bag file path:"), bgpath_txt])
     bgpath_txt.value = bagfile
     play_btn = widgets.Button(description="Play", icon='play')
-    pause_btn = widgets.Button(description="Pause", icon='pause', disabled=True)
-    step_btn = widgets.Button(description="Step", icon='step-forward', disabled=True)
+    pause_btn = widgets.Button(description="Pause", icon='pause',
+                               disabled=True)
+    step_btn = widgets.Button(description="Step", icon='step-forward',
+                              disabled=True)
     ibox = widgets.Checkbox(description="Immediate")
     lbox = widgets.Checkbox(description="Loop")
     clockbox = widgets.Checkbox(description="Clock")
@@ -221,17 +228,22 @@ def bag_player(bagfile=''):
     que_int = widgets.IntText(value=100)
     que_box = widgets.HBox([widgets.Label("Queue size:"), que_int])
     factor_float = widgets.FloatText(value=1)
-    factor_box = widgets.HBox([widgets.Label("Multiply the publish rate by:"), factor_float])
+    factor_box = widgets.HBox(
+        [widgets.Label("Multiply the publish rate by:"), factor_float])
     delay_float = widgets.FloatText(value=0)
-    delay_box = widgets.HBox([widgets.Label("Delay after every advertise call:"), delay_float])
+    delay_box = widgets.HBox(
+        [widgets.Label("Delay after every advertise call:"), delay_float])
     duration_float = widgets.FloatText(value=0)
-    duration_box = widgets.HBox([dzbox, widgets.Label("Duration in secs:"), duration_float])
+    duration_box = widgets.HBox(
+        [dzbox, widgets.Label("Duration in secs:"), duration_float])
     out_box = widgets.Output(layout={'border': '1px solid black'})
-    ######## Play Button ##################################################
+
     def ply_clk(arg):
+        """ Play Button """
         if play_btn.description == "Play":
-            info_dict = yaml.load(subprocess.Popen(['rosbag', 'info', '--yaml', bgpath_txt.value],
-                stdout=subprocess.PIPE).communicate()[0])
+            info_dict = yaml.load(
+                subprocess.Popen(['rosbag', 'info', '--yaml', bgpath_txt.value],
+                                 stdout=subprocess.PIPE).communicate()[0])
             if info_dict is None:
                 raise FileNotFoundError("Bag file not found!")
             else:
@@ -271,8 +283,9 @@ def bag_player(bagfile=''):
             pause_btn.icon = 'pause'
             step_btn.disabled = True
     play_btn.on_click(ply_clk)
-    ###################### Pause Button #########################
+
     def pause_clk(arg):
+        """ Pause Button """
         bag_player.sp.stdin.write(b' \n')
         bag_player.sp.stdin.flush()
         if pause_btn.description == 'Pause':
@@ -284,14 +297,17 @@ def bag_player(bagfile=''):
             pause_btn.icon = 'pause'
             step_btn.disabled = True
     pause_btn.on_click(pause_clk)
-    ################## step Button ###############################
+
     def step_clk(arg):
+        """ Step Button """
         bag_player.sp.stdin.write(b's\n')
         bag_player.sp.stdin.flush()
     step_btn.on_click(step_clk)
     options_hbox = widgets.HBox([ibox, lbox, clockbox, kabox])
     buttons_hbox = widgets.HBox([play_btn, pause_btn, step_btn])
-    btm_box = widgets.VBox([bgpath_box, options_hbox, duration_box, start_box, que_box, factor_box, delay_box, buttons_hbox, out_box])
+    btm_box = widgets.VBox([bgpath_box, options_hbox, duration_box, start_box,
+                            que_box, factor_box, delay_box, buttons_hbox,
+                            out_box])
     widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
     return vbox
