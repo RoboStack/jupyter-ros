@@ -15,17 +15,21 @@ class JointStatePublisher(Node):
         private = "~%s" % name
         if self.has_parameter(private):
             return self.get_parameter(private)
-        elif self.has_parameter(name):
+
+        if self.has_parameter(name):
             return self.get_parameter(name)
-        else:
-            return value
+
+        return value
+
     def init_collada(self, robot):
         robot = robot.getElementsByTagName('kinematics_model')[0].getElementsByTagName('technique_common')[0]
         for child in robot.childNodes:
             if child.nodeType is child.TEXT_NODE:
                 continue
+
             if child.localName == 'joint':
                 name = child.getAttribute('name')
+
                 if child.getElementsByTagName('revolute'):
                     joint = child.getElementsByTagName('revolute')[0]
                 else:
@@ -36,6 +40,7 @@ class JointStatePublisher(Node):
                     limit = joint.getElementsByTagName('limits')[0]
                     minval = float(limit.getElementsByTagName('min')[0].childNodes[0].nodeValue)
                     maxval = float(limit.getElementsByTagName('max')[0].childNodes[0].nodeValue)
+
                 if minval == maxval:  # this is fixed joint
                     continue
 
@@ -49,15 +54,18 @@ class JointStatePublisher(Node):
         for child in robot.childNodes:
             if child.nodeType is child.TEXT_NODE:
                 continue
+
             if child.localName == 'joint':
                 jtype = child.getAttribute('type')
                 if jtype == 'fixed' or jtype == 'floating':
                     continue
+
                 name = child.getAttribute('name')
                 self.joint_list.append(name)
                 if jtype == 'continuous':
                     minval = -pi
                     maxval = pi
+
                 else:
                     try:
                         limit = child.getElementsByTagName('limit')[0]
@@ -72,6 +80,7 @@ class JointStatePublisher(Node):
                     tag = safety_tags[0]
                     if tag.hasAttribute('soft_lower_limit'):
                         minval = max(minval, float(tag.getAttribute('soft_lower_limit')))
+
                     if tag.hasAttribute('soft_upper_limit'):
                         maxval = min(maxval, float(tag.getAttribute('soft_upper_limit')))
 
@@ -81,6 +90,7 @@ class JointStatePublisher(Node):
                     entry = {'parent': tag.getAttribute('joint')}
                     if tag.hasAttribute('multiplier'):
                         entry['factor'] = float(tag.getAttribute('multiplier'))
+
                     if tag.hasAttribute('offset'):
                         entry['offset'] = float(tag.getAttribute('offset'))
 
@@ -93,20 +103,23 @@ class JointStatePublisher(Node):
                 if self.zeros and name in self.zeros:
                     zeroval = self.zeros[name]
                 elif minval > 0 or maxval < 0:
-                    zeroval = (maxval + minval)/2
+                    zeroval = (maxval + minval) / 2
                 else:
                     zeroval = 0
 
                 joint = {'min': minval, 'max': maxval, 'zero': zeroval}
                 if self.pub_def_positions:
                     joint['position'] = zeroval
+
                 if self.pub_def_vels:
                     joint['velocity'] = 0.0
+
                 if self.pub_def_efforts:
                     joint['effort'] = 0.0
 
                 if jtype == 'continuous':
                     joint['continuous'] = True
+
                 self.free_joints[name] = joint
 
     def __init__(self):
@@ -164,10 +177,12 @@ class JointStatePublisher(Node):
                 position = msg.position[i]
             else:
                 position = None
+
             if msg.velocity:
                 velocity = msg.velocity[i]
             else:
                 velocity = None
+
             if msg.effort:
                 effort = msg.effort[i]
             else:
@@ -176,8 +191,10 @@ class JointStatePublisher(Node):
             joint = self.free_joints[name]
             if position is not None:
                 joint['position'] = position
+
             if velocity is not None:
                 joint['velocity'] = velocity
+
             if effort is not None:
                 joint['effort'] = effort
 
@@ -206,11 +223,13 @@ class JointStatePublisher(Node):
             if not has_effort and 'effort' in joint:
                 has_effort = True
         num_joints = (len(self.free_joints.items()) +
-                        len(self.dependent_joints.items()))
+                      len(self.dependent_joints.items()))
         if has_position:
             msg.position = num_joints * [0.0]
+
         if has_velocity:
             msg.velocity = num_joints * [0.0]
+
         if has_effort:
             msg.effort = num_joints * [0.0]
 
@@ -236,17 +255,21 @@ class JointStatePublisher(Node):
                         error_message = "Found an infinite recursive mimic chain"
                         self.get_logger().error("{}: [{}, {}]".format(error_message, ', '.join(recursive_mimic_chain_joints), parent))
                         sys.exit(-1)
+
                     recursive_mimic_chain_joints.append(parent)
                     param = self.dependent_joints[parent]
                     parent = param['parent']
                     offset += factor * param.get('offset', 0)
                     factor *= param.get('factor', 1)
+
                 joint = self.free_joints[parent]
 
             if has_position and 'position' in joint:
                 msg.position[i] = joint['position'] * factor + offset
+
             if has_velocity and 'velocity' in joint:
                 msg.velocity[i] = joint['velocity'] * factor
+
             if has_effort and 'effort' in joint:
                 msg.effort[i] = joint['effort']
 
@@ -265,6 +288,7 @@ class JointStatePublisher(Node):
                     else:
                         joint['position'] = joint['max']
                         joint['forward'] = not forward
+
             else:
                 joint['position'] -= delta
                 if joint['position'] < joint['min']:
