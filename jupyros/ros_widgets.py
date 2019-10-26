@@ -122,6 +122,17 @@ def publish(node, topic, msg_type):
             or not issubclass(type(node), rclpy.node.Node)):
         raise TypeError("Input argument 'node' is not of type rclpy.node.Node!")
 
+    # Check if topic already created.
+    for topic_couple in node.get_topic_names_and_types():
+        if topic[0] != "/":
+            if "/" + topic in topic_couple:
+                print(f"Publisher for topic, /{topic}, already created!")
+                return
+
+        if topic in topic_couple:
+            print(f"Publisher for topic, /{topic}, already created!")
+            return
+
     publisher = node.create_publisher(msg_type, topic, 10)
 
     widget_list = []
