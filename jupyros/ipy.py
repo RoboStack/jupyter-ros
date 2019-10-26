@@ -17,4 +17,4 @@ try:
         t.start()
         return out
 except:
-    pass
+    print("register_cell_magic not enabled!")

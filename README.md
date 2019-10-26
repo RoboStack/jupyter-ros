@@ -64,8 +64,8 @@ For a development installation (requires npm),
 ~$ git clone https://github.com/zmk5/jupyter-ros2.git
 ~$ cd jupyter-ros2
 ~$ python3 -m pip install -e .
-~$ jupyter nbextension install --py --symlink --sys-prefix jupyros
-~$ jupyter nbextension enable --py --sys-prefix jupyros
+~$ jupyter nbextension install --py --symlink --sys-prefix jupyros2
+~$ jupyter nbextension enable --py --sys-prefix jupyros2
 ```
 
 ## Troubleshooting

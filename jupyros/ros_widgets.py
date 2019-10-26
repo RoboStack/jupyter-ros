@@ -42,7 +42,6 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     @return widget_dict and widget_list
     """
     # import only here so non ros env doesn't block installation
-    # from genpy.message import Message  # was only available for ros1 not sure about ros2...
     if isinstance(msg_instance, Image):
         w = widgets.Text()
         widget_dict['img'] = w
