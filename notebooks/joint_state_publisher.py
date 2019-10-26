@@ -1,14 +1,11 @@
-import rclpy
-from rclpy.node import Node
-import random
-
-import xml.dom.minidom
-from sensor_msgs.msg import JointState
-from math import pi
-from threading import Thread
 import sys
 import signal
-import math
+from math import pi
+from threading import Thread
+import rclpy
+from rclpy.node import Node
+import xml.dom.minidom
+from sensor_msgs.msg import JointState
 
 RANGE = 10000
 
