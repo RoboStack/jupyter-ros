@@ -1,8 +1,8 @@
 import os
 import threading
 import subprocess
-import yaml
 import time
+import yaml
 import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
@@ -117,6 +117,11 @@ def publish(node, topic, msg_type):
 
     @return jupyter widget for display
     """
+    # Check if a ros2 node is provided.
+    if (not isinstance(node, rclpy.node.Node)
+            or not issubclass(type(node), rclpy.node.Node)):
+        raise TypeError("Input argument 'node' is not of type rclpy.node.Node!")
+
     publisher = node.create_publisher(msg_type, topic, 10)
 
     widget_list = []
@@ -183,7 +188,7 @@ def live_plot(node, plot_string, topic_type, history=100, title=None):
                     display_legend=True, title=title)
     data = []
 
-    def cb(msg, data=data):
+    def live_plot_callback(msg, data=data):
         data_el = []
         for f in fields:
             data_el.append(getattr(msg, f))
@@ -194,7 +199,7 @@ def live_plot(node, plot_string, topic_type, history=100, title=None):
             lines.y = ndat
             lines.x = np.arange(len(data))
 
-    node.create_subscription(topic_type, topic, cb, 10)
+    node.create_subscription(topic_type, topic, live_plot_callback, 10)
     return fig
 
 def bag_player(bagfile=''):

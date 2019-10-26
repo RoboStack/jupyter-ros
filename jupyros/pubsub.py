@@ -1,14 +1,18 @@
 import sys
 import threading
 import ipywidgets as widgets
+
 try:
     import rclpy
 
 except ModuleNotFoundError:
-    pass
+    print("The rclpy package is not found in your $PYTHONPATH. " +
+          "Subscribe and publish are not going to work.")
+    print("Do you need to activate your ros2 environment?")
 
-output_registry = {}
-subscriber_registry = {}
+OUTPUT_REGISTRY = {}
+SUBSCRIBER_REGISTRY = {}
+
 
 def callback_active():
     return threading.currentThread().name in active_callbacks
@@ -20,8 +24,9 @@ class OutputRedirector:
 
     def write(self, msg):
         thread_name = threading.currentThread().name
-        if thread_name != 'MainThread' and output_registry.get(threading.currentThread().getName()) is not None:
-            output_registry[threading.currentThread().getName()].append_stdout(msg)
+        if (thread_name != 'MainThread'
+                and OUTPUT_REGISTRY.get(threading.currentThread().getName()) is not None):
+            OUTPUT_REGISTRY[threading.currentThread().getName()].append_stdout(msg)
         else:
             self.original.write(msg)
 
@@ -46,24 +51,30 @@ def subscribe(node, topic, msg_type, callback):
 
     @return Jupyter output widget
     """
+    # Check if a ros2 node is provided.
+    if (not isinstance(node, rclpy.node.Node)
+            or not issubclass(type(node), rclpy.node.Node)):
+        raise TypeError("Input argument 'node' is not of type rclpy.node.Node!")
 
-    if subscriber_registry.get(topic):
+    if SUBSCRIBER_REGISTRY.get(topic):
         raise RuntimeError("Already registerd...")
 
     out = widgets.Output(layout={'border': '1px solid gray'})
-    subscriber_registry[topic] = node.create_subscription(msg_type, topic, callback, 10)
-    output_registry[topic] = out
+    SUBSCRIBER_REGISTRY[topic] = node.create_subscription(
+        msg_type, topic, callback, 10)
+    OUTPUT_REGISTRY[topic] = out
 
     btn = widgets.Button(description='Stop')
 
     def stop_start_subscriber(x):
-        if output_registry.get(topic) is not None:
-            node.destroy_subscription(subscriber_registry[topic])
-            del output_registry[topic]
+        if OUTPUT_REGISTRY.get(topic) is not None:
+            node.destroy_subscription(SUBSCRIBER_REGISTRY[topic])
+            del OUTPUT_REGISTRY[topic]
             btn.description = 'Start'
         else:
-            output_registry[topic] = out
-            subscriber_registry[topic] = node.create_subscription(msg_type, topic, callback, 10)
+            OUTPUT_REGISTRY[topic] = out
+            SUBSCRIBER_REGISTRY[topic] = node.create_subscription(
+                msg_type, topic, callback, 10)
             btn.description = 'Stop'
 
     btn.on_click(stop_start_subscriber)
