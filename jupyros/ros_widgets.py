@@ -73,6 +73,7 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
             widget_list.append(w_box)
     return widget_dict, widget_list
 
+
 def widget_dict_to_msg(msg_instance, d):
     for key in d:
         if isinstance(d[key], widgets.Widget):
@@ -102,6 +103,7 @@ def img_to_msg(imgpath):
         imgmsg = bridge.cv2_to_imgmsg(img)
         return imgmsg
 
+
 def publish(node, topic, msg_type):
     """
     Create a form widget for message type msg_type.
@@ -123,14 +125,14 @@ def publish(node, topic, msg_type):
         raise TypeError("Input argument 'node' is not of type rclpy.node.Node!")
 
     # Check if topic already created.
-    for topic_couple in node.get_topic_names_and_types():
+    for operating_publisher in node.publishers:
         if topic[0] != "/":
-            if "/" + topic in topic_couple:
+            if "/" + topic is operating_publisher.topic:
                 print(f"Publisher for topic, /{topic}, already created!")
                 return
 
-        if topic in topic_couple:
-            print(f"Publisher for topic, /{topic}, already created!")
+        if topic is operating_publisher.topic:
+            print(f"Publisher for topic, {topic}, already created!")
             return
 
     publisher = node.create_publisher(msg_type, topic, 10)
@@ -154,6 +156,7 @@ def publish(node, topic, msg_type):
         msg_to_send = msg_type()
         widget_dict_to_msg(msg_to_send, widget_dict)
         publisher.publish(msg_to_send)
+        print("Message Sent!")
 
     send_btn.on_click(send_msg)
 
@@ -174,13 +177,12 @@ def publish(node, topic, msg_type):
             stop_btn.description = "Start"
 
     stop_btn.on_click(start_thread)
-
-
     btm_box = widgets.HBox((send_btn, latch_check, rate_field, stop_btn))
     widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
 
     return vbox
+
 
 def live_plot(node, plot_string, topic_type, history=100, title=None):
     topic = plot_string[:plot_string.find(':') - 1]
@@ -212,6 +214,7 @@ def live_plot(node, plot_string, topic_type, history=100, title=None):
 
     node.create_subscription(topic_type, topic, live_plot_callback, 10)
     return fig
+
 
 def bag_player(bagfile=''):
     """
