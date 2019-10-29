@@ -2,10 +2,10 @@ import os
 from notebook.utils import url_path_join
 from notebook.base.handlers import IPythonHandler
 from ament_index_python.packages import get_package_prefix
-import jupyros._version
+from jupyros import _version
 
 
-__version__ = jupyros._version.__version__
+__version__ = _version.__version__
 
 class ROSStaticHandler(IPythonHandler):
     def get(self, *args, **kwargs):
