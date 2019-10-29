@@ -6,7 +6,6 @@ import yaml
 import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
-import cv2
 
 try:
     import rclpy
