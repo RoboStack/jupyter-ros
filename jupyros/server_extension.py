@@ -7,7 +7,11 @@ import os
 
 __version__ = _version.__version__
 
-r = rospkg.RosPack(['/home/wolfv/catkin_ws/'])
+if os.getenv('JUPYROS_DEFAULT_WS'):
+    envs = [os.getenv('JUPYROS_DEFAULT_WS')]
+else:
+    envs = []
+r = rospkg.RosPack(envs)
 
 class ROSStaticHandler(IPythonHandler):
     def get(self, *args, **kwargs):
