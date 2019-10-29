@@ -3,6 +3,7 @@ var widgets = require('@jupyter-widgets/base');
 var _ = require('lodash');
 
 var ROSLIB = require('roslib');
+var RCLNODE = require('rclnodejs');
 var ROS3D = require('ros3d');
 var THREE = require('three');
 

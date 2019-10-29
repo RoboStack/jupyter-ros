@@ -77,16 +77,16 @@ class NPM(Command):
         pass
 
     def get_npm_name(self):
-        npmName = 'npm';
+        npm_name = 'npm'
         if platform.system() == 'Windows':
-            npmName = 'npm.cmd';
+            npm_name = 'npm.cmd'
 
-        return npmName;
+        return npm_name
 
     def has_npm(self):
-        npmName = self.get_npm_name();
+        npm_name = self.get_npm_name()
         try:
-            check_call([npmName, '--version'])
+            check_call([npm_name, '--version'])
             return True
         except:
             return False
@@ -99,15 +99,18 @@ class NPM(Command):
     def run(self):
         has_npm = self.has_npm()
         if not has_npm:
-            log.error("`npm` unavailable.  If you're running this command using sudo, make sure `npm` is available to sudo")
+            log.error("`npm` unavailable.  If you're running this command "
+                      + "using sudo, make sure `npm` is available to sudo")
 
         env = os.environ.copy()
         env['PATH'] = npm_path
 
         if self.should_run_npm_install():
             log.info("Installing build dependencies with npm.  This may take a while...")
-            npmName = self.get_npm_name();
-            check_call([npmName, 'install'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)
+            npm_name = self.get_npm_name()
+            check_call(
+                [npm_name, 'install'], cwd=node_root, stdout=sys.stdout,
+                stderr=sys.stderr)
             os.utime(self.node_modules, None)
 
         for t in self.targets:
