@@ -60,22 +60,35 @@ def subscribe(node, topic, msg_type, callback):
         raise RuntimeError("Already registerd...")
 
     out = widgets.Output(layout={'border': '1px solid gray'})
+    def test_callback(msg):
+        out.append_stdout(f"{msg.position.x}")
     SUBSCRIBER_REGISTRY[topic] = node.create_subscription(
-        msg_type, topic, callback, 10)
+        msg_type, topic, test_callback, 10)
     OUTPUT_REGISTRY[topic] = out
 
     btn = widgets.Button(description='Stop')
 
+    THREAD_MAP2 = {}
+    THREAD_MAP2[topic] = False
+    def thread_target():
+        while THREAD_MAP2[topic]:
+            rclpy.spin_once(node, timeout_sec=0.1)
+
     def stop_start_subscriber(x):
+        # THREAD_MAP2[topic] = not THREAD_MAP2[topic]
         if OUTPUT_REGISTRY.get(topic) is not None:
+            THREAD_MAP2[topic] = False
             node.destroy_subscription(SUBSCRIBER_REGISTRY[topic])
             del OUTPUT_REGISTRY[topic]
             btn.description = 'Start'
         else:
+            THREAD_MAP2[topic] = True
             OUTPUT_REGISTRY[topic] = out
             SUBSCRIBER_REGISTRY[topic] = node.create_subscription(
-                msg_type, topic, callback, 10)
+                msg_type, topic, test_callback, 10)
             btn.description = 'Stop'
+            local_thread = threading.Thread(target=thread_target)
+            local_thread.start()
 
     btn.on_click(stop_start_subscriber)
     btns = widgets.HBox((btn, ))
