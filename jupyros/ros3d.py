@@ -1,6 +1,12 @@
 import ipywidgets as widgets
 from traitlets import *
-from ._version import version_info
+
+try:
+    from _version import version_info
+except:
+    from ._version import version_info
+
+js_version = '^' + '.'.join([str(x) for x in version_info[:3]])
 
 def _quick_widget(package_name, version, has_view=True):
     def quick_widget_decorator(cls):
@@ -33,7 +39,6 @@ def _quick_widget(package_name, version, has_view=True):
 
     return quick_widget_decorator
 
-js_version = '^' + '.'.join([str(v) for v in version_info[:3]])
 
 register = _quick_widget('jupyter-ros', js_version)
 register_noview = _quick_widget('jupyter-ros', js_version, False)
