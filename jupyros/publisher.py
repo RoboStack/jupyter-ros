@@ -62,7 +62,7 @@ class Publisher():
             "send_btn": widgets.Button(description="Send Message"),
             }
 
-    def setup_widgets(self):
+    def display(self):
         """ Display's widgets within the Jupyter Cell for a ros2 Publisher """
         self.__widgets["send_btn"].on_click(self.__send_msg)
         self.__widgets["stop_btn"].on_click(self.__start_thread)
