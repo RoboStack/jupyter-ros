@@ -18,10 +18,11 @@ except ModuleNotFoundError:
 
 class Publisher():
     """
-    Create a class containing the form widget for message type `msg_type`.
+    Creates a class containing the form widget for message type `msg_type`.
     This class analyzes the fields of msg_type and creates
     an appropriate widget.
-    A publisher is automatically created which publishes to the
+    
+    A ros2 publisher is automatically created which publishes to the
     topic given as topic parameter. This allows pressing the
     "Send Message" button to send the message.
 
@@ -76,7 +77,7 @@ class Publisher():
 
         return vbox
 
-    def __send_msg(self, arg):
+    def __send_msg(self, _):
         """ Generic call to send message. """
         msg_to_send = self.msg_type()
         # widget_dict_to_msg(msg_to_send, widget_dict)
@@ -89,7 +90,7 @@ class Publisher():
             self.__send_msg(None)
             time.sleep(d)
 
-    def __start_thread(self, click_args):
+    def __start_thread(self, _):
         self.__thread_map[self.topic] = not self.__thread_map[self.topic]
         if self.__thread_map[self.topic]:
             local_thread = threading.Thread(target=self.__thread_target)
