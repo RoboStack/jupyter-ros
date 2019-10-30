@@ -5,6 +5,7 @@ from .pubsub import *
 from .ipy import *
 from .server_extension import *
 from .publisher import Publisher
+from .subscription import Subscription
 from .ros3d import *
 
 def _jupyter_nbextension_paths():
