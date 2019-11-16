@@ -14,7 +14,7 @@ notebook, trying to promote a rich, interactive experience
 for Robotics developers utilizing the power of the jupyter
 notebook.
 
-![](https://raw.githubusercontent.com/zmk5/jupyter-ros/master/docs/assets/jupyter-ros2-demo.png)
+![](https://raw.githubusercontent.com/zmk5/jupyter-ros2/master/docs/assets/jupyter-ros2-demo.png)
 
 With jupyter-ros2, it's possible to easily create widgets for
 custom message types to send messages.
