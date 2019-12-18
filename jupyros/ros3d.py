@@ -1,6 +1,9 @@
+import os
+
 import ipywidgets as widgets
 from traitlets import *
 from ._version import version_info
+
 
 def _quick_widget(package_name, version, has_view=True):
     def quick_widget_decorator(cls):
@@ -42,7 +45,9 @@ sync_widget.update(widgets.widget_serialization)
 
 @register_noview
 class ROSConnection(widgets.Widget):
-    url = Unicode("ws://localhost:9090").tag(sync=True)
+    url = Unicode(
+        os.environ.get("JUPYROS_WEBSOCKET_URL", "ws://localhost:9090")
+    ).tag(sync=True)
 
 @register_noview
 class TFClient(widgets.Widget):
@@ -56,7 +61,9 @@ class TFClient(widgets.Widget):
 class URDFModel(widgets.Widget):
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
-    url = Unicode("http://localhost:3000").tag(sync=True)
+    url = Unicode(
+        os.environ.get("JUPYROS_ASSETS_URL", "http://localhost:3000")
+    ).tag(sync=True)
 
 @register
 class GridModel(widgets.Widget):

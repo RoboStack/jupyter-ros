@@ -19,7 +19,7 @@ var URDFModelDefaults =     {
         _view_module: "jupyter-ros",
         _view_module_version: "^0.1.0",
         _view_name: "URDFView",
-        path: "http://localhost:3000",
+        path: "http://" + window.location.hostname + ":3000",
         ros: undefined,
         tf_client: undefined,
     }
@@ -91,7 +91,7 @@ var ROSConnectionModelDefaults =     {
         _model_module_version: "^0.1.0",
         _model_name: "ROSConnectionModel",
         port: "9090",
-        url: "ws://localhost",
+        url: "ws://" + window.location.hostname,
     }
     
     
