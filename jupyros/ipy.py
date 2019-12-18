@@ -1,3 +1,11 @@
+#############################################################################
+# Copyright (c) Wolf Vollprecht, QuantStack                                 #
+#                                                                           #
+# Distributed under the terms of the BSD 3-Clause License.                  #
+#                                                                           #
+# The full license is in the file LICENSE, distributed with this software.  #
+#############################################################################
+
 from IPython import get_ipython
 from IPython.core.magic import register_line_magic, register_cell_magic, register_line_cell_magic
 from threading import Thread
