@@ -1,3 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////
+// Copyright (c) Wolf Vollprecht, QuantStack                                 //
+//                                                                           //
+// Distributed under the terms of the BSD 3-Clause License.                  //
+//                                                                           //
+// The full license is in the file LICENSE, distributed with this software.  //
+///////////////////////////////////////////////////////////////////////////////
+
+
 // Entry point for the unpkg bundle containing custom model definitions.
 //
 // It differs from the notebook bundle in that it does not need to define a

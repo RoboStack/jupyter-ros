@@ -1,3 +1,11 @@
+///////////////////////////////////////////////////////////////////////////////
+// Copyright (c) Wolf Vollprecht, QuantStack                                 //
+//                                                                           //
+// Distributed under the terms of the BSD 3-Clause License.                  //
+//                                                                           //
+// The full license is in the file LICENSE, distributed with this software.  //
+///////////////////////////////////////////////////////////////////////////////
+
 // This file contains the javascript that is run when the notebook is loaded.
 // It contains some requirejs configuration and the `load_ipython_extension`
 // which is required for any notebook extension.

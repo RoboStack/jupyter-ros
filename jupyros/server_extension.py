@@ -1,3 +1,11 @@
+#############################################################################
+# Copyright (c) Wolf Vollprecht, QuantStack                                 #
+#                                                                           #
+# Distributed under the terms of the BSD 3-Clause License.                  #
+#                                                                           #
+# The full license is in the file LICENSE, distributed with this software.  #
+#############################################################################
+
 from notebook.utils import url_path_join
 from notebook.base.handlers import IPythonHandler
 from jupyros import _version

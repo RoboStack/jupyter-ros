@@ -77,3 +77,9 @@ import jupyros
 
 If you got the following error when you run a cell ```failed to display Jupyter Widget of type VBox```,
 you can solve it by running the following command ```jupyter nbextension enable --py --sys-prefix widgetsnbextension```
+
+## License
+
+We use a shared copyright model that enables all contributors to maintain the copyright on their contributions.
+
+This software is licensed under the BSD-3-Clause license. See the LICENSE file for details.
