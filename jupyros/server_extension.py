@@ -1,13 +1,17 @@
 from notebook.utils import url_path_join
 from notebook.base.handlers import IPythonHandler
-import jupyros.version
+from jupyros import _version
 
 import rospkg
 import os
 
 __version__ = _version.__version__
 
-r = rospkg.RosPack()
+if os.getenv('JUPYROS_DEFAULT_WS'):
+    envs = os.getenv('JUPYROS_DEFAULT_WS').split(';')
+else:
+    envs = []
+r = rospkg.RosPack(envs)
 
 class ROSStaticHandler(IPythonHandler):
     def get(self, *args, **kwargs):

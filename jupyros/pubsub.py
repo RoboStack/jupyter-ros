@@ -1,7 +1,10 @@
+from __future__ import print_function
+
 import threading
 import time
 import ipywidgets as widgets
 import sys
+
 try:
     import rospy
 except:
@@ -47,7 +50,8 @@ def subscribe(topic, msg_type, callback):
     """
 
     if subscriber_registry.get(topic):
-        raise RuntimeError("Already registerd...")
+        print("Removing previous callback, only one redirection possible right now", file=sys.stderr)
+        subscriber_registry[topic].unregister()
 
     out = widgets.Output(layout={'border': '1px solid gray'})
     subscriber_registry[topic] = rospy.Subscriber(topic, msg_type, callback)
