@@ -134,10 +134,10 @@ def publish(topic, msg_type):
 
     thread_map[topic] = False
     def thread_target():
-        d = rospy.Duration(1.0 / float(rate_field.value))
+        rate = rospy.Rate(rate_field.value)
         while thread_map[topic]:
             send_msg(None)
-            rospy.sleep(d)
+            rate.sleep()
 
     def start_thread(click_args):
         thread_map[topic] = not thread_map[topic]
