@@ -41,9 +41,9 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
         w = None
 
         if s_t in ['float32', 'float64']:
-            w = widgets.FloatSlider()
+            w = widgets.FloatText()
         if s_t in ['int8', 'uint8', 'int32', 'uint32', 'int64', 'uint64']:
-            w = widgets.IntSlider()
+            w = widgets.IntText()
         if s_t in ['string']:
             w = widgets.Text()
 
@@ -54,8 +54,9 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
 
         if w:
             widget_dict[slot] = w
-            w_box = widgets.HBox([widgets.Label(value=slot), w])
+            w_box = widgets.HBox([widgets.Label(value=slot, layout=widgets.Layout(width="100px")), w])
             widget_list.append(w_box)
+
     return widget_dict, widget_list
 
 def widget_dict_to_msg(msg_instance, d):
