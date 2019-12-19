@@ -30,12 +30,19 @@ var default_serializers = function(names) {
     return {serializers: _.extend(named_serializers, widgets.WidgetModel.serializers)};
 }
 
+var fixup_url = function(url) {
+    url = url
+        .replace("{hostname}", window.location.hostname)
+        .replace("{port}", window.location.port);
+    return url;
+}
+
 var ROSConnectionModel = widgets.WidgetModel.extend({
     defaults: _.extend(widget_defaults(), defaults.ROSConnectionModelDefaults),
     initialize: function() {
         ROSConnectionModel.__super__.initialize.apply(this, arguments);
         this.connection = new ROSLIB.Ros({
-          url: this.get('url')
+          url: fixup_url(this.get('url'))
         });
     },
     get_connection: function() {
@@ -325,7 +332,7 @@ var URDFView = widgets.WidgetView.extend({
             ros: this.model.get('ros').get_connection(),
             tfClient: this.model.get('tf_client').get_client(),
             rootObject: this.viewer.scene,
-            path: this.model.get('url')
+            path: fixup_url(this.model.get('url'))
         });
     },
     trigger_rerender: function() {
