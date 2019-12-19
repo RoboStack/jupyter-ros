@@ -58,9 +58,7 @@ sync_widget.update(widgets.widget_serialization)
 
 @register_noview
 class ROSConnection(widgets.Widget):
-    url = Unicode(
-        os.environ.get("JUPYROS_WEBSOCKET_URL", "ws://localhost:9090")
-    ).tag(sync=True)
+    url = Unicode(os.environ.get("JUPYROS_WEBSOCKET_URL", "ws://{hostname}:9090")).tag(sync=True)
 
 @register_noview
 class TFClient(widgets.Widget):
@@ -75,7 +73,7 @@ class URDFModel(widgets.Widget):
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
     url = Unicode(
-        os.environ.get("JUPYROS_ASSETS_URL", "http://localhost:3000")
+        os.environ.get("JUPYROS_ASSETS_URL", "http://{hostname}:3000")
     ).tag(sync=True)
 
 @register
