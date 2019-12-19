@@ -10,7 +10,7 @@ git add and git commit
 git push
 git push --tags
 
-- To release a new version of ros3d-jupyter on NPM:
+- To release a new version of jupyter-ros on NPM:
 
 ```
 # clean out the `dist` and `node_modules` directories
