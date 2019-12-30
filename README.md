@@ -47,6 +47,10 @@ To install the extension for **jupyterlab**, you also need to execute the follow
 
     $ jupyter labextension install jupyter-ros
 
+Install the ipywidgets package for **jupyterlab** if not already installed.
+
+    $ jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
 ##### Development installation
 
 For a development installation (requires npm),
