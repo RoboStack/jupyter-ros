@@ -17,11 +17,17 @@ Once installed, you should use conda to install jupyter:
 The less recommended alternative is to install jupyter-ros in a virtual environment
 or globally (least recommended for compatibility reasons with rosbridge).
 
+.. warning::
+  
+  Never start the rosbridge server in the same environment as Jupyter. They rely
+  on incompatible versions of Tornado. The rosbridge server runs best with the
+  default Tornado version from the Ubuntu repositories!
+
 Once you have jupyter, and the jupyros-package installed, you can run the kernel
 generator to install a special ROS Python kernel for Jupyter. This modifies a pre-
 existing kernel in such a way that it knows about the catkin workspace.
 
-You can find the avaiable jupyter kernels by running:
+You can find the available jupyter kernels by running:
 
 .. code-block:: sh
 
@@ -30,14 +36,25 @@ You can find the avaiable jupyter kernels by running:
   Available kernels:
   julia        ~/.local/share/jupyter/kernels/julia
   python3      ~/miniconda3/share/jupyter/kernels/python3
-  python3      ~/miniconda2/share/jupyter/kernels/python2
+  python2      ~/miniconda2/share/jupyter/kernels/python2
   xcpp11       ~/miniconda3/share/jupyter/kernels/xcpp11
   xcpp14       ~/miniconda3/share/jupyter/kernels/xcpp14
   xcpp17       ~/miniconda3/share/jupyter/kernels/xcpp17
   xonsh        ~/miniconda3/share/jupyter/kernels/xonsh
 
 For maximum compatibility with ROS 1 releases, we want to base the ROS kernel on
-the existing Python 2 kernel. 
+the existing Python 2 kernel.
+
+To run the installed generator, run:
+
+.. code-block:: sh
+
+  $ ros_kernel_generator python2 /home/$USER/catkin_ws/devel/setup.bash
+
+This will install a new kernel specification next to the installed python2 kernel 
+(in this case at ``~/miniconda2/share/jupyter/kernels/ros_python2``) with ROS specific
+environment variables set to the ones from the catkin workspace (such as an additional
+Python path to find the ROS Python libraries).
 
 The jupyter-ros server extension
 --------------------------------

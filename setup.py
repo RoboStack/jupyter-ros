@@ -139,6 +139,7 @@ setup_args = {
         ('etc/jupyter/nbconfig/notebook.d/' ,['jupyros/etc/jupyros.json']),
         ('etc/jupyter/jupyter_notebook_config.d/', ['jupyros/etc/jupyros_server_extension.json'])
     ],
+    'scripts': ['scripts/ros_kernel_generator']
     'install_requires': [
         'ipywidgets>=7.0.0',
         'bqplot',

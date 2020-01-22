@@ -58,10 +58,40 @@ sync_widget.update(widgets.widget_serialization)
 
 @register_noview
 class ROSConnection(widgets.Widget):
+    """ Base ROS Connection
+
+    The ROS Connection widget has the parameters with the websocket endpoint to 
+    communicate with the rosbridge server.
+
+    Parameters
+    ----------
+
+    url : Unicode
+        URL endpoint of the websocket. Defaults to ``ws://{hostname}:9090``
+        where ``{hostname}`` is replaced by the current hostname at runtime
+        (e.g. ``localhost``). You can override the default value by setting the
+        ``JUPYTER_WEBSOCKET_URL`` environment variable.
+    """
     url = Unicode(os.environ.get("JUPYROS_WEBSOCKET_URL", "ws://{hostname}:9090")).tag(sync=True)
 
 @register_noview
 class TFClient(widgets.Widget):
+    """ Base TF Client
+    
+    The TFClient keeps track of TF frames.
+
+    Parameters
+    ----------
+
+    angular_treshold: Float
+        The angular threshold for the TF republisher (default: 0.01)
+    translational_treshold: Float
+        The translation threshold for the TF republisher (default: 0.01)
+    rate: Float
+        Update and publish rate for the TF republisher (default: 10.0)
+    fixed_frame: Unicode
+        Fixed base frame for TF tree (default: '')
+    """
     ros = Instance(ROSConnection).tag(**sync_widget)
     angular_treshold = Float(0.01).tag(sync=True)
     translational_treshold = Float(0.01).tag(sync=True)
@@ -70,6 +100,22 @@ class TFClient(widgets.Widget):
 
 @register
 class URDFModel(widgets.Widget):
+    """ A URDFModel (Robot model)
+
+    Displays a 3D robot model.
+    
+    Parameters
+    ----------
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    url: Unicode
+        URL from which to fetch the _assets_ (mesh and texture files). This can 
+        be either the jupyter-ros server extension (in this case one should use
+        "http://{hostname}:{port}/rospkg/") or another server / URL where the 
+        mesh files can be downloaded (default: "http://{hostname}:3000")
+    """
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
     url = Unicode(
@@ -78,12 +124,46 @@ class URDFModel(widgets.Widget):
 
 @register
 class GridModel(widgets.Widget):
+    """ A simple GridModel
+
+    Displays a 3D grid.
+    
+    Parameters
+    ----------
+
+    cell_size: Float
+        Size of the cells in meters
+    color: Unicode
+        Color of the grid lines (e.g. a hex specifier ``#FF0000``)
+    num_cells: Int
+        Number of cells in length, and width (default: 2)0
+    """
     cell_size = Float(0.5).tag(sync=True)
     color = Unicode("#0181c4").tag(sync=True)
     num_cells = Int(20).tag(sync=True)
 
 @register
 class OccupancyGrid(widgets.Widget):
+    """ Displays an Occupancy Grid
+
+    Parameters
+    ----------
+
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    topic: Unicode
+        The topic to subscribe to (default: ``/basic_controls``)
+    continuous: Book
+        Wether the occupancy grid should continously update (default: False)
+    compression: Unicode
+        Compression mechanism (default: 'cbor')
+    color: Unicode
+        Color of the grid lines (e.g. a hex specifier ``#FFFFFF``)
+    opacity: Float
+        Opacity of the occupancy grid (default: 1.0)
+    """
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
     topic = Unicode("/map").tag(sync=True)
@@ -96,6 +176,23 @@ class OccupancyGrid(widgets.Widget):
 
 @register
 class InteractiveMarker(widgets.Widget):
+    """ Interactive Marker Widget
+
+    Displays an interactive marker in the Viewer.
+
+    Parameters
+    ----------
+
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    topic: Unicode
+        The topic to subscribe to (default: ``/basic_controls``)
+    menu_font_size: Unicode
+        Menu font size (default: ``'0.8em'``)
+    """
+
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
     topic = Unicode('/basic_controls').tag(sync=True)
@@ -105,6 +202,22 @@ class InteractiveMarker(widgets.Widget):
 
 @register
 class Marker(widgets.Widget):
+    """ Displays a Marker message
+
+    Parameters
+    ----------
+
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    topic: Unicode
+        Name of the topic (default: ``/pose_array``)
+    path: Unicode
+        Marker path (default: ``/``)
+    lifetime: Float
+        Lifetime of marker in seconds, 0 for infinity (default: 0.0)
+    """
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
     topic = Unicode('/visualization_marker').tag(sync=True)
@@ -113,29 +226,89 @@ class Marker(widgets.Widget):
 
 @register
 class PoseArray(widgets.Widget):
+    """ Displays a PoseArray message 
+    
+    Parameters
+    ----------
+
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    topic: Unicode
+        Name of the topic (default: ``/pose_array``)
+    color: Unicode
+        Hex string of the color for visualization (default: ``"#CC00FF"``)
+    length: Float
+        Length of pose arrows (default: 1m)
+    """
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
-    topic = Unicode('/particle_cloud').tag(sync=True)
+    topic = Unicode('/pose_array').tag(sync=True)
     color = Unicode('#CC00FF').tag(sync=True)
     length = Float(1.0).tag(sync=True)
 
 @register
 class Pose(widgets.Widget):
+    """ Displays a Pose message
+
+    Parameters
+    ----------
+
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    topic: Unicode
+        Name of the topic (default: ``/pose``)
+    color: Unicode
+        Hex string of the color for visualization (default: ``"#CC00FF"``)
+    length: Float
+        Length of pose arrows (default: 1m)
+    """
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
-    topic = Unicode('/particle_cloud').tag(sync=True)
+    topic = Unicode('/pose').tag(sync=True)
     color = Unicode('#CC00FF').tag(sync=True)
     length = Float(1.0).tag(sync=True)
 
 @register
 class Polygon(widgets.Widget):
+    """ Displays a Polygon message
+    
+    Parameters
+    ----------
+
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    topic: Unicode
+        Name of the topic (default: ``/polygon``)
+    color: Unicode
+        Hex string of the color for visualization (default: ``"#CC00FF"``)
+    """
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
-    topic = Unicode('/path').tag(sync=True)
+    topic = Unicode('/polygon').tag(sync=True)
     color = Unicode('#CC00FF').tag(sync=True)
 
 @register
 class Path(widgets.Widget):
+    """ Displays a Path message
+    
+    Parameters
+    ----------
+
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    topic: Unicode
+        Name of the topic (default: ``/path``)
+    color: Unicode
+        Hex string of the color for visualization (default: ``"#CC00FF"``)
+    """
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
     topic = Unicode('/path').tag(sync=True)
@@ -143,9 +316,36 @@ class Path(widgets.Widget):
 
 @register
 class LaserScan(widgets.Widget):
+    """ Displays a LaserScan message
+    
+    Parameters
+    ----------
+
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    topic: Unicode
+        Name of the topic (default: ``/scan``)
+    point_ratio: Float
+        Ratio of points to send to the frontend (default: 1.0)
+    message_ratio: Float
+        Ratio of messages to send to the frontend (default: 1.0)
+    max_points: Int
+        Maximum number of points to display (default: 200000)
+    color_source: Unicode
+        Source field for the color information (default: 'intensities')
+    color_map: Unicode
+        Color map function (default: '')
+    point_size: Float
+        Point size (default: 0.05)
+    static_color: Unicode
+        Hex string of the color for visualization (default: ``"#FF0000"``)
+    """
+
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
-    topic = Unicode('/path').tag(sync=True)
+    topic = Unicode('/scan').tag(sync=True)
     point_ratio = Float(1.0).tag(sync=True)
     message_ratio = Float(1.0).tag(sync=True)
     max_points = Int(200000).tag(sync=True)
@@ -156,16 +356,56 @@ class LaserScan(widgets.Widget):
 
 @register
 class MarkerArrayClient(widgets.Widget):
+    """ MarkerArrayClient
+
+    A client that listens to changes in a MarkerArray and triggers the update of 
+    a visualization.
+
+    Parameters
+    ----------
+
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    topic: Unicode
+        Name of the topic (default: ``/marker_array``)
+    path: Unicode
+        The base path to any meshes that will be loaded (default: ``'/'``)
+    """
     ros = Instance(ROSConnection).tag(**sync_widget)
     tf_client = Instance(TFClient).tag(**sync_widget)
-    topic = Unicode('/basic_controls').tag(sync=True)
+    topic = Unicode('/marker_array').tag(sync=True)
     path = Unicode('/').tag(sync=True)
 
 @register
 class PointCloud(widgets.Widget):
-    ros = Instance(ROSConnection).tag(**sync_widget)
+    """ Displays a PointCloud message
+    
+    Parameters
+    ----------
+
+    ros: ROSConnection instance
+        Instance of the ROS Connection that should be used
+    tf_client: TFClient instance
+        Instance of the TF Client that should be used
+    topic: Unicode
+        Name of the topic (default: ``/point_cloud``)
+    point_ratio: Float
+        Ratio of points to send to the frontend (default: 1.0)
+    message_ratio: Float
+        Ratio of messages to send to the frontend (default: 1.0)
+    max_points: Int
+        Maximum number of points to display (default: 200000)
+    point_size: Float
+        Point size (default: 0.05)
+    static_color: Unicode
+        Hex string of the color for visualization (default: ``"#FF0000"``)
+    """
+
+    ros = Instance(ROSConnection).tag(**sync_widget)    
     tf_client = Instance(TFClient).tag(**sync_widget)
-    topic = Unicode('').tag(sync=True)
+    topic = Unicode('/point_cloud').tag(sync=True)
     message_ratio = Float(2.0).tag(sync=True)
     point_ratio = Float(3.0).tag(sync=True)
     max_points = Int(200000).tag(sync=True)
@@ -176,18 +416,40 @@ class PointCloud(widgets.Widget):
 
 @register
 class Viewer(widgets.DOMWidget):
+    """ Viewer class
+
+    This is the class that represents the actual 3D viewer widget. The viewer
+    is derived from the ``ipywidgets.DOMWidget`` and therefore also implements
+    the ``layout`` attribute which can be used to modify the CSS layout of the 
+    viewer.
+
+    Parameters
+    ----------
+
+    background_color: Unicode
+        Background color of the viewer (default: ``'#FFFFFF'``)
+    alpha: Float
+        The alpha value of the background
+    objects: List of ROS3D widget instances
+        Objects to render in the viewer (e.g. Marker, PointCloud, ...)
+    """
     background_color = Unicode('#FFFFFF').tag(sync=True)
-    alpha = Bool(True).tag(sync=True)
+    alpha = Float(1.0).tag(sync=True)
     height = Unicode('100%').tag(sync=True)
     objects = List(Instance(widgets.Widget)).tag(**sync_widget)
 
 @register_noview
 class DepthCloud(widgets.Widget):
+    """
+    Display a Depth Cloud for a RGB-D cloud (needs infrastructure on the server side.)
+    """
     url = Unicode('').tag(sync=True)
     f = Float(525.0).tag(sync=True)
 
 @register
 class SceneNode(widgets.Widget):
+    """ Scene Node (to be used in conjunction with DepthCloud)
+    """
     frame_id = Unicode('/base_link').tag(sync=True)
     tf_client = Instance(TFClient).tag(**sync_widget)
     object = Instance(DepthCloud).tag(**sync_widget)

@@ -31,6 +31,7 @@ pieces:
    publishing_receiving
    ros_widgets
    server_extension
+   troubleshooting
 
 .. toctree::
    :maxdepth: 2
