@@ -17,4 +17,6 @@ sphinx:
 formats: all
 
 python:
-   setup_py_install: true
+  install:
+    - method: pip
+      path: .
