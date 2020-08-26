@@ -55,7 +55,7 @@ Install the ipywidgets package for **jupyterlab** if not already installed.
 
 For a development installation (requires npm),
 
-    git clone https://github.com/wolfv/jupyter-ros.git
+    git clone https://github.com/RoboStack/jupyter-ros.git
     cd jupyter-ros
     pip install -e .
     jupyter nbextension install --py --symlink --sys-prefix jupyros
