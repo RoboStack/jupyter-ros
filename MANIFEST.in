@@ -1,2 +1,9 @@
-recursive-include ros3d/static *.*
-include jupyros/etc/*.json
+include LICENSE
+include README.md
+include pyproject.toml
+
+include jupyros/jupyros.json
+include jupyros/jupyros_server_extension.json
+
+graft jupyros/static
+graft jupyros/labextension

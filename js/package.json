@@ -1,9 +1,9 @@
 {
-  "name": "jupyter-ros",
+  "name": "@robostack/jupyter-ros",
   "version": "0.3.0",
   "description": "Jupyter widgets for the ROS ecosystem.",
   "author": "Wolf Vollprecht",
-  "main": "lib/index.js",
+  "main": "lib/labplugin.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/wolfv/jupyter-ros.git"
@@ -20,14 +20,20 @@
     "dist/*.js"
   ],
   "scripts": {
-    "clean": "rimraf dist/",
-    "prepublish": "webpack",
-    "watch": "webpack --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf dist/ ../jupyros/static ../jupyros/labextension",
+    "build": "jlpm run clean && webpack",
+    "build:labextension": "jlpm run build && jupyter labextension build .",
+    "watch": "run-p watch:src && watch:labextension",
+    "watch:src": "webpack --watch",
+    "watch:labextension": "jupyter labextension watch .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "webpack"
   },
   "devDependencies": {
-    "webpack": "^3.5.5",
-    "rimraf": "^2.6.1"
+    "@jupyterlab/builder": "^3.0.1",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.1",
+    "webpack": "^3.5.5"
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.1 || ^2.0",
@@ -35,6 +41,7 @@
     "ros3d": "^1.0.0"
   },
   "jupyterlab": {
-    "extension": "lib/labplugin"
+    "extension": "lib/labplugin.js",
+    "outputDir": "../jupyros/labextension"
   }
 }

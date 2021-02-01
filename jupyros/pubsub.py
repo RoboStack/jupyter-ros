@@ -29,6 +29,9 @@ def callback_active():
 class OutputRedirector:
     def __init__(self, original):
         self.original = original
+    
+    def isatty(self):
+        return self.original.isatty()
 
     def write(self, msg):
         thread_name = threading.currentThread().name

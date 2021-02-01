@@ -22,3 +22,14 @@ def _jupyter_nbextension_paths():
         'dest': 'jupyter-ros',
         'require': 'jupyter-ros/extension'
     }]
+
+def _jupyter_labextension_paths():
+    return [{
+        'src': 'labextension',
+        'dest': '@robostack/jupyter-ros',
+    }]
+
+def _jupyter_server_extension_paths():
+    return [{
+        "module": "jupyros"
+    }]
