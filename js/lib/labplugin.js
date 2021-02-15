@@ -13,11 +13,11 @@ module.exports = {
   id: 'jupyter-ros',
   requires: [base.IJupyterWidgetRegistry],
   activate: function(app, widgets) {
-      widgets.registerWidget({
-          name: 'jupyter-ros',
-          version: index_module.version,
-          exports: index_module
-      });
+    widgets.registerWidget({
+        name: 'jupyter-ros',
+        version: index_module.version,
+        exports: index_module
+    });
   },
   autoStart: true
 };

@@ -14,6 +14,10 @@ var local_loaders = {
         path.resolve(__dirname, 'loaders')
     ]
 }
+
+const STATIC_PATH = path.resolve(__dirname, '../jupyros/static');
+const DIST_PATH = path.resolve(__dirname, 'dist');
+
 module.exports = [
     {// Notebook extension
      //
@@ -26,7 +30,7 @@ module.exports = [
         entry: './lib/extension.js',
         output: {
             filename: 'extension.js',
-            path: path.resolve(__dirname, '..', 'jupyros', 'static'),
+            path: STATIC_PATH,
             libraryTarget: 'amd'
         },
         resolveLoader: local_loaders
@@ -40,7 +44,7 @@ module.exports = [
         entry: './lib/index.js',
         output: {
             filename: 'index.js',
-            path: path.resolve(__dirname, '..', 'jupyros', 'static'),
+            path: STATIC_PATH,
             libraryTarget: 'amd'
         },
         devtool: 'source-map',
@@ -67,7 +71,7 @@ module.exports = [
         entry: './lib/embed.js',
         output: {
             filename: 'index.js',
-            path: path.resolve(__dirname, 'dist'),
+            path: DIST_PATH,
             libraryTarget: 'amd',
             publicPath: 'https://unpkg.com/jupyter-ros@' + version + '/dist/'
         },

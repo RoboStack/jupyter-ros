@@ -1,12 +1,22 @@
+# Python build
+__pycache__
 *.egg-info/
-.ipynb_checkpoints/
-dist/
-build/
-*.py[cod]
+
+# JS deps
 node_modules/
 
 # Compiled javascript
-jupyros/static/
 *.map
+dist/
+jupyros/static/
+jupyros/labextension/
+
+# Examples
+.ipynb_checkpoints/
+
+# Others
+build/
+*.py[cod]
+
 # OS X
 .DS_Store
