@@ -1,10 +1,101 @@
 
+var DepthCloudModelDefaults =     {
+        _model_module: "jupyter-ros",
+        _model_module_version: "^0.4.0",
+        _model_name: "DepthCloudModel",
+        f: 525.0,
+        url: "",
+    }
+    
+    
+
+var GridModelDefaults =     {
+        _model_module: "jupyter-ros",
+        _model_module_version: "^0.4.0",
+        _model_name: "GridModel",
+        _view_module: "jupyter-ros",
+        _view_module_version: "^0.4.0",
+        _view_name: "GridView",
+        cell_size: 0.5,
+        color: "#0181c4",
+        num_cells: 20,
+    }
+    
+    
+
+var InteractiveMarkerModelDefaults =     {
+        _model_module: "jupyter-ros",
+        _model_module_version: "^0.4.0",
+        _model_name: "InteractiveMarkerModel",
+        _view_module: "jupyter-ros",
+        _view_module_version: "^0.4.0",
+        _view_name: "InteractiveMarkerView",
+        menu_font_size: "0.8em",
+        ros: null,
+        tf_client: null,
+        topic: "/basic_controls",
+    }
+    
+    
+
+var LaserScanModelDefaults =     {
+        _model_module: "jupyter-ros",
+        _model_module_version: "^0.4.0",
+        _model_name: "LaserScanModel",
+        _view_module: "jupyter-ros",
+        _view_module_version: "^0.4.0",
+        _view_name: "LaserScanView",
+        color_map: "",
+        color_source: "intensities",
+        max_points: 200000,
+        message_ratio: 1.0,
+        point_ratio: 1.0,
+        point_size: 0.05,
+        ros: null,
+        static_color: "#FF0000",
+        tf_client: null,
+        topic: "/scan",
+    }
+    
+    
+
+var MarkerModelDefaults =     {
+        _model_module: "jupyter-ros",
+        _model_module_version: "^0.4.0",
+        _model_name: "MarkerModel",
+        _view_module: "jupyter-ros",
+        _view_module_version: "^0.4.0",
+        _view_name: "MarkerView",
+        lifetime: 0.0,
+        path: "/",
+        ros: null,
+        tf_client: null,
+        topic: "/visualization_marker",
+    }
+    
+    
+
+var MarkerArrayClientModelDefaults =     {
+        _model_module: "jupyter-ros",
+        _model_module_version: "^0.4.0",
+        _model_name: "MarkerArrayClientModel",
+        _view_module: "jupyter-ros",
+        _view_module_version: "^0.4.0",
+        _view_name: "MarkerArrayClientView",
+        path: "/",
+        ros: null,
+        tf_client: null,
+        topic: "/marker_array",
+    }
+    
+    
+
 var OccupancyGridModelDefaults =     {
         _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
+        _model_module_version: "^0.4.0",
         _model_name: "OccupancyGridModel",
         _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
+        _view_module_version: "^0.4.0",
         _view_name: "OccupancyGridView",
         color: "#FFFFFF",
         compression: "cbor",
@@ -17,12 +108,27 @@ var OccupancyGridModelDefaults =     {
     
     
 
+var PathModelDefaults =     {
+        _model_module: "jupyter-ros",
+        _model_module_version: "^0.4.0",
+        _model_name: "PathModel",
+        _view_module: "jupyter-ros",
+        _view_module_version: "^0.4.0",
+        _view_name: "PathView",
+        color: "#CC00FF",
+        ros: null,
+        tf_client: null,
+        topic: "/path",
+    }
+    
+    
+
 var PointCloudModelDefaults =     {
         _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
+        _model_module_version: "^0.4.0",
         _model_name: "PointCloudModel",
         _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
+        _view_module_version: "^0.4.0",
         _view_name: "PointCloudView",
         max_points: 200000,
         message_ratio: 2.0,
@@ -31,74 +137,84 @@ var PointCloudModelDefaults =     {
         ros: null,
         static_color: "#FF0000",
         tf_client: null,
-        topic: "",
+        topic: "/point_cloud",
     }
     
     
 
-var GridModelDefaults =     {
+var PolygonModelDefaults =     {
         _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "GridModel",
+        _model_module_version: "^0.4.0",
+        _model_name: "PolygonModel",
         _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
-        _view_name: "GridView",
-        cell_size: 0.5,
-        color: "#0181c4",
-        num_cells: 20,
-    }
-    
-    
-
-var MarkerModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "MarkerModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
-        _view_name: "MarkerView",
-        lifetime: 0.0,
-        path: "/",
+        _view_module_version: "^0.4.0",
+        _view_name: "PolygonView",
+        color: "#CC00FF",
         ros: null,
         tf_client: null,
-        topic: "/visualization_marker",
+        topic: "/polygon",
+    }
+    
+    
+
+var PoseModelDefaults =     {
+        _model_module: "jupyter-ros",
+        _model_module_version: "^0.4.0",
+        _model_name: "PoseModel",
+        _view_module: "jupyter-ros",
+        _view_module_version: "^0.4.0",
+        _view_name: "PoseView",
+        color: "#CC00FF",
+        length: 1.0,
+        ros: null,
+        tf_client: null,
+        topic: "/pose",
     }
     
     
 
 var PoseArrayModelDefaults =     {
         _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
+        _model_module_version: "^0.4.0",
         _model_name: "PoseArrayModel",
         _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
+        _view_module_version: "^0.4.0",
         _view_name: "PoseArrayView",
         color: "#CC00FF",
         length: 1.0,
         ros: null,
         tf_client: null,
-        topic: "/particle_cloud",
+        topic: "/pose_array",
     }
     
     
 
-var URDFModelDefaults =     {
+var ROSConnectionModelDefaults =     {
         _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "URDFModel",
+        _model_module_version: "^0.4.0",
+        _model_name: "ROSConnectionModel",
+        url: "ws://{hostname}:9090",
+    }
+    
+    
+
+var SceneNodeModelDefaults =     {
+        _model_module: "jupyter-ros",
+        _model_module_version: "^0.4.0",
+        _model_name: "SceneNodeModel",
         _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
-        _view_name: "URDFView",
-        ros: null,
+        _view_module_version: "^0.4.0",
+        _view_name: "SceneNodeView",
+        frame_id: "/base_link",
+        object: null,
         tf_client: null,
-        url: "http://" + window.location.hostname + ":3000",
     }
     
     
 
 var TFClientModelDefaults =     {
         _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
+        _model_module_version: "^0.4.0",
         _model_name: "TFClientModel",
         angular_treshold: 0.01,
         fixed_frame: "",
@@ -109,147 +225,31 @@ var TFClientModelDefaults =     {
     
     
 
-var PolygonModelDefaults =     {
+var URDFModelDefaults =     {
         _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "PolygonModel",
+        _model_module_version: "^0.4.0",
+        _model_name: "URDFModel",
         _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
-        _view_name: "PolygonView",
-        color: "#CC00FF",
+        _view_module_version: "^0.4.0",
+        _view_name: "URDFView",
         ros: null,
         tf_client: null,
-        topic: "/path",
+        url: "http://{hostname}:3000",
     }
     
     
 
 var ViewerModelDefaults =     {
         _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
+        _model_module_version: "^0.4.0",
         _model_name: "ViewerModel",
         _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
+        _view_module_version: "^0.4.0",
         _view_name: "ViewerView",
-        alpha: true,
+        alpha: 1.0,
         background_color: "#FFFFFF",
         height: "100%",
         objects: null,
-    }
-    
-    
-
-var MarkerArrayClientModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "MarkerArrayClientModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
-        _view_name: "MarkerArrayClientView",
-        path: "/",
-        ros: null,
-        tf_client: null,
-        topic: "/basic_controls",
-    }
-    
-    
-
-var DepthCloudModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "DepthCloudModel",
-        f: 525.0,
-        url: "",
-    }
-    
-    
-
-var InteractiveMarkerModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "InteractiveMarkerModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
-        _view_name: "InteractiveMarkerView",
-        menu_font_size: "0.8em",
-        ros: null,
-        tf_client: null,
-        topic: "/basic_controls",
-    }
-    
-    
-
-var PoseModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "PoseModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
-        _view_name: "PoseView",
-        color: "#CC00FF",
-        length: 1.0,
-        ros: null,
-        tf_client: null,
-        topic: "/particle_cloud",
-    }
-    
-    
-
-var SceneNodeModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "SceneNodeModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
-        _view_name: "SceneNodeView",
-        frame_id: "/base_link",
-        object: null,
-        tf_client: null,
-    }
-    
-    
-
-var LaserScanModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "LaserScanModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
-        _view_name: "LaserScanView",
-        color_map: "",
-        color_source: "intensities",
-        max_points: 200000,
-        message_ratio: 1.0,
-        point_ratio: 1.0,
-        point_size: 0.05,
-        ros: null,
-        static_color: "#FF0000",
-        tf_client: null,
-        topic: "/path",
-    }
-    
-    
-
-var ROSConnectionModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "ROSConnectionModel",
-        url: "ws://" + window.location.hostname + ":9090",
-    }
-    
-    
-
-var PathModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.2.2",
-        _model_name: "PathModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.2.2",
-        _view_name: "PathView",
-        color: "#CC00FF",
-        ros: null,
-        tf_client: null,
-        topic: "/path",
     }
     
     

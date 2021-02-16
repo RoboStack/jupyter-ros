@@ -515,6 +515,7 @@ def js_extract():
     import sys, inspect, json
     clsmembers = inspect.getmembers(sys.modules[__name__], inspect.isclass)
     # print(clsmembers)
+    res = ""
     def modulify(d, suffix=''):
         js = {key + suffix: key + suffix for key in d}
         s = "{\n"
@@ -529,9 +530,17 @@ def js_extract():
             for_export[cls_name] = text
 
     for key in for_export:
-        print(for_export[key])
+        res += for_export[key] + "\n"
 
     export_template = """
 module.exports = {exports_json}
     """
-    print(export_template.format(exports_json=modulify(for_export, 'Defaults')))
+    return res + export_template.format(exports_json=modulify(for_export, 'Defaults'))
+
+if __name__ == "__main__":
+    import os
+    filedir = os.path.dirname(os.path.realpath(__file__))
+
+    defaults_js = js_extract()
+    with open(os.path.join(filedir, "../js/lib/defaults.js"), "w") as fo:
+        fo.write(defaults_js)

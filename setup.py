@@ -22,6 +22,20 @@ ensure_python('>=3.6')
 # Get our version
 version = get_version(path.join(name, '_version.py'))
 
+# def extract_defaults():
+#     import sys
+#     sys.path.append("jupyros")
+
+#     import ros3d
+
+#     print("Extracting defaults.js")
+#     with open("./js/lib/defaults.js", "w") as fo:
+#         s = ros3d.js_extract()
+#         fo.write(s)
+#     sys.path.pop()
+
+# extract_defaults()
+
 # Extensions' path
 module_path = path.join(HERE, name)
 nb_path = path.join(HERE, name, 'static')

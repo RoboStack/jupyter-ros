@@ -62,6 +62,9 @@ For a development installation (requires npm),
     jupyter nbextension enable --py --sys-prefix jupyros
 
 
+To update the `defaults.js` javascript you need to run `python jupyros/ros3d.py`.
+
+
 ## Troubleshooting
 
 You might see a warning like "The rospy package is not found in your $PYTHONPATH.
