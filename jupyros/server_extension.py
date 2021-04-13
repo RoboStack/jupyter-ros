@@ -18,7 +18,7 @@ __version__ = _version.__version__
 if os.getenv('JUPYROS_DEFAULT_WS'):
     envs = os.getenv('JUPYROS_DEFAULT_WS').split(';')
 else:
-    envs = []
+    envs = None
 r = rospkg.RosPack(envs)
 
 class ROSStaticHandler(IPythonHandler):
