@@ -1,0 +1,5 @@
+{
+  "packageManager": "python",
+  "packageName": "jupyros",
+  "uninstallInstructions": "Use your Python package manager (pip, conda, etc.) to uninstall the package jupyros / jupyter-ros"
+}
