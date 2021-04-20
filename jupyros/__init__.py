@@ -18,9 +18,9 @@ from .ros3d import *
 def _jupyter_nbextension_paths():
     return [{
         'section': 'notebook',
-        'src': 'static',
-        'dest': 'jupyter-ros',
-        'require': 'jupyter-ros/extension'
+        'src': 'nbextension',
+        'dest': '@robostack/jupyter-ros',
+        'require': '@robostack/jupyter-ros/extension'
     }]
 
 def _jupyter_labextension_paths():

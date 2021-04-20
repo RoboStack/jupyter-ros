@@ -8,7 +8,7 @@ node_modules/
 # Compiled javascript
 *.map
 dist/
-jupyros/static/
+jupyros/nbextension/
 jupyros/labextension/
 
 # Examples
