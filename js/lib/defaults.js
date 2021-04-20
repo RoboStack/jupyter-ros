@@ -1,7 +1,7 @@
 
 var DepthCloudModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "DepthCloudModel",
         f: 525.0,
         url: "",
@@ -10,11 +10,11 @@ var DepthCloudModelDefaults =     {
     
 
 var GridModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "GridModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "GridView",
         cell_size: 0.5,
         color: "#0181c4",
@@ -24,11 +24,11 @@ var GridModelDefaults =     {
     
 
 var InteractiveMarkerModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "InteractiveMarkerModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "InteractiveMarkerView",
         menu_font_size: "0.8em",
         ros: null,
@@ -39,11 +39,11 @@ var InteractiveMarkerModelDefaults =     {
     
 
 var LaserScanModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "LaserScanModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "LaserScanView",
         color_map: "",
         color_source: "intensities",
@@ -60,11 +60,11 @@ var LaserScanModelDefaults =     {
     
 
 var MarkerModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "MarkerModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "MarkerView",
         lifetime: 0.0,
         path: "/",
@@ -76,11 +76,11 @@ var MarkerModelDefaults =     {
     
 
 var MarkerArrayClientModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "MarkerArrayClientModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "MarkerArrayClientView",
         path: "/",
         ros: null,
@@ -91,11 +91,11 @@ var MarkerArrayClientModelDefaults =     {
     
 
 var OccupancyGridModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "OccupancyGridModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "OccupancyGridView",
         color: "#FFFFFF",
         compression: "cbor",
@@ -109,11 +109,11 @@ var OccupancyGridModelDefaults =     {
     
 
 var PathModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "PathModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "PathView",
         color: "#CC00FF",
         ros: null,
@@ -124,11 +124,11 @@ var PathModelDefaults =     {
     
 
 var PointCloudModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "PointCloudModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "PointCloudView",
         max_points: 200000,
         message_ratio: 2.0,
@@ -143,11 +143,11 @@ var PointCloudModelDefaults =     {
     
 
 var PolygonModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "PolygonModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "PolygonView",
         color: "#CC00FF",
         ros: null,
@@ -158,11 +158,11 @@ var PolygonModelDefaults =     {
     
 
 var PoseModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "PoseModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "PoseView",
         color: "#CC00FF",
         length: 1.0,
@@ -174,11 +174,11 @@ var PoseModelDefaults =     {
     
 
 var PoseArrayModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "PoseArrayModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "PoseArrayView",
         color: "#CC00FF",
         length: 1.0,
@@ -190,8 +190,8 @@ var PoseArrayModelDefaults =     {
     
 
 var ROSConnectionModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "ROSConnectionModel",
         url: "ws://{hostname}:9090",
     }
@@ -199,11 +199,11 @@ var ROSConnectionModelDefaults =     {
     
 
 var SceneNodeModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "SceneNodeModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "SceneNodeView",
         frame_id: "/base_link",
         object: null,
@@ -213,8 +213,8 @@ var SceneNodeModelDefaults =     {
     
 
 var TFClientModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "TFClientModel",
         angular_treshold: 0.01,
         fixed_frame: "",
@@ -226,11 +226,11 @@ var TFClientModelDefaults =     {
     
 
 var URDFModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "URDFModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "URDFView",
         ros: null,
         tf_client: null,
@@ -240,11 +240,11 @@ var URDFModelDefaults =     {
     
 
 var ViewerModelDefaults =     {
-        _model_module: "jupyter-ros",
-        _model_module_version: "^0.4.1",
+        _model_module: "@robostack/jupyter-ros",
+        _model_module_version: "^0.5.0",
         _model_name: "ViewerModel",
-        _view_module: "jupyter-ros",
-        _view_module_version: "^0.4.1",
+        _view_module: "@robostack/jupyter-ros",
+        _view_module_version: "^0.5.0",
         _view_name: "ViewerView",
         alpha: 1.0,
         background_color: "#FFFFFF",

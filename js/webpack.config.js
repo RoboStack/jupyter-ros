@@ -15,7 +15,7 @@ var local_loaders = {
     ]
 }
 
-const STATIC_PATH = path.resolve(__dirname, '../jupyros/static');
+const STATIC_PATH = path.resolve(__dirname, '../jupyros/nbextension');
 const DIST_PATH = path.resolve(__dirname, 'dist');
 
 module.exports = [
@@ -31,7 +31,8 @@ module.exports = [
         output: {
             filename: 'extension.js',
             path: STATIC_PATH,
-            libraryTarget: 'amd'
+            libraryTarget: 'amd',
+            publicPath: '',
         },
         resolveLoader: local_loaders
     },
@@ -45,7 +46,8 @@ module.exports = [
         output: {
             filename: 'index.js',
             path: STATIC_PATH,
-            libraryTarget: 'amd'
+            libraryTarget: 'amd',
+            publicPath: '',
         },
         devtool: 'source-map',
         module: {
@@ -73,7 +75,7 @@ module.exports = [
             filename: 'index.js',
             path: DIST_PATH,
             libraryTarget: 'amd',
-            publicPath: 'https://unpkg.com/jupyter-ros@' + version + '/dist/'
+            publicPath: 'https://unpkg.com/@robostack/jupyter-ros@' + version + '/dist/'
         },
         devtool: 'source-map',
         module: {

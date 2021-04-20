@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 
 # The name of the project
 name = 'jupyros'
-nb_ext_name = 'jupyter-ros'
+nb_ext_name = '@robostack/jupyter-ros'
 ext_name = '@robostack/jupyter-ros'
 
 HERE = path.dirname(path.abspath(__file__))
@@ -38,22 +38,24 @@ version = get_version(path.join(name, '_version.py'))
 
 # Extensions' path
 module_path = path.join(HERE, name)
-nb_path = path.join(HERE, name, 'static')
+nb_path = path.join(HERE, name, 'nbextension')
 lab_path = path.join(HERE, name, 'labextension')
+
 
 cmdclass = create_cmdclass(
     'js',
     package_data_spec = {
         name: [
-            'static/*',
+            'nbextension/*',
             'labextension/*'
         ]
     },
     data_files_spec = [
-        ('share/jupyter/nbextensions/' + nb_ext_name, nb_path, '**'),
-        ('etc/jupyter/nbconfig/notebook.d', name, 'jupyter-ros.json'),
-        ("share/jupyter/labextensions/" + ext_name, lab_path, "**"),
-        ('etc/jupyter/jupyter_notebook_config.d', name, 'jupyros_server_extension.json')
+        ('share/jupyter/nbextensions/' + nb_ext_name, "jupyros/nbextension", '*.*'),
+        ("share/jupyter/labextensions/" + ext_name, "jupyros/labextension", "**"),
+        ("share/jupyter/labextensions/" + ext_name, ".", "install.json"),
+        ('etc/jupyter/nbconfig/notebook.d', "jupyros", 'jupyter-ros.json'),
+        ('etc/jupyter/jupyter_notebook_config.d', "jupyros", 'jupyros_server_extension.json')
     ]
 )
 
