@@ -25,31 +25,21 @@ plotting from ROS topics to this library.
 If you find this initial package useful, don't hesitate to
 contribute!
 You can also always reach out to w.vollprecht@gmail.com or
-on twitter: https://twitter.com/wuoulf
+on twitter: https://twitter.com/wuoulf, or join us on [Gitter](https://gitter.im/RoboStack/Lobby)
 
 ## Installation and Dependencies
 
-You need a ROS environment with rospy, obviously.
+You need a ROS environment with rospy. We recommend using [Robostack](https://github.com/RoboStack/ros-noetic) (follow their installation instructions) which allows you to install ROS in a conda environment.
 Also required are `numpy` and `bqplot` for the live-plotting
 and `ipywidgets` for the interactive widgets
 
-    pip install jupyter bqplot pyyaml ipywidgets
-    jupyter nbextension enable --py --sys-prefix ipywidgets
+    conda install jupyter bqplot pyyaml ipywidgets
 
 `pyyaml` is necessary for rospy.
 
-To install use pip:
+To install use conda or mamba:
 
-    pip install jupyros
-    jupyter nbextension enable --py --sys-prefix jupyros
-
-To install the extension for **jupyterlab**, you also need to execute the following:
-
-    $ jupyter labextension install jupyter-ros
-
-Install the ipywidgets package for **jupyterlab** if not already installed.
-
-    $ jupyter labextension install @jupyter-widgets/jupyterlab-manager
+    conda install jupyter-ros
 
 ##### Development installation
 
@@ -76,7 +66,7 @@ using
 
 ```
 import sys
-sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages/')
+sys.path.append('/opt/ros/melodic/lib/python2.7/dist-packages/')
 
 # The next line should now work!
 import jupyros
