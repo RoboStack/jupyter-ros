@@ -39,7 +39,7 @@ and `ipywidgets` for the interactive widgets
 
 To install use conda or mamba:
 
-    conda install jupyter-ros
+    conda install jupyter-ros -c robostack
 
 ##### Development installation
 
