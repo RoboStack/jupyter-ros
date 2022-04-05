@@ -288,3 +288,41 @@ def bag_player(bagfile=''):
     widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
     return vbox
+
+
+def client(srv_name, srv_type):
+    """
+    Create a form widget for message type srv_type.
+    This function analyzes the fields of srv_type and creates
+    an appropriate widget.
+
+    @param srv_type The message type
+    @param srv_name The service name to call
+
+    @return jupyter widget for display
+    """
+
+    widget_list = []
+    widget_dict = {}
+
+    add_widgets(srv_type._request_class(), widget_dict, widget_list)
+    call_btn = widgets.Button(description="Call Service")
+
+    def call_srv(arg):
+        msg_to_send = srv_type._request_class()
+        widget_dict_to_msg(msg_to_send, widget_dict)
+        rospy.wait_for_service(srv_name)
+
+        try:
+            service = rospy.ServiceProxy(srv_name, srv_type)
+            return service(msg_to_send)
+        except rospy.ServiceException as e:
+            print("Service call failed: %s" % e)
+
+    call_btn.on_click(call_srv)
+
+    # btm_box = widgets.HBox(call_btn)
+    widget_list.append(call_btn)
+    vbox = widgets.VBox(children=widget_list)
+
+    return vbox
