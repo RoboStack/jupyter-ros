@@ -296,7 +296,7 @@ def client(srv_name, srv_type):
     This function analyzes the fields of srv_type and creates
     an appropriate widget.
 
-    @param srv_type The message type
+    @param srv_type The service message type
     @param srv_name The service name to call
 
     @return jupyter widget for display
@@ -321,7 +321,6 @@ def client(srv_name, srv_type):
 
     call_btn.on_click(call_srv)
 
-    # btm_box = widgets.HBox(call_btn)
     widget_list.append(call_btn)
     vbox = widgets.VBox(children=widget_list)
 
