@@ -301,6 +301,7 @@ def client(srv_name, srv_type):
 
     @return jupyter widget for display
     """
+    rospy.wait_for_service(srv_name, timeout=5)
 
     widget_list = []
     widget_dict = {}
@@ -311,7 +312,7 @@ def client(srv_name, srv_type):
     def call_srv(arg):
         msg_to_send = srv_type._request_class()
         widget_dict_to_msg(msg_to_send, widget_dict)
-        rospy.wait_for_service(srv_name)
+
 
         try:
             service = rospy.ServiceProxy(srv_name, srv_type)
