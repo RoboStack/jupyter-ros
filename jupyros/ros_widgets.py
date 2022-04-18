@@ -339,8 +339,9 @@ class TurtleWidget:
         self.img_path = ''
         self.image = None
         self.canvas = None
-        self.position_old = {"x": 0, "y": 0, "theta": 0}
-        self.position_new = {"x": 0, "y": 0, "theta": 0}
+        self.pose = {"x": 0,
+                     "y": 0,
+                     "theta": 0}
         self.turtle_size = turtle_size
         self.canvas_width = width
         self.canvas_height = height
@@ -356,20 +357,21 @@ class TurtleWidget:
         turtle_pngs = [img for img in images if ('.png' in img and 'palette' not in img)]
         self.name = turtle_pngs[random.randint(0, len(turtle_pngs) - 1)]
         self.image = widgets.Image.from_file(self.img_path + self.name)
+        return self
 
-    def spawn(self, position=None):
-        if position is None:
+    def spawn(self, new_pose=None):
+        if new_pose is None:
             # Spawn in the middle of canvas
-            self.position_new["x"] = self.canvas_width / 2
-            self.position_new["y"] = self.canvas_height / 2
+            self.pose["x"] = self.canvas_width / 2
+            self.pose["y"] = self.canvas_height / 2
         else:
-            self.position_new = position
+            self.pose = new_pose
 
         # Pick random turtle
         self.randomize()
 
-        # Four layers for the canvas: 0-background, 1-path, 2-turtle, 3-ghost turtle
-        self.canvas = ipycanvas.MultiCanvas(4,
+        # Three layers for the canvas: 0-background, 1-path, 2-turtle
+        self.canvas = ipycanvas.MultiCanvas(3,
                                             width=self.canvas_width,
                                             height=self.canvas_height,
                                             layout={"width": "100%"})
@@ -380,55 +382,50 @@ class TurtleWidget:
 
         with ipycanvas.hold_canvas(self.canvas):
             self.draw_turtle(n=2)  # Draw on the turtle layer
-        self.position_old = self.position_new
 
-    def move_to_pose(self, position):
+        return self
+
+    def move_to_pose(self, new_pose):
         self.last_move_time = time.time()
-        self.position_new = position
 
-        if self.position_new != self.position_old:
+        if new_pose != self.pose:
             with ipycanvas.hold_canvas(self.canvas):
-                # Draw turtle in new position on foremost (ghost) canvas
-                # self.draw_turtle(3)
-
-                # Clear old turtle
-                self.canvas[2].clear()
-
-                # Draw new turtle again on middle canvas
-                self.draw_turtle(2)
-
-                # Clear foremost canvas
-                # self.canvas[3].clear()
-
                 # Draw line path
-                # self.canvas[1].stroke_style = '#B3B8FF'
-                # self.canvas[1].line_width = 8
-                # self.canvas[1].stroke_line(self.position_old["x"], self.position_old["y"],
-                #                            self.position_new["x"], self.position_new["y"])
-
-                # Update
-                self.position_old = self.position_new
+                self.canvas[1].stroke_style = '#B3B8FF'
+                self.canvas[1].line_width = 8
+                self.canvas[1].stroke_line(self.pose["x"], self.pose["y"],
+                                           new_pose["x"], new_pose["y"])
 
                 # Circle markers
-                self.canvas[1].fill_style = '#B3B8FF'
-                self.canvas[1].fill_circle(self.position_new["x"], self.position_new["y"], radius=5)
+                # self.canvas[1].fill_style = '#B3B8FF'
+                # self.canvas[1].fill_circle(new_pose["x"], new_pose["y"], radius=5)
+
+                # Update
+                self.pose = new_pose
+                self.canvas[2].clear()
+                self.draw_turtle(2)
+
+        return self
 
     def draw_turtle(self, n):
         # Offsets for turtle center and orientation
         x_offset = - self.turtle_size / 2
         y_offset = - self.turtle_size / 2
-        theta_offset = self.position_new["theta"] - math.radians(90) # to face right side
+        theta_offset = self.pose["theta"] - math.radians(90)  # to face right side
 
-        # with ipycanvas.hold_canvas(self.canvas):
         # Transform canvas
-        self.canvas[n].translate(self.position_new["x"], self.position_new["y"])
+        self.canvas[n].translate(self.pose["x"], self.pose["y"])
         self.canvas[n].rotate(-theta_offset)
 
         self.canvas[n].draw_image(self.image, x_offset, y_offset, self.turtle_size)
 
         # Revert transformation
         self.canvas[n].rotate(theta_offset)
-        self.canvas[n].translate(-self.position_new["x"], -self.position_new["y"])
+        self.canvas[n].translate(-self.pose["x"], -self.pose["y"])
+
+        return self
+
+
 
 
 
