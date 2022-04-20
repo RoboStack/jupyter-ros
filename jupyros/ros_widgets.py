@@ -349,112 +349,94 @@ def client(srv_name, srv_type):
 
 class TurtleWidget:
     def __init__(self, width=1600, height=1600, turtle_size=100):
-        self.img_path = ''
-        self.name_index = {"turtle1": 0}
-        self.images = []
-        self.poses = []
-        self.canvas = None
+        self.turtles = {}
         self.turtle_size = turtle_size
-        self.canvas_width = width
-        self.canvas_height = height
         self.canvas_middle = {"x": width // 2,
                               "y": height // 2,
                               "theta": 0}
+
+        # Three layers for the canvas: 0-background, 1-paths, 2-turtles
+        self.canvas = ipycanvas.MultiCanvas(3,
+                                            width=width, height=height,
+                                            layout={"width": "100%"})
+
+        # Water background
+        self.canvas[0].fill_style = '#4556FF'
+        self.canvas[0].fill_rect(0, 0, width, height)
+
         self.last_move_time = time.time()
-        self.number_of_turtles = 0
-        self.spawn(name="turtle1")
+        self.spawn()
 
-    def randomize(self, index=0):
-        if self.img_path == '':
-            r = rospkg.RosPack()
-            self.img_path = r.get_path('turtlesim') + '/images/'
+    def spawn(self, name=None, pose=None):
 
-        images = os.listdir(self.img_path)
-        turtle_pngs = [img for img in images if ('.png' in img and 'palette' not in img)]
-        random_png = turtle_pngs[random.randint(0, len(turtle_pngs) - 1)]
-        self.images[index] = widgets.Image.from_file(self.img_path + random_png)
+        if (name is None) or (name in self.turtles.keys()):
+            name = "turtle" + str(len(self.turtles) + 1)
 
-        return self
+        self.turtles[name] = self.Turtle(name)
 
-    def spawn(self, name=None, new_pose=None):
-        self.number_of_turtles += 1
-
-        if self.canvas is None:
-            # Three layers for the canvas: 0-background, 1-path, 2-turtle
-            self.canvas = ipycanvas.MultiCanvas(3,
-                                                width=self.canvas_width,
-                                                height=self.canvas_height,
-                                                layout={"width": "100%"})
-
-            # Water background
-            self.canvas[0].fill_style = '#4556FF'
-            self.canvas[0].fill_rect(0, 0, self.canvas_width, self.canvas_height)
-
-        if (name is None) or (name in self.name_index.keys()):
-            name = "turtle" + str(self.number_of_turtles)
-
-        # Add info for new turtle
-        index = self.number_of_turtles - 1
-        self.name_index[name] = index
-        self.images.append(None)
-        self.randomize(index)
-        self.poses.append(self.canvas_middle)
-
-        if new_pose is not None:
-            self.poses[index] = new_pose
+        if pose is None:
+            # Spawn to middle of canvas
+            self.turtles[name].pose = self.canvas_middle
+        else:
+            self.turtles[name].pose = pose
 
         with ipycanvas.hold_canvas(self.canvas):
-            self.draw_turtle(index, n=2)  # Draw on the turtle layer
+            self.draw_turtle(name)
 
         print(name + " has spawned.")
-        return self
 
     def move_to_pose(self, name, new_pose):
         self.last_move_time = time.time()
-        index = self.name_index[name]
 
-        if new_pose != self.poses[index]:
+        if new_pose != self.turtles[name].pose:
             with ipycanvas.hold_canvas(self.canvas):
                 # Draw line path
-                self.canvas[1].stroke_style = '#B3B8FF'
+                self.canvas[1].stroke_style = self.turtles[name].path_color
                 self.canvas[1].line_width = 8
-                self.canvas[1].stroke_line(self.poses[index]["x"],
-                                           self.poses[index]["y"],
+                self.canvas[1].stroke_line(self.turtles[name].pose["x"],
+                                           self.turtles[name].pose["y"],
                                            new_pose["x"], new_pose["y"])
 
-                # Circle markers
-                # self.canvas[1].fill_style = '#B3B8FF'
-                # self.canvas[1].fill_circle(new_pose["x"], new_pose["y"], radius=5)
-
                 # Update
-                self.poses[index] = new_pose
+                self.turtles[name].pose = new_pose
                 self.canvas[2].clear()
-                for i in range(self.number_of_turtles):
-                    self.draw_turtle(index=i, n=2)
+                for turtle in self.turtles.keys():
+                    self.draw_turtle(name=turtle)
 
-        return self
-
-    def draw_turtle(self, index=0, n=2):
+    def draw_turtle(self, name="turtle1", n=2):
         # Offsets for turtle center and orientation
         x_offset = - self.turtle_size / 2
         y_offset = - self.turtle_size / 2
-        theta_offset = self.poses[index]["theta"] - math.radians(90)  # to face right side
+        theta_offset = self.turtles[name].pose["theta"] - math.radians(90)  # to face right side
 
         # Transform canvas
-        self.canvas[n].translate(self.poses[index]["x"],
-                                 self.poses[index]["y"])
+        self.canvas[n].translate(self.turtles[name].pose["x"], self.turtles[name].pose["y"])
         self.canvas[n].rotate(-theta_offset)
 
-        self.canvas[n].draw_image(self.images[index],
+        self.canvas[n].draw_image(self.turtles[name].image,
                                   x_offset, y_offset,
                                   self.turtle_size)
 
         # Revert transformation
         self.canvas[n].rotate(theta_offset)
-        self.canvas[n].translate(-self.poses[index]["x"],
-                                 -self.poses[index]["y"])
+        self.canvas[n].translate(-self.turtles[name].pose["x"], -self.turtles[name].pose["y"])
 
-        return self
+    class Turtle:
+        def __init__(self, name):
+            self.name = name
+            self.image = None
+            self.randomize()
+            self.pose = {"x": 0,
+                         "y": 0,
+                         "theta": 0}
+            self.path_color = '#B3B8FF'  # Light blue
 
-
+        def randomize(self):
+            r = rospkg.RosPack()
+            img_path = r.get_path('turtlesim') + '/images/'
+            images = os.listdir(img_path)
+            turtle_pngs = [img for img in images if ('.png' in img and 'palette' not in img)]
+            random_png = turtle_pngs[random.randint(0, len(turtle_pngs) - 1)]
+            self.image = widgets.Image.from_file(img_path + random_png)
+            return self
 
