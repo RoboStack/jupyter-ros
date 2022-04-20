@@ -14,6 +14,7 @@ except:
 try:
     from cv_bridge import CvBridge, CvBridgeError
     import cv2
+
     bridge = CvBridge()
 except:
     pass
@@ -72,6 +73,7 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
 
     return widget_dict, widget_list
 
+
 def widget_dict_to_msg(msg_instance, d):
     for key in d:
         if isinstance(d[key], widgets.Widget):
@@ -86,11 +88,14 @@ def widget_dict_to_msg(msg_instance, d):
             submsg = getattr(msg_instance, key)
             widget_dict_to_msg(submsg, d[key])
 
+
 thread_map = {}
+
 
 def img_to_msg(imgpath):
     if not cv2 or not CvBridge:
-        raise RuntimeError("CV Bridge is not installed, please install it to publish Images\nsudo apt-get install ros-$(rosversion -d)-cv-bridge")
+        raise RuntimeError(
+            "CV Bridge is not installed, please install it to publish Images\nsudo apt-get install ros-$(rosversion -d)-cv-bridge")
 
     img = cv2.imread(imgpath)
     if img is None:
@@ -98,6 +103,7 @@ def img_to_msg(imgpath):
     else:
         imgmsg = bridge.cv2_to_imgmsg(img)
         return imgmsg
+
 
 def publish(topic, msg_type):
     """
@@ -138,6 +144,7 @@ def publish(topic, msg_type):
     send_btn.on_click(send_msg)
 
     thread_map[topic] = False
+
     def thread_target():
         rate = rospy.Rate(rate_field.value)
         while thread_map[topic]:
@@ -155,12 +162,12 @@ def publish(topic, msg_type):
 
     stop_btn.on_click(start_thread)
 
-
     btm_box = widgets.HBox((send_btn, latch_check, rate_field, stop_btn))
     widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
 
     return vbox
+
 
 def live_plot(plot_string, topic_type, history=100, title=None):
     topic = plot_string[:plot_string.find(':') - 1]
@@ -189,6 +196,7 @@ def live_plot(plot_string, topic_type, history=100, title=None):
 
     rospy.Subscriber(topic, topic_type, cb)
     return fig
+
 
 def bag_player(bagfile=''):
     """
@@ -225,11 +233,12 @@ def bag_player(bagfile=''):
     duration_float = widgets.FloatText(value=0)
     duration_box = widgets.HBox([dzbox, widgets.Label("Duration in secs:"), duration_float])
     out_box = widgets.Output(layout={'border': '1px solid black'})
+
     ######## Play Button ##################################################
     def ply_clk(arg):
         if play_btn.description == "Play":
             info_dict = yaml.load(subprocess.Popen(['rosbag', 'info', '--yaml', bgpath_txt.value],
-                stdout=subprocess.PIPE).communicate()[0])
+                                                   stdout=subprocess.PIPE).communicate()[0])
             if info_dict is None:
                 raise FileNotFoundError("Bag file not found!")
             else:
@@ -268,7 +277,9 @@ def bag_player(bagfile=''):
             pause_btn.description = 'Pause'
             pause_btn.icon = 'pause'
             step_btn.disabled = True
+
     play_btn.on_click(ply_clk)
+
     ###################### Pause Button #########################
     def pause_clk(arg):
         bag_player.sp.stdin.write(b' \n')
@@ -281,15 +292,19 @@ def bag_player(bagfile=''):
             pause_btn.description = 'Pause'
             pause_btn.icon = 'pause'
             step_btn.disabled = True
+
     pause_btn.on_click(pause_clk)
+
     ################## step Button ###############################
     def step_clk(arg):
         bag_player.sp.stdin.write(b's\n')
         bag_player.sp.stdin.flush()
+
     step_btn.on_click(step_clk)
     options_hbox = widgets.HBox([ibox, lbox, clockbox, kabox])
     buttons_hbox = widgets.HBox([play_btn, pause_btn, step_btn])
-    btm_box = widgets.VBox([bgpath_box, options_hbox, duration_box, start_box, que_box, factor_box, delay_box, buttons_hbox, out_box])
+    btm_box = widgets.VBox(
+        [bgpath_box, options_hbox, duration_box, start_box, que_box, factor_box, delay_box, buttons_hbox, out_box])
     widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
     return vbox
@@ -318,7 +333,6 @@ def client(srv_name, srv_type):
         msg_to_send = srv_type._request_class()
         widget_dict_to_msg(msg_to_send, widget_dict)
 
-
         try:
             service = rospy.ServiceProxy(srv_name, srv_type)
             return service(msg_to_send)
@@ -335,65 +349,77 @@ def client(srv_name, srv_type):
 
 class TurtleWidget:
     def __init__(self, width=1600, height=1600, turtle_size=100):
-        self.name = ''
         self.img_path = ''
-        self.image = None
+        self.name_index = {"turtle1": 0}
+        self.images = []
+        self.poses = []
         self.canvas = None
-        self.pose = {"x": 0,
-                     "y": 0,
-                     "theta": 0}
         self.turtle_size = turtle_size
         self.canvas_width = width
         self.canvas_height = height
+        self.canvas_middle = {"x": width // 2,
+                              "y": height // 2,
+                              "theta": 0}
         self.last_move_time = time.time()
-        self.spawn()
+        self.number_of_turtles = 0
+        self.spawn(name="turtle1")
 
-    def randomize(self):
+    def randomize(self, index=0):
         if self.img_path == '':
             r = rospkg.RosPack()
             self.img_path = r.get_path('turtlesim') + '/images/'
 
         images = os.listdir(self.img_path)
         turtle_pngs = [img for img in images if ('.png' in img and 'palette' not in img)]
-        self.name = turtle_pngs[random.randint(0, len(turtle_pngs) - 1)]
-        self.image = widgets.Image.from_file(self.img_path + self.name)
+        random_png = turtle_pngs[random.randint(0, len(turtle_pngs) - 1)]
+        self.images[index] = widgets.Image.from_file(self.img_path + random_png)
+
         return self
 
-    def spawn(self, new_pose=None):
-        if new_pose is None:
-            # Spawn in the middle of canvas
-            self.pose["x"] = self.canvas_width / 2
-            self.pose["y"] = self.canvas_height / 2
-        else:
-            self.pose = new_pose
+    def spawn(self, name=None, new_pose=None):
+        self.number_of_turtles += 1
 
-        # Pick random turtle
-        self.randomize()
+        if self.canvas is None:
+            # Three layers for the canvas: 0-background, 1-path, 2-turtle
+            self.canvas = ipycanvas.MultiCanvas(3,
+                                                width=self.canvas_width,
+                                                height=self.canvas_height,
+                                                layout={"width": "100%"})
 
-        # Three layers for the canvas: 0-background, 1-path, 2-turtle
-        self.canvas = ipycanvas.MultiCanvas(3,
-                                            width=self.canvas_width,
-                                            height=self.canvas_height,
-                                            layout={"width": "100%"})
+            # Water background
+            self.canvas[0].fill_style = '#4556FF'
+            self.canvas[0].fill_rect(0, 0, self.canvas_width, self.canvas_height)
 
-        # Water background
-        self.canvas[0].fill_style = '#4556FF'
-        self.canvas[0].fill_rect(0, 0, self.canvas_width, self.canvas_height)
+        if (name is None) or (name in self.name_index.keys()):
+            name = "turtle" + str(self.number_of_turtles)
+
+        # Add info for new turtle
+        index = self.number_of_turtles - 1
+        self.name_index[name] = index
+        self.images.append(None)
+        self.randomize(index)
+        self.poses.append(self.canvas_middle)
+
+        if new_pose is not None:
+            self.poses[index] = new_pose
 
         with ipycanvas.hold_canvas(self.canvas):
-            self.draw_turtle(n=2)  # Draw on the turtle layer
+            self.draw_turtle(index, n=2)  # Draw on the turtle layer
 
+        print(name + " has spawned.")
         return self
 
-    def move_to_pose(self, new_pose):
+    def move_to_pose(self, name, new_pose):
         self.last_move_time = time.time()
+        index = self.name_index[name]
 
-        if new_pose != self.pose:
+        if new_pose != self.poses[index]:
             with ipycanvas.hold_canvas(self.canvas):
                 # Draw line path
                 self.canvas[1].stroke_style = '#B3B8FF'
                 self.canvas[1].line_width = 8
-                self.canvas[1].stroke_line(self.pose["x"], self.pose["y"],
+                self.canvas[1].stroke_line(self.poses[index]["x"],
+                                           self.poses[index]["y"],
                                            new_pose["x"], new_pose["y"])
 
                 # Circle markers
@@ -401,36 +427,34 @@ class TurtleWidget:
                 # self.canvas[1].fill_circle(new_pose["x"], new_pose["y"], radius=5)
 
                 # Update
-                self.pose = new_pose
+                self.poses[index] = new_pose
                 self.canvas[2].clear()
-                self.draw_turtle(2)
+                for i in range(self.number_of_turtles):
+                    self.draw_turtle(index=i, n=2)
 
         return self
 
-    def draw_turtle(self, n):
+    def draw_turtle(self, index=0, n=2):
         # Offsets for turtle center and orientation
         x_offset = - self.turtle_size / 2
         y_offset = - self.turtle_size / 2
-        theta_offset = self.pose["theta"] - math.radians(90)  # to face right side
+        theta_offset = self.poses[index]["theta"] - math.radians(90)  # to face right side
 
         # Transform canvas
-        self.canvas[n].translate(self.pose["x"], self.pose["y"])
+        self.canvas[n].translate(self.poses[index]["x"],
+                                 self.poses[index]["y"])
         self.canvas[n].rotate(-theta_offset)
 
-        self.canvas[n].draw_image(self.image, x_offset, y_offset, self.turtle_size)
+        self.canvas[n].draw_image(self.images[index],
+                                  x_offset, y_offset,
+                                  self.turtle_size)
 
         # Revert transformation
         self.canvas[n].rotate(theta_offset)
-        self.canvas[n].translate(-self.pose["x"], -self.pose["y"])
+        self.canvas[n].translate(-self.poses[index]["x"],
+                                 -self.poses[index]["y"])
 
         return self
-
-
-
-
-
-
-
 
 
 
