@@ -372,7 +372,7 @@ class TurtleWidget:
         if (name is None) or (name in self.turtles.keys()):
             name = "turtle" + str(len(self.turtles) + 1)
 
-        self.turtles[name] = self.Turtle(name)
+        self.turtles[name] = self.Turtle(name, self.turtle_size)
 
         if pose is None:
             # Spawn to middle of canvas
@@ -385,23 +385,27 @@ class TurtleWidget:
 
         print(name + " has spawned.")
 
-    def move_to_pose(self, name, new_pose):
-        self.last_move_time = time.time()
+    def move_turtles(self, new_poses):
+        elapsed_time = time.time() - self.last_move_time
 
-        if new_pose != self.turtles[name].pose:
+        if elapsed_time > 0.1:  # seconds
+            self.last_move_time = time.time()
+
             with ipycanvas.hold_canvas(self.canvas):
-                # Draw line path
-                self.canvas[1].stroke_style = self.turtles[name].path_color
                 self.canvas[1].line_width = 8
-                self.canvas[1].stroke_line(self.turtles[name].pose["x"],
-                                           self.turtles[name].pose["y"],
-                                           new_pose["x"], new_pose["y"])
-
-                # Update
-                self.turtles[name].pose = new_pose
                 self.canvas[2].clear()
-                for turtle in self.turtles.keys():
-                    self.draw_turtle(name=turtle)
+
+                for name in self.turtles.keys():
+                    # Draw line path
+                    self.canvas[1].stroke_style = self.turtles[name].path_color
+                    self.canvas[1].stroke_line(self.turtles[name].pose["x"],
+                                               self.turtles[name].pose["y"],
+                                               new_poses[name]["x"],
+                                               new_poses[name]["y"])
+
+                    # Update
+                    self.turtles[name].pose = new_poses[name]
+                    self.draw_turtle(name)
 
     def draw_turtle(self, name="turtle1", n=2):
         # Offsets for turtle center and orientation
@@ -413,7 +417,7 @@ class TurtleWidget:
         self.canvas[n].translate(self.turtles[name].pose["x"], self.turtles[name].pose["y"])
         self.canvas[n].rotate(-theta_offset)
 
-        self.canvas[n].draw_image(self.turtles[name].image,
+        self.canvas[n].draw_image(self.turtles[name].canvas,
                                   x_offset, y_offset,
                                   self.turtle_size)
 
@@ -422,9 +426,10 @@ class TurtleWidget:
         self.canvas[n].translate(-self.turtles[name].pose["x"], -self.turtles[name].pose["y"])
 
     class Turtle:
-        def __init__(self, name):
+        def __init__(self, name, size=100):
             self.name = name
-            self.image = None
+            self.size = size
+            self.canvas = None
             self.randomize()
             self.pose = {"x": 0,
                          "y": 0,
@@ -437,6 +442,14 @@ class TurtleWidget:
             images = os.listdir(img_path)
             turtle_pngs = [img for img in images if ('.png' in img and 'palette' not in img)]
             random_png = turtle_pngs[random.randint(0, len(turtle_pngs) - 1)]
-            self.image = widgets.Image.from_file(img_path + random_png)
+            turtle_img = widgets.Image.from_file(img_path + random_png)
+            turtle_canvas = ipycanvas.Canvas(width=self.size, height=self.size)
+
+            with ipycanvas.hold_canvas(turtle_canvas):
+                turtle_canvas.draw_image(turtle_img, 0, 0, self.size)
+
+            time.sleep(0.1)  # Drawing time
+            self.canvas = turtle_canvas
+
             return self
 
