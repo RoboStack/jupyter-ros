@@ -348,7 +348,7 @@ def client(srv_name, srv_type):
 
 
 class TurtleWidget:
-    def __init__(self, width=1600, height=1600, turtle_size=100):
+    def __init__(self, width=1600, height=1600, turtle_size=100, background_color="#4556FF"):
         self.turtles = {}
         self.turtle_size = turtle_size
         self.canvas_middle = {"x": width // 2,
@@ -361,7 +361,7 @@ class TurtleWidget:
                                             layout={"width": "100%"})
 
         # Water background
-        self.canvas[0].fill_style = '#4556FF'
+        self.canvas[0].fill_style = background_color
         self.canvas[0].fill_rect(0, 0, width, height)
 
         self.last_move_time = time.time()
