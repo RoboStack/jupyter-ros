@@ -2,7 +2,7 @@ import sys
 from threading import Thread
 import ipywidgets as widgets
 from IPython.core.magic import register_cell_magic
-from jupyros.pubsub import OUTPUT_REGISTRY
+from jupyros.ros2.pubsub import OUTPUT_REGISTRY
 
 def executor(cell, gbls, lcls):
     exec(cell, gbls, lcls)

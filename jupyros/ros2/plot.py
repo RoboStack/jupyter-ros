@@ -7,7 +7,7 @@ Author: zmk5 (Zahi Kakish)
 from typing import TypeVar
 import numpy as np
 import bqplot as bq
-from jupyros.subscription import Subscription
+from jupyros.ros2.subscription import Subscription
 
 try:
     import rclpy
