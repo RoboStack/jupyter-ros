@@ -24,6 +24,9 @@ class TurtleSim:
         self.canvas[0].fill_style = background_color
         self.canvas[0].fill_rect(0, 0, width, height)
 
+        # Turtle path width
+        self.canvas[1].line_width = 8
+
         self.last_move_time = time.time()
         self.spawn()
 
@@ -48,11 +51,10 @@ class TurtleSim:
     def move_turtles(self, new_poses):
         elapsed_time = time.time() - self.last_move_time
 
-        if elapsed_time > 0.1:  # seconds
+        if elapsed_time > 0.08:  # seconds
             self.last_move_time = time.time()
 
             with ipycanvas.hold_canvas(self.canvas):
-                self.canvas[1].line_width = 8
                 self.canvas[2].clear()
 
                 for name in self.turtles.keys():
@@ -74,6 +76,7 @@ class TurtleSim:
         theta_offset = self.turtles[name].pose["theta"] - math.radians(90)  # to face right side
 
         # Transform canvas
+        self.canvas[n].save()
         self.canvas[n].translate(self.turtles[name].pose["x"], self.turtles[name].pose["y"])
         self.canvas[n].rotate(-theta_offset)
 
@@ -82,8 +85,7 @@ class TurtleSim:
                                   self.turtle_size)
 
         # Revert transformation
-        self.canvas[n].rotate(theta_offset)
-        self.canvas[n].translate(-self.turtles[name].pose["x"], -self.turtles[name].pose["y"])
+        self.canvas[n].restore()
 
     class Turtle:
         def __init__(self, name, size=100):
