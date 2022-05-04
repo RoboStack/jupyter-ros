@@ -1,5 +1,0 @@
-{
-  "load_extensions": {
-    "@robostack/jupyter-ros/extension": true
-  }
-}
