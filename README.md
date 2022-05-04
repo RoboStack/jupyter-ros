@@ -1,3 +1,17 @@
+This is Fork of the Robostack Jupyter-Ros library. It will be used to port the Jupyros library to allow Ros2 implementations and functions. The repo also uses previously developped software from a previous attempt to port Ros2. By zmk5 at https://github.com/zmk5/jupyter-ros2 .
+
+The Ros2 port will be done by DoBots.
+
+
+To Do:
+- Separate the functions of Ros1 and Ros2 into submodules.
+- Make the Submodules functional
+- Relay data between node and Jupyter notebooks
+- Display graphs of the previous recieved data
+- (Future) Port Jupyros1 to Jupyros2 3D graphing
+
+The Readme will be adjusted in time to match the newer functions of Ros2
+
 # ROS Support for jupyter notebooks
 
 While the Jupyter ecosystem has been widely adopted by
@@ -24,10 +38,19 @@ plotting from ROS topics to this library.
 
 If you find this initial package useful, don't hesitate to
 contribute!
+
+If you want to contact the maintaners and creators of the original Jupyros implementation please refer to the original repository of this fork. https://github.com/RoboStack/jupyterlab-ros 
+
+You may also find them at:
 You can also always reach out to w.vollprecht@gmail.com or
 on twitter: https://twitter.com/wuoulf, or join us on [Gitter](https://gitter.im/RoboStack/Lobby)
 
+If you are interested in the Ros2 port:
+Please contact: info@dobots.com
+
 ## Installation and Dependencies
+(At this moment the Jupyros Ros2 port does not function as a package, please do not attempt to install this repo as a package)
+
 
 You need a ROS environment with rospy. We recommend using [Robostack](https://github.com/RoboStack/ros-noetic) (follow their installation instructions) which allows you to install ROS in a conda environment.
 Also required are `numpy` and `bqplot` for the live-plotting
