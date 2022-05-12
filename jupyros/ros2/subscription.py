@@ -141,3 +141,41 @@ class Subscription():
             self.__widgets["out"].append_stdout(f"{args[0]}\n")
 
         return print_modifier
+    
+    
+def subscribe(topic, msg_type, callback):
+    """
+    Subscribes to a specific topic in another thread, but redirects output!
+
+    @param topic The topic
+    @param msg_type The message type
+    @param callback The callback
+
+    @return Jupyter output widget
+    """
+
+    if subscriber_registry.get(topic):
+        print("Removing previous callback, only one redirection possible right now", file=sys.stderr)
+        subscriber_registry[topic].unregister()
+
+    out = widgets.Output(layout={'border': '1px solid gray'})
+    subscriber_registry[topic] = rospy.Subscriber(topic, msg_type, callback)
+    output_registry[topic] = out
+
+    btn = widgets.Button(description='Stop')
+
+    def stop_start_subscriber(x):
+        if output_registry.get(topic) is not None:
+            subscriber_registry[topic].unregister()
+            del output_registry[topic]
+            btn.description = 'Start'
+        else:
+            output_registry[topic] = out
+            subscriber_registry[topic] = rospy.Subscriber(topic, msg_type, callback)
+            btn.description = 'Stop'
+
+    btn.on_click(stop_start_subscriber)
+    btns = widgets.HBox((btn, ))
+    vbox = widgets.VBox((btns, out))
+    return vbox
+

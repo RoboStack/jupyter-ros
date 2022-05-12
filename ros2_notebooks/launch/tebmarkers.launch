@@ -1,0 +1,9 @@
+<launch>
+	<node pkg="interactive_marker_proxy"
+		type="proxy"
+		args="topic_ns:=/marker_obstacles target_frame:=/odom"
+		name="interactive_marker_proxy" />
+	<include file="$(find teb_local_planner)/launch/test_optim_node.launch" />
+	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
+	<node pkg="tf2_web_republisher" type="tf2_web_republisher" name="tf2_web_republisher" />
+</launch>

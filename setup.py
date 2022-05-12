@@ -1,4 +1,11 @@
 from os import path
+from setuptools import setup, find_packages, Command
+from setuptools.command.sdist import sdist
+from setuptools.command.build_py import build_py
+from setuptools.command.egg_info import egg_info
+from subprocess import check_call
+import sys
+import platform
 
 from jupyter_packaging import (
     create_cmdclass, install_npm, ensure_targets,
@@ -6,7 +13,8 @@ from jupyter_packaging import (
     get_version
 )
 
-from setuptools import setup, find_packages
+
+
 
 # The name of the project
 name = 'jupyros'
@@ -94,7 +102,7 @@ setup_args = {
         'numpy',
         'rospkg'
     ],
-    'packages': find_packages(),
+    'packages': find_packages(where="jupyros"),
     'zip_safe': False,
     'cmdclass': cmdclass,
     'classifiers': [

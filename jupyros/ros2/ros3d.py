@@ -12,7 +12,7 @@ from traitlets import Int
 from traitlets import Bool
 from traitlets import List
 from traitlets import utils as tut
-from ._version import version_info
+from _version import version_info
 
 
 def _quick_widget(package_name, version, has_view=True):
