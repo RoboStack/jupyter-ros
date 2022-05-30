@@ -32,6 +32,8 @@ notebook.
 
 ![Screen_shot_Ros2](https://user-images.githubusercontent.com/27964546/170959530-820e6dc5-e23f-414e-baf4-23596fb53c10.png)
 
+
+
 With jupyter-ros, it's possible to easily create widgets for
 custom message types to send messages.
 
@@ -53,8 +55,11 @@ Please contact: info@dobots.com
 ## Installation and Dependencies
 (At this moment the Jupyros Ros2 port does not function as a package, please do not attempt to install this repo as a package)
 
+For the Ros 2, you need a Ros2 environment with Rclpy. The use of Simcloud https://github.com/dobots/simcloud is recommended for this. 
+
 
 You need a ROS environment with rospy. We recommend using [Robostack](https://github.com/RoboStack/ros-noetic) (follow their installation instructions) which allows you to install ROS in a conda environment.
+
 Also required are `numpy` and `bqplot` for the live-plotting
 and `ipywidgets` for the interactive widgets
 
