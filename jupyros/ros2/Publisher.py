@@ -81,7 +81,13 @@ class Publisher():
         vbox = widgets.VBox(children=self.__widget_list)
 
         return vbox
-
+    def send_msg(self, msg_to_send):
+        """ Generic call to send message. """
+        msg_to_send = self.msg_type()
+        # widget_dict_to_msg(msg_to_send, widget_dict)
+        self.__publisher.publish(msg_to_send)
+        print("Message Sent!")
+    
     def __send_msg(self, _) -> None:
         """ Generic call to send message. """
         msg_to_send = self.msg_type()
