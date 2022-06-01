@@ -14,6 +14,7 @@ except:
 try:
     from cv_bridge import CvBridge, CvBridgeError
     import cv2
+
     bridge = CvBridge()
 except:
     pass
@@ -22,6 +23,7 @@ import ipywidgets as widgets
 import numpy as np
 import threading
 import subprocess, yaml, os
+
 
 
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
@@ -67,6 +69,7 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
 
     return widget_dict, widget_list
 
+
 def widget_dict_to_msg(msg_instance, d):
     for key in d:
         if isinstance(d[key], widgets.Widget):
@@ -81,11 +84,14 @@ def widget_dict_to_msg(msg_instance, d):
             submsg = getattr(msg_instance, key)
             widget_dict_to_msg(submsg, d[key])
 
+
 thread_map = {}
+
 
 def img_to_msg(imgpath):
     if not cv2 or not CvBridge:
-        raise RuntimeError("CV Bridge is not installed, please install it to publish Images\nsudo apt-get install ros-$(rosversion -d)-cv-bridge")
+        raise RuntimeError(
+            "CV Bridge is not installed, please install it to publish Images\nsudo apt-get install ros-$(rosversion -d)-cv-bridge")
 
     img = cv2.imread(imgpath)
     if img is None:
@@ -93,6 +99,7 @@ def img_to_msg(imgpath):
     else:
         imgmsg = bridge.cv2_to_imgmsg(img)
         return imgmsg
+
 
 def publish(topic, msg_type):
     """
@@ -133,6 +140,7 @@ def publish(topic, msg_type):
     send_btn.on_click(send_msg)
 
     thread_map[topic] = False
+
     def thread_target():
         rate = rospy.Rate(rate_field.value)
         while thread_map[topic]:
@@ -150,12 +158,12 @@ def publish(topic, msg_type):
 
     stop_btn.on_click(start_thread)
 
-
     btm_box = widgets.HBox((send_btn, latch_check, rate_field, stop_btn))
     widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
 
     return vbox
+
 
 def live_plot(plot_string, topic_type, history=100, title=None):
     topic = plot_string[:plot_string.find(':') - 1]
@@ -184,6 +192,7 @@ def live_plot(plot_string, topic_type, history=100, title=None):
 
     rospy.Subscriber(topic, topic_type, cb)
     return fig
+
 
 def bag_player(bagfile=''):
     """
@@ -220,11 +229,12 @@ def bag_player(bagfile=''):
     duration_float = widgets.FloatText(value=0)
     duration_box = widgets.HBox([dzbox, widgets.Label("Duration in secs:"), duration_float])
     out_box = widgets.Output(layout={'border': '1px solid black'})
+
     ######## Play Button ##################################################
     def ply_clk(arg):
         if play_btn.description == "Play":
             info_dict = yaml.load(subprocess.Popen(['rosbag', 'info', '--yaml', bgpath_txt.value],
-                stdout=subprocess.PIPE).communicate()[0])
+                                                   stdout=subprocess.PIPE).communicate()[0])
             if info_dict is None:
                 raise FileNotFoundError("Bag file not found!")
             else:
@@ -263,7 +273,9 @@ def bag_player(bagfile=''):
             pause_btn.description = 'Pause'
             pause_btn.icon = 'pause'
             step_btn.disabled = True
+
     play_btn.on_click(ply_clk)
+
     ###################### Pause Button #########################
     def pause_clk(arg):
         bag_player.sp.stdin.write(b' \n')
@@ -276,15 +288,19 @@ def bag_player(bagfile=''):
             pause_btn.description = 'Pause'
             pause_btn.icon = 'pause'
             step_btn.disabled = True
+
     pause_btn.on_click(pause_clk)
+
     ################## step Button ###############################
     def step_clk(arg):
         bag_player.sp.stdin.write(b's\n')
         bag_player.sp.stdin.flush()
+
     step_btn.on_click(step_clk)
     options_hbox = widgets.HBox([ibox, lbox, clockbox, kabox])
     buttons_hbox = widgets.HBox([play_btn, pause_btn, step_btn])
-    btm_box = widgets.VBox([bgpath_box, options_hbox, duration_box, start_box, que_box, factor_box, delay_box, buttons_hbox, out_box])
+    btm_box = widgets.VBox(
+        [bgpath_box, options_hbox, duration_box, start_box, que_box, factor_box, delay_box, buttons_hbox, out_box])
     widget_list.append(btm_box)
     vbox = widgets.VBox(children=widget_list)
     return vbox
@@ -313,7 +329,6 @@ def client(srv_name, srv_type):
         msg_to_send = srv_type._request_class()
         widget_dict_to_msg(msg_to_send, widget_dict)
 
-
         try:
             service = rospy.ServiceProxy(srv_name, srv_type)
             return service(msg_to_send)
@@ -326,3 +341,4 @@ def client(srv_name, srv_type):
     vbox = widgets.VBox(children=widget_list)
 
     return vbox
+
