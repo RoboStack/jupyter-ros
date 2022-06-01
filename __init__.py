@@ -1,18 +1,19 @@
-import jupyros
-"""
-from .ros1.pubsub import *
-from .ros1.ipy import *
-from .ros1.server_extension import *
-from .ros1.ros3d import *
+#############################################################################
+# Copyright (c) Wolf Vollprecht, QuantStack                                 #
+#                                                                           #
+# Distributed under the terms of the BSD 3-Clause License.                  #
+#                                                                           #
+# The full license is in the file LICENSE, distributed with this software.  #
+#############################################################################
 
-from .ros2.ros_widgets import *
-from .ros2.pubsub import *
-from .ros2.ipy import *
-from .ros2.server_extension import *
-from .ros2.ros3d import *
-from .ros2.subscription import *
-from .ros2.publisher import *
-from .ros2.plot import *
+from ._version import version_info, __version__
+
+from .ros_widgets import *
+from .pubsub import *
+from .ipy import *
+from .server_extension import *
+
+from .ros3d import *
 
 def _jupyter_nbextension_paths():
     return [{
@@ -31,5 +32,4 @@ def _jupyter_labextension_paths():
 def _jupyter_server_extension_paths():
     return [{
         "module": "jupyros"
-    }]
-"""         
+    }
