@@ -61,40 +61,66 @@ class Publisher():
         self.__publisher = self.node.create_publisher(msg_type, topic, 10)
         self.__thread_map = {}
         self.__widget_list = []
-        # self.__widget_dict = {}
+        self.__widget_dict = {}
         self.__widgets = {
             "rate_field": widgets.IntText(description="Rate", value=5),
             "stop_btn": widgets.Button(description="Start"),
             "send_btn": widgets.Button(description="Send Message"),
+            "txt_input": widgets.Text(description="Message", value="Something")
             }
+    
+    def widget_dict_to_msg(self, msg_instance, d):
+        for key in d:
+            if isinstance(d[key], widgets.Widget):
+                if key == 'img':
+                    img_msg = img_to_msg(d[key].value)
+                    for slot in img_msg.__slots__:
+                        setattr(msg_instance, slot, getattr(img_msg, slot))
+                    return
+                else:
+                    setattr(msg_instance, key, d[key].value)
+            else:
+                submsg = getattr(msg_instance, key)
+                widget_dict_to_msg(submsg, d[key])
 
     def display(self) -> widgets.VBox:
         """ Display's widgets within the Jupyter Cell for a ros2 Publisher """
         self.__widgets["send_btn"].on_click(self.__send_msg)
         self.__widgets["stop_btn"].on_click(self.__start_thread)
+        top_box = widgets.HBox((
+            self.__widgets["txt_input"],
+        ))
         btm_box = widgets.HBox((
             self.__widgets["send_btn"],
             self.__widgets["rate_field"],
             self.__widgets["stop_btn"],
+            
             ))
         self.__widget_list.append(btm_box)
-        vbox = widgets.VBox(children=self.__widget_list)
+        vbox = widgets.VBox([top_box, btm_box])
 
         return vbox
-    def send_msg(self, msg_to_send, print_msg = None):
+    def send_msg(self, msg, print_msg = None):
+         
         """ Generic call to send message. """
         msg_to_send = self.msg_type()
-        # widget_dict_to_msg(msg_to_send, widget_dict)
+        msg_to_send.data=msg
+        #self.widget_dict_to_msg(msg_to_send, self._widget_dict)
         self.__publisher.publish(msg_to_send)
-        if(print_msg):
+        if(print_msg==True):
             print("Message Sent!")
     
+    
+
     def __send_msg(self, _) -> None:
         """ Generic call to send message. """
-        msg_to_send = self.msg_type()
-        # widget_dict_to_msg(msg_to_send, widget_dict)
-        self.__publisher.publish(msg_to_send)
-        print("Message Sent!")
+        
+        #msg_to_send = self.msg_type()
+        #msg_to_send.data="test"
+        #msg_to_send = self.msg_type()
+        #self.widget_dict_to_msg(msg_to_send, self._widget_dict)
+        self.send_msg(self.__widgets["txt_input"].value)
+        #print("Message Sent!")
 
     def __thread_target(self) -> None:
         d = 1.0 / float(self.__widgets["rate_field"].value)

@@ -6,7 +6,6 @@ import jupyros.ros2 as jr2
 from ipyevents import Event 
 from ipywidgets import Output
 from ipycanvas import Canvas
-from geometry_msgs.msg import Twist
 import rclpy
 
 
@@ -34,7 +33,7 @@ class key_input:
         
         
         #Using the Ros2 Jupyros Publisher module, create 
-        self.key_in = jr2.Publisher(node, Twist, topic)
+        self.key_in = jr2.Publisher(node, msg_type, topic)
         
     # Method to change the window color
     def set_color(self, color):
@@ -60,7 +59,7 @@ class key_input:
     # method to display the screen and to receive keyboard inputs
     def display(self, print_outgoing_msg = None):
         
-        if(print_outgoing_msg):
+        if(print_outgoing_msg == None):
             print_outgoing_msg =  False
             
         @self.out.capture()
