@@ -11,6 +11,9 @@ dist/
 jupyros/nbextension/
 jupyros/labextension/
 
+#Tesing files
+Testing_3d.ipynb
+
 # Examples
 .ipynb_checkpoints/
 
