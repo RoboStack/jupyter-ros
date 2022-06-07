@@ -4,10 +4,12 @@ Live Plot class for jupyter-ros2 Project
 Author: zmk5 (Zahi Kakish)
 
 """
+import sys
+sys.path.append("./../../jupyros")
 from typing import TypeVar
 import numpy as np
 import bqplot as bq
-from jupyros.ros2.subscription import Subscription
+from .ros2.Subscription import *
 
 try:
     import rclpy
