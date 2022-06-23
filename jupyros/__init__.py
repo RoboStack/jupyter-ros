@@ -7,6 +7,7 @@ from .server_extension import *
 from .ros3d import *
 
 from .ros2 import *
+from .turtle_sim import *
 
 """
 from .ros2.ros_widgets import *

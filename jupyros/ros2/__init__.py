@@ -6,5 +6,6 @@ from .Subscription import *
 from .Publisher import *
 from .ros3d import *
 from .key_input import *
+from .turtle_sim import *
 
 
