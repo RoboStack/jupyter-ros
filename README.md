@@ -1,3 +1,9 @@
+# Jupyros2
+Navigate to:
+|-- Jupyros
+    |-- Ros2
+        |-- README.md
+
 # ROS Support for jupyter notebooks
 
 While the Jupyter ecosystem has been widely adopted by
