@@ -18,14 +18,12 @@ try:
     bridge = CvBridge()
 except:
     pass
-from socket import timeout
 import bqplot as bq
 import ipywidgets as widgets
 import numpy as np
 import threading
 import subprocess, yaml, os
 import actionlib
-
 
 
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
@@ -376,7 +374,7 @@ def action_client(action_name, action_msg, goal_msg, callbacks=None):
     done_handle = None
     active_handle = None
     feedback_handle = None
-    
+
     if callbacks:
         if 'done_cb' in callbacks.keys():
             done_handle = callbacks['done_cb']
@@ -398,13 +396,13 @@ def action_client(action_name, action_msg, goal_msg, callbacks=None):
                            done_cb=done_handle,
                            active_cb=active_handle,
                            feedback_cb=feedback_handle
-        )
+                           )
         a_client.wait_for_result()
         result = a_client.get_result()
 
         if thread_map[action_name]:
             rospy.loginfo(f'[{action_name.upper()}] Result is {result}')
-            
+
         thread_map[action_name] = False
         return result
 
@@ -435,4 +433,3 @@ def action_client(action_name, action_msg, goal_msg, callbacks=None):
     widget_box = widgets.VBox(children=widget_list)
 
     return widget_box
-
