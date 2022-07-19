@@ -92,7 +92,8 @@ setup_args = {
         'ipywidgets>=7.0.0',
         'bqplot',
         'numpy',
-        'rospkg'
+        'rospkg',
+        'ipycanvas'
     ],
     'packages': find_packages(),
     'zip_safe': False,
