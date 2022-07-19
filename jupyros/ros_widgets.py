@@ -23,7 +23,7 @@ import ipywidgets as widgets
 import numpy as np
 import threading
 import subprocess, yaml, os
-
+import actionlib
 
 
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
@@ -342,3 +342,94 @@ def client(srv_name, srv_type):
 
     return vbox
 
+
+def action_client(action_name, action_msg, goal_msg, callbacks=None):
+    """
+    Create a form widget for message type action_msg.
+    This function analyzes the fields of action_msg and creates
+    an appropriate widget.
+    An action client is automatically created which sends a goal to the
+    action server given as action_name. This allows pressing the
+    "Send Goal" button to send the message to ROS.
+
+    @param action_name  The namespace in which to access the action
+    @param action_msg   The action message type
+    @param goal_msg     The goal message type
+    @param callbacks    A dictionary of callback function handles with
+                        optional keys: done_cb, active_cb and feedback_cb
+
+    @return jupyter widget for display
+    """
+
+    # Create actions client and connect to server
+    a_client = actionlib.SimpleActionClient(action_name, action_msg)
+    rospy.loginfo(f'[{action_name.upper()}]: Waiting for action server.')
+    server_ok = a_client.wait_for_server(timeout=rospy.Duration(5.0))
+    if server_ok:
+        rospy.loginfo(f'[{action_name.upper()}] Connection to server successful.')
+    else:
+        rospy.logerr(f'[{action_name.upper()}] Unable to connect to server.')
+
+    # Unpack callback functions
+    done_handle = None
+    active_handle = None
+    feedback_handle = None
+
+    if callbacks:
+        if 'done_cb' in callbacks.keys():
+            done_handle = callbacks['done_cb']
+        if 'active_cb' in callbacks.keys():
+            active_handle = callbacks['active_cb']
+        if 'feedback_cb' in callbacks.keys():
+            feedback_handle = callbacks['feedback_cb']
+
+    # Create widget
+    widget_list = []
+    widget_dict = {}
+    add_widgets(goal_msg(), widget_dict, widget_list)
+
+    thread_map[action_name] = False
+
+    def send_goal(arg):
+        widget_dict_to_msg(goal_msg, widget_dict)
+        a_client.send_goal(goal_msg,
+                           done_cb=done_handle,
+                           active_cb=active_handle,
+                           feedback_cb=feedback_handle
+                           )
+        a_client.wait_for_result()
+        result = a_client.get_result()
+
+        if thread_map[action_name]:
+            rospy.loginfo(f'[{action_name.upper()}] Result is {result}')
+
+        thread_map[action_name] = False
+        return result
+
+    def cancel_action(arg):
+        thread_map[action_name] = False
+        rospy.loginfo(f'[{action_name.upper()}] The action has been cancelled.')
+        a_client.cancel_goal()
+
+    def thread_target():
+        while thread_map[action_name]:
+            send_goal(None)
+
+    def start_thread(click_args):
+        thread_map[action_name] = not thread_map[action_name]
+        if thread_map[action_name]:
+            local_thread = threading.Thread(target=thread_target)
+            local_thread.start()
+
+    # Buttons
+    send_btn = widgets.Button(description="Send Goal")
+    send_btn.on_click(start_thread)
+
+    cancel_btn = widgets.Button(description="Cancel Action")
+    cancel_btn.on_click(cancel_action)
+
+    buttons = widgets.HBox((send_btn, cancel_btn))
+    widget_list.append(buttons)
+    widget_box = widgets.VBox(children=widget_list)
+
+    return widget_box
