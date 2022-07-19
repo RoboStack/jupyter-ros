@@ -30,10 +30,10 @@ on twitter: https://twitter.com/wuoulf, or join us on [Gitter](https://gitter.im
 ## Installation and Dependencies
 
 You need a ROS environment with rospy. We recommend using [Robostack](https://github.com/RoboStack/ros-noetic) (follow their installation instructions) which allows you to install ROS in a conda environment.
-Also required are `numpy` and `bqplot` for the live-plotting
-and `ipywidgets` for the interactive widgets
+Also required are `numpy` and `bqplot` for the live-plotting, 
+`ipywidgets` for the interactive widgets, and `ipycanvas` for the Turtlesim animations.
 
-    conda install jupyter bqplot pyyaml ipywidgets
+    conda install jupyter bqplot pyyaml ipywidgets ipycanvas
 
 `pyyaml` is necessary for rospy.
 
