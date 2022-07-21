@@ -19,11 +19,11 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'jupyter-ros'
-copyright = '2020, Wolf Vollprecht'
+copyright = '2022, Wolf Vollprecht'
 author = 'Wolf Vollprecht'
 
 # The full version, including alpha/beta/rc tags
-release = '0.3.0'
+release = '0.6.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -34,6 +34,7 @@ release = '0.3.0'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
+    'myst_parser',
     # 'sphinx.ext.intersphinx',
     # 'sphinx.ext.autosummary',
     # 'sphinx.ext.viewcode',
