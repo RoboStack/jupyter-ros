@@ -23,7 +23,11 @@ import ipywidgets as widgets
 import numpy as np
 import threading
 import subprocess, yaml, os
-import actionlib
+
+try: 
+    import actionlib
+except:
+    print("The actionlib package is not found in your $PYTHONPATH. Action clients are not going to work.")
 
 
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
