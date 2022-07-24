@@ -5,29 +5,35 @@
 #                                                                           #
 # The full license is in the file LICENSE, distributed with this software.  #
 #############################################################################
+import os
+import yaml
+import threading
+import subprocess
+import numpy as np
+
+import bqplot as bq
+import ipywidgets as widgets
+
 
 try:
     import rospy
 except:
     print("The rospy package is not found in your $PYTHONPATH. Subscribe and publish are not going to work.")
     print("Do you need to activate your ROS environment?")
-try:
-    from cv_bridge import CvBridge, CvBridgeError
-    import cv2
-
-    bridge = CvBridge()
-except:
-    pass
-import bqplot as bq
-import ipywidgets as widgets
-import numpy as np
-import threading
-import subprocess, yaml, os
 
 try: 
     import actionlib
 except:
     print("The actionlib package is not found in your $PYTHONPATH. Action clients are not going to work.")
+    print("Do you need to activate your ROS environment?")
+
+try:
+    from cv_bridge import CvBridge
+    import cv2
+
+    bridge = CvBridge()
+except:
+    pass
 
 
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):

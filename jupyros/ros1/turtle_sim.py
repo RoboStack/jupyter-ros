@@ -1,10 +1,12 @@
-import ipycanvas
-import ipywidgets
-import rospkg
-import random
+import os
 import time
 import math
-import os
+import random
+
+import ipycanvas
+import ipywidgets
+
+import rospkg
 
 
 class TurtleSim:
