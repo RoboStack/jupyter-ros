@@ -5,15 +5,16 @@
 #                                                                           #
 # The full license is in the file LICENSE, distributed with this software.  #
 #############################################################################
+import os
 
 from notebook.utils import url_path_join
 from notebook.base.handlers import IPythonHandler
-from jupyros import _version
 
 import rospkg
-import os
 
-__version__ = _version.__version__
+from .._version import __version__
+
+__version__ = __version__
 
 if os.getenv('JUPYROS_DEFAULT_WS'):
     envs = os.getenv('JUPYROS_DEFAULT_WS').split(';')

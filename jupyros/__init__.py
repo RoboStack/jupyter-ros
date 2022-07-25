@@ -8,12 +8,12 @@
 
 from ._version import version_info, __version__
 
-from .ros_widgets import *
-from .pubsub import *
-from .ipy import *
-from .server_extension import *
-
-from .ros3d import *
+from .ros1.ipy import *
+from .ros1.pubsub import *
+from .ros1.ros_widgets import *
+from .ros1.ros3d import *
+from .ros1.server_extension import *
+from .ros1.turtle_sim import *
 
 def _jupyter_nbextension_paths():
     return [{

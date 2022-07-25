@@ -8,13 +8,10 @@
 
 import os
 
-import ipywidgets as widgets
 from traitlets import *
+import ipywidgets as widgets
 
-try:
-    from _version import version_info
-except:
-    from ._version import version_info
+from .._version import version_info
 
 js_version = '^' + '.'.join([str(x) for x in version_info[:3]])
 
