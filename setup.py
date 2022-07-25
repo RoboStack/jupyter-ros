@@ -95,7 +95,7 @@ setup_args = {
         'rospkg',
         'ipycanvas'
     ],
-    'packages': ['jupyros'],
+    'packages': find_packages(),
     'zip_safe': False,
     'cmdclass': cmdclass,
     'classifiers': [
