@@ -1,3 +1,15 @@
 [build-system]
 requires = ["jupyter_packaging~=0.7.9", "jupyterlab>=3.0.0,==3.*", "setuptools>=40.8.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[[tool.tbump.file]]
+src = "jupyros/_version.py"
+version_template = '({major}, {minor}, {patch}, "{channel}", "{release}")'
+
+[[tool.tbump.field]]
+name = "channel"
+default = ""
+
+[[tool.tbump.field]]
+name = "release"
+default = ""
