@@ -15,27 +15,37 @@ pieces:
 
 - publishing and receiving messages from the notebook interface
 - a 3D widget for inspecting the robot and sensors in 3D
-- playing back bag files and other helpers
+- playing back bag files and other helpers   
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: General
 
-   installation
+   gen_getting_started
+   gen_support
+
+.. toctree::
+   :maxdepth: 3
+   :caption: User Documentation
+
+   user_installation
+   user_ros_essentials 
+   user_3d_widgets
+   user_server
+   user_troubleshooting
 
 .. toctree::
    :maxdepth: 2
-   :caption: Usage:
+   :caption: Developer Documentation
 
-   publishing_receiving
-   ros_widgets
-   server_extension
-   troubleshooting
+   dev_installation
+   dev_testing
+   dev_contributing
 
 .. toctree::
    :maxdepth: 2
-   :caption: Reference:
+   :caption: Reference
 
    reference
 

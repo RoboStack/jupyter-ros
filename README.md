@@ -6,8 +6,8 @@ robotics community has not jumped on the band wagon yet!
 Most tools around ROS, the Robot Operating System, are
 built using Python and QT.
 
-However, using QT seperates the user away from the code.
-We've built an initial version of the ROS tools for jupyter
+However, using QT separates the user away from the code.
+We've built a set of ROS tools for jupyter
 notebook, trying to promote a rich, interactive experience
 for Robotics developers utilizing the power of the jupyter
 notebook.
@@ -19,10 +19,7 @@ notebook.
 With jupyter-ros, it's possible to easily create widgets for
 custom message types to send messages.
 
-In the future, we plan to bring simple and fast real-time
-plotting from ROS topics to this library.
-
-If you find this initial package useful, don't hesitate to
+If you find this package useful, don't hesitate to
 contribute!
 You can also always reach out to w.vollprecht@gmail.com or
 on twitter: https://twitter.com/wuoulf, or join us on [Gitter](https://gitter.im/RoboStack/Lobby)
@@ -60,9 +57,7 @@ To update the `defaults.js` javascript you need to run `python jupyros/ros3d.py`
 You might see a warning like "The rospy package is not found in your $PYTHONPATH.
 Subscribe and publish are not going to work. Do you need to activate your ROS environment?"
 
-This is harmless during installation, but if you see this warning in a notebook, you should
-check that your ROS environment is activated. You can also set the path from inside the notebook
-using
+This is harmless during installation, but if you see this warning in a notebook, you should check that your ROS environment is activated. You can also set the path from inside the notebook using
 
 ```
 import sys
