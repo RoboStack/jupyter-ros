@@ -1,7 +1,7 @@
 """
 Subscription class for jupyter-ros2 Project
 
-Modified by: ldani (Luigi Dania)
+Modified by: ldania (Luigi Dania)
 Date: 22-July-2022
 
 
