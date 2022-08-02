@@ -3,6 +3,7 @@
   "version": "0.5.0",
   "description": "Jupyter widgets for the ROS ecosystem.",
   "author": "Wolf Vollprecht",
+  "license": "BSD-3-Clause",
   "main": "lib/labplugin.js",
   "repository": {
     "type": "git",
