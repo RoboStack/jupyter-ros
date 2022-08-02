@@ -82,7 +82,7 @@ the following:
    from rospy_tutorials.srv import AddTwoInts
 
    rospy.init_node('service_node')
-   jupyros.client('service_name', AddTwoInts)
+   jupyros.service_client('service_name', AddTwoInts)
 
 The generated widget will change depending on the message type being passed.
 
