@@ -4,14 +4,16 @@ include pyproject.toml
 
 include jupyros/jupyter-ros.json
 include jupyros/jupyros_server_extension.json
-include jupyros/_version.pyc
+include jupyros/_version.py
 include jupyros/__init__.py
 
 graft jupyros/static
 graft jupyros/labextension
+graft jupyros/nbextension
 graft jupyros/ros1
 graft jupyros/ros2
 
+# Javascript files
 include js/package.json
 include js/yarn.lock
 include js/webpack.config.js
@@ -20,8 +22,6 @@ include ts*.json
 include *.config.js
 include yarn.lock
 include *.js
-
-# Javascript files
 graft js/dist
 graft js/loaders
 graft js/lib
