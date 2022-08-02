@@ -103,14 +103,14 @@ class Publisher():
         vbox = widgets.VBox([top_box, btm_box])
 
         return vbox
-    def send_msg(self, msg, print_msg = None):
+    def send_msg(self, msg_to_send, print_msg = None):
          
         """ Generic call to send message. """
         msg_to_send = msg
         #msg_to_send.data=msg
         #self.widget_dict_to_msg(msg_to_send, self._widget_dict)
         self.__publisher.publish(msg_to_send)
-        if(True):
+        if(print_msg == True):
             print("Message Sent!, the message is", msg_to_send)
     
     

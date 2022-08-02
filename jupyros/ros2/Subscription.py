@@ -28,7 +28,7 @@ except ModuleNotFoundError:
 MsgType = TypeVar('MsgType')
 
 
-class Subscription():
+class Subscriber():
     """
     Creates a class containing the form widget for message type `msg_type`.
     This class analyzes the fields of msg_type and creates
