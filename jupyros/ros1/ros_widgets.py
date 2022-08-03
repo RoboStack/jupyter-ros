@@ -316,7 +316,17 @@ def bag_player(bagfile=''):
     return vbox
 
 
-def client(srv_name, srv_type):
+def client(*args, **kwargs):
+    """
+    Deprecated client for ROS services.
+    Use service_client() instead.
+    """
+    from warnings import warn
+    warn("client() is deprecated. Use service_client() instead.")
+    return service_client(*args, **kwargs)
+
+
+def service_client(srv_name, srv_type):
     """
     Create a form widget for message type srv_type.
     This function analyzes the fields of srv_type and creates
@@ -327,7 +337,11 @@ def client(srv_name, srv_type):
 
     @return jupyter widget for display
     """
-    rospy.wait_for_service(srv_name, timeout=5)
+    try:
+        rospy.wait_for_service(srv_name, timeout=5)
+    except rospy.ROSException:
+        rospy.logerr(f"Service {srv_name} is unavailable.")
+        return
 
     widget_list = []
     widget_dict = {}
@@ -343,7 +357,7 @@ def client(srv_name, srv_type):
             service = rospy.ServiceProxy(srv_name, srv_type)
             return service(msg_to_send)
         except rospy.ServiceException as e:
-            print("Service call failed: %s" % e)
+            rospy.logerr(f"Service call failed: {e}")
 
     call_btn.on_click(call_srv)
 
@@ -373,7 +387,7 @@ def action_client(action_name, action_msg, goal_msg, callbacks=None):
 
     # Create actions client and connect to server
     a_client = actionlib.SimpleActionClient(action_name, action_msg)
-    rospy.loginfo(f'[{action_name.upper()}]: Waiting for action server.')
+    rospy.loginfo(f'[{action_name.upper()}] Waiting for action server.')
     server_ok = a_client.wait_for_server(timeout=rospy.Duration(5.0))
     if server_ok:
         rospy.loginfo(f'[{action_name.upper()}] Connection to server successful.')
