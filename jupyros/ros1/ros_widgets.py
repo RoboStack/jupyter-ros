@@ -316,6 +316,16 @@ def bag_player(bagfile=''):
     return vbox
 
 
+def client(*args, **kwargs):
+    """
+    Deprecated client for ROS services.
+    Use service_client() instead.
+    """
+    from warnings import warn
+    warn("client() is deprecated. Use service_client() instead.")
+    return service_client(*args, **kwargs)
+
+
 def service_client(srv_name, srv_type):
     """
     Create a form widget for message type srv_type.
