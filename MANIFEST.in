@@ -7,7 +7,6 @@ include jupyros/jupyros_server_extension.json
 include jupyros/_version.py
 include jupyros/__init__.py
 
-graft jupyros/static
 graft jupyros/labextension
 graft jupyros/nbextension
 graft jupyros/ros1
