@@ -11,6 +11,7 @@ from typing import TypeVar
 import threading
 import time
 import ipywidgets as widgets
+from . import add_widgets
 
 try:
     import rclpy
@@ -71,6 +72,8 @@ class Publisher():
             "send_btn": widgets.Button(description="Send Message"),
             "txt_input": widgets.Text(description="Message", value="Something")
             }
+       
+        add_widgets(self.msg_type, self.__widget_dict, self.__widget_list)
     
     def widget_dict_to_msg(self, msg_instance, d):
         for key in d:
@@ -100,30 +103,21 @@ class Publisher():
             
             ))
         self.__widget_list.append(btm_box)
-        vbox = widgets.VBox([top_box, btm_box])
+        vbox = widgets.VBox(children=self.__widget_list)
 
         return vbox
-    def send_msg(self, msg_to_send, print_msg = None):
+    
+    def __send_msg(self, msg_to_send, print_msg = None):
          
         """ Generic call to send message. """
-        msg_to_send = msg
-        #msg_to_send.data=msg
-        #self.widget_dict_to_msg(msg_to_send, self._widget_dict)
-        self.__publisher.publish(msg_to_send)
+        msg = self.msg_type()
+        #self.widget_dict_to_msg(msg_to_send, self.__widget_dict)
+        #self.__publisher.publish(msg)
+        self.__publisher.publish(msg)
         if(print_msg == True):
-            print("Message Sent!, the message is", msg_to_send)
+            print("Message Sent", msg)
     
     
-
-    def __send_msg(self, _) -> None:
-        """ Generic call to send message. """
-        
-        #msg_to_send = self.msg_type()
-        #msg_to_send.data="test"
-        #msg_to_send = self.msg_type()
-        #self.widget_dict_to_msg(msg_to_send, self._widget_dict)
-        self.send_msg(self.__widgets["txt_input"].value)
-        #print("Message Sent!")
 
     def __thread_target(self) -> None:
         d = 1.0 / float(self.__widgets["rate_field"].value)
