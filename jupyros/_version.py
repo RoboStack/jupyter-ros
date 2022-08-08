@@ -29,7 +29,7 @@ def _fetchVersion():
     raise FileNotFoundError(f"Could not find package.json under dir {HERE!s}")
 
 def _fetchJSVersion():
-    HERE = Path(__file__).parent.resolve()
+    HERE = Path(__file__).parent.parent.resolve()
 
     for settings in HERE.rglob("package.json"):
         try:

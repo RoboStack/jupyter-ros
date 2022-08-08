@@ -3,18 +3,20 @@ requires = ["jupyter_packaging~=0.10,<2", "jupyterlab>=3,<4"]
 build-backend = "jupyter_packaging.build_api"
 
 [tool.jupyter-packaging.options]
-skip-if-exists = ["jupyros/labextension/static/style.js"]
-ensured-targets = ["jupyros/labextension/static/style.js", "jupyros/labextension/package.json"]
+skip-if-exists = ["jupyros/labextension/static/style.js", "jupyros/nbextension/extension.js", "jupyros/nbextension/index.js"]
+ensured-targets = ["jupyros/labextension/static/style.js", "jupyros/labextension/package.json", "jupyros/nbextension/extension.js", "jupyros/nbextension/index.js"]
 
 [tool.jupyter-packaging.builder]
 factory = "jupyter_packaging.npm_builder"
 
 [tool.jupyter-packaging.build-args]
+path="js"
 build_cmd = "build:prod"
+source_dir="lib"
 npm = ["jlpm"]
 
 [tool.check-manifest]
-ignore = ["jupyros/labextension/**", "packages/**", "assets/**", "lerna.json", "yarn.lock", ".*", "package-lock.json", "docs/**"]
+ignore = ["jupyros/labextension/**", "jupyros/nbextension/**", "js/**", ".*", "docs/**"]
 
 [tool.jupyter-releaser.hooks]
 before-bump-version = ["python -m pip install jupyterlab~=3.4"]
