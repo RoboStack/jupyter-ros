@@ -22,8 +22,12 @@ jobs:
     - name: Build the extension
       run: |
         set -eux
-        jlpm
-        jlpm run eslint:check
+        # TODO: add lint check
+        #pushd js
+        #jlpm
+        #jlpm run eslint:check
+        #popd
+        
         python -m pip install .
         jupyter labextension list
         jupyter labextension list 2>&1 | grep -ie "@robostack/jupyter-ros.*OK"

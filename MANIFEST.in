@@ -1,29 +1,23 @@
 include LICENSE
-include README.md
+include *.md
 include pyproject.toml
 
-include jupyros/jupyter-ros.json
-include jupyros/jupyros_server_extension.json
+graft jupyros/ros1
+graft jupyros/ros2
 include jupyros/_version.py
 include jupyros/__init__.py
 
-graft jupyros/labextension
+# Extensions
 graft jupyros/nbextension
-graft jupyros/ros1
-graft jupyros/ros2
+graft jupyros/labextension
+include install.json
+include jupyros/jupyter-ros.json
+include jupyros/jupyros_server_extension.json
 
 # Javascript files
 include js/package.json
-include js/yarn.lock
 include js/webpack.config.js
-include install.json
-include ts*.json
-include *.config.js
-include yarn.lock
-include *.js
-graft js/dist
-graft js/loaders
-graft js/lib
+
 prune **/node_modules
 
 # Patterns to exclude from any directory

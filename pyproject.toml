@@ -16,12 +16,12 @@ source_dir="lib"
 npm = ["jlpm"]
 
 [tool.check-manifest]
-ignore = ["jupyros/labextension/**", "jupyros/nbextension/**", "js/**", ".*", "docs/**"]
+ignore = ["jupyros/labextension/**", "jupyros/nbextension/**", "notebooks/**", "scripts/**", "docs/**", "js/**", ".*"]
 
 [tool.jupyter-releaser.hooks]
-before-bump-version = ["python -m pip install jupyterlab~=3.4"]
-before-build-npm = ["python -m pip install jupyterlab", "jlpm"]
-before-build-python = ["cd js && jlpm run clean"]
+before-bump-version = ["python -m pip install jupyterlab", "pushd js && jlpm clean && popd"]
+before-build-npm = ["python -m pip install jupyterlab", "pushd js && jlpm clean && jlpm && popd"]
+before-build-python = ["pushd js && jlpm clean && popd"]
 
 [tool.jupyter-releaser.options]
 version-cmd = "python scripts/bump-version.py"
