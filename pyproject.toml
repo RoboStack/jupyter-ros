@@ -1,15 +1,25 @@
 [build-system]
-requires = ["jupyter_packaging~=0.7.9", "jupyterlab>=3.0.0,==3.*", "setuptools>=40.8.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["jupyter_packaging~=0.10,<2", "jupyterlab>=3,<4"]
+build-backend = "jupyter_packaging.build_api"
 
-[[tool.tbump.file]]
-src = "jupyros/_version.py"
-version_template = '({major}, {minor}, {patch}, "{channel}", "{release}")'
+[tool.jupyter-packaging.options]
+skip-if-exists = ["jupyros/labextension/static/style.js"]
+ensured-targets = ["jupyros/labextension/static/style.js", "jupyros/labextension/package.json"]
 
-[[tool.tbump.field]]
-name = "channel"
-default = ""
+[tool.jupyter-packaging.builder]
+factory = "jupyter_packaging.npm_builder"
 
-[[tool.tbump.field]]
-name = "release"
-default = ""
+[tool.jupyter-packaging.build-args]
+build_cmd = "build:prod"
+npm = ["jlpm"]
+
+[tool.check-manifest]
+ignore = ["jupyros/labextension/**", "packages/**", "assets/**", "lerna.json", "yarn.lock", ".*", "package-lock.json", "docs/**"]
+
+[tool.jupyter-releaser.hooks]
+before-bump-version = ["python -m pip install jupyterlab~=3.4"]
+before-build-npm = ["python -m pip install jupyterlab", "jlpm"]
+before-build-python = ["cd js && jlpm run clean"]
+
+[tool.jupyter-releaser.options]
+version-cmd = "python scripts/bump-version.py"
