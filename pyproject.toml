@@ -21,7 +21,7 @@ ignore = ["jupyros/labextension/**", "jupyros/nbextension/**", "notebooks/**", "
 [tool.jupyter-releaser.hooks]
 before-bump-version = ["python -m pip install jupyterlab", "cd js && jlpm clean"]
 before-build-npm = ["python -m pip install jupyterlab", "cd js && jlpm clean && jlpm"]
-before-build-python = ["ce js && jlpm clean"]
+before-build-python = ["cd js && jlpm clean"]
 
 [tool.jupyter-releaser.options]
 version-cmd = "python scripts/bump-version.py"
