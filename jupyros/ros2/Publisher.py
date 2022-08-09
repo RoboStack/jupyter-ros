@@ -12,6 +12,19 @@ import threading
 import time
 import ipywidgets as widgets
 from . import add_widgets
+import functools
+
+def rsetattr(obj, attr, val):
+    pre, _, post = attr.rpartition('.')
+    return setattr(rgetattr(obj, pre) if pre else obj, post, val)
+
+# using wonder's beautiful simplification: https://stackoverflow.com/questions/31174295/getattr-and-setattr-on-nested-objects/31174427?noredirect=1#comment86638618_31174427
+
+def rgetattr(obj, attr, *args):
+    def _getattr(obj, attr):
+        return getattr(obj, attr, *args)
+    return functools.reduce(_getattr, [obj] + attr.split('.'))
+
 
 try:
     import rclpy
@@ -73,22 +86,34 @@ class Publisher():
             "txt_input": widgets.Text(description="Message", value="Something")
             }
        
-        add_widgets(self.msg_type, self.__widget_dict, self.__widget_list)
+        self.widget_dict, self.widget_list = add_widgets(self.msg_type, self.__widget_dict, self.__widget_list)
     
-    def widget_dict_to_msg(self, msg_instance, d):
-        for key in d:
-            if isinstance(d[key], widgets.Widget):
-                if key == 'img':
-                    img_msg = img_to_msg(d[key].value)
-                    for slot in img_msg.__slots__:
-                        setattr(msg_instance, slot, getattr(img_msg, slot))
-                    return
-                else:
-                    setattr(msg_instance, key, d[key].value)
+    def widget_dict_to_msg(self):
+        
+        """
+        Iterate over the attributes and give them per attribute
+        
+        
+        """
+        for key in self.__widget_list:
+            if(key.has_trait('children')):
+                try:
+                    attr_adress = ".".join([head_class, str(key.children[0].value)])
+                    print(attr_adress)
+                    #rsetattr(bun,attr_adress, 0.0)
+                    rsetattr(self.msg_inst, attr_adress, float(key.children[1].value))
+                except:
+                    next
             else:
-                submsg = getattr(msg_instance, key)
-                widget_dict_to_msg(submsg, d[key])
+                head_class = key.value
+            
+            
+            #submsg = getattr(msg_instance, key)
+            #self._sub_msg[key] =
+            #widget_dict_to_msg(submsg, d[key])
 
+                
+                
     def display(self) -> widgets.VBox:
         """ Display's widgets within the Jupyter Cell for a ros2 Publisher """
         self.__widgets["send_btn"].on_click(self.__send_msg)
@@ -106,16 +131,17 @@ class Publisher():
         vbox = widgets.VBox(children=self.__widget_list)
 
         return vbox
+
+        
     
-    def __send_msg(self, msg_to_send, print_msg = None):
+    def __send_msg(self, args):
          
+        
         """ Generic call to send message. """
-        msg = self.msg_type()
-        #self.widget_dict_to_msg(msg_to_send, self.__widget_dict)
-        #self.__publisher.publish(msg)
-        self.__publisher.publish(msg)
-        if(print_msg == True):
-            print("Message Sent", msg)
+        self.msg_inst =  self.msg_type()
+        self.widget_dict_to_msg()
+        self.__publisher.publish(self.msg_inst)
+        #self.__publisher.publish()
     
     
 

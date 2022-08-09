@@ -3,6 +3,12 @@ import ipywidgets as widgets
 from ament_index_python.packages import get_package_share_directory
 import rosidl_runtime_py.utilities as rut
 
+
+
+
+
+
+
 def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     """
     Adds widgets.
@@ -26,37 +32,67 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
     if(rut.is_message(msg_instance) == False):
         return 0
     ## Type of msg
-    msg_class = msg_instance._fields_and_field_types
+    #msg_class = msg_instance._fields_and_field_types
 
   
     
-    for idx, slot in enumerate(msg_instance.__slots__):
-        attr = getattr(msg_instance, slot)
-        print(attr)
-        s_t = msg_instance.SLOT_TYPES[idx]
-        print(s_t)
-        w = None
-
-        if s_t in ['float32', 'float64']:
-            w = widgets.FloatText()
-        if s_t in ['int8', 'uint8', 'int32', 'uint32', 'int64', 'uint64']:
-            w = widgets.IntText()
-
-        if s_t in ['string']:
-            w = widgets.Text()
-              
-        #if isinstance(attr, Message):
-        try:
-            widget_list.append(widgets.Label(value=slot))
+    for idx, slot in enumerate(msg_instance._fields_and_field_types):
         
-            widget_dict[slot] = {}
-            add_widgets(attr, widget_dict[slot], widget_list, slot)
-        except:
-            print("next")
+        
+        
         try:
-            widget_dict[slot] = w
-            w_box = widgets.HBox([widgets.Label(value=slot, layout=widgets.Layout(width="100px")), w])
-            widget_list.append(w_box)
+            msg_inst = msg_instance()
         except:
-            print("next one")
+            msg_inst = msg_instance
+        attr = getattr(msg_inst, slot)
+        
+        #s_t = msg_instance._fields_and_field_types[slot]
+        
+        try:
+            msg_attr = attr.get_fields_and_field_types()
+        except:
+            next
+            
+        w = None
+        
+        if(rut.is_message(msg_instance)):
+            widget_list.append(widgets.Label(value=slot))
+
+            widget_dict[slot] = {}
+        
+        for s_t in msg_attr:
+            
+  
+            if  msg_attr[s_t] in ['float', 'float32', 'float64', 'double']:
+                w = widgets.FloatText()
+
+            if msg_attr[s_t] in ['int', 'int8', 'uint8', 'int32', 'uint32', 'int64', 'uint64']:
+                w = widgets.IntText()
+
+            if msg_attr[s_t] in ['string']:
+                w = widgets.Text()
+            
+
+                
+            if(w):
+
+                widget_dict[slot] = w
+                w_box = widgets.HBox([widgets.Label(value=s_t, layout=widgets.Layout(width="100px")), w])
+                widget_list.append(w_box)
+
     return widget_dict, widget_list
+            
+
+                
+
+            
+            
+"""
+            if(rut.is_message(msg_instance)):
+                
+                widget_list.append(widgets.Label(value=slot))
+
+                widget_dict[slot] = {}
+            else:
+                print("No inst")
+"""
