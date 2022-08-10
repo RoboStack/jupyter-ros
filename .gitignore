@@ -20,7 +20,3 @@ build/
 
 # OS X
 .DS_Store
-
-## Ros2 Incompleted Modules
-jupyros/ros2/turtle_sim.py
-notebooks/ROS2_Turtlesim.ipynb
