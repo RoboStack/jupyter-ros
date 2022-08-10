@@ -1,3 +1,27 @@
 [build-system]
-requires = ["jupyter_packaging~=0.7.9", "jupyterlab>=3.0.0,==3.*", "setuptools>=40.8.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["jupyter_packaging~=0.10,<2", "jupyterlab>=3,<4"]
+build-backend = "jupyter_packaging.build_api"
+
+[tool.jupyter-packaging.options]
+skip-if-exists = ["jupyros/labextension/static/style.js", "jupyros/nbextension/extension.js", "jupyros/nbextension/index.js"]
+ensured-targets = ["jupyros/labextension/static/style.js", "jupyros/labextension/package.json", "jupyros/nbextension/extension.js", "jupyros/nbextension/index.js"]
+
+[tool.jupyter-packaging.builder]
+factory = "jupyter_packaging.npm_builder"
+
+[tool.jupyter-packaging.build-args]
+path="js"
+build_cmd = "build:prod"
+source_dir="lib"
+npm = ["jlpm"]
+
+[tool.check-manifest]
+ignore = ["jupyros/labextension/**", "jupyros/nbextension/**", "notebooks/**", "scripts/**", "docs/**", "js/**", ".*"]
+
+[tool.jupyter-releaser.hooks]
+before-bump-version = ["python -m pip install jupyterlab", "cd js && jlpm clean"]
+before-build-npm = ["python -m pip install jupyterlab", "cd js && jlpm clean && jlpm"]
+before-build-python = ["cd js && jlpm clean"]
+
+[tool.jupyter-releaser.options]
+version-cmd = "python scripts/bump-version.py"

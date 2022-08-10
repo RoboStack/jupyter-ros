@@ -2,7 +2,12 @@
   "name": "@robostack/jupyter-ros",
   "version": "0.5.0",
   "description": "Jupyter widgets for the ROS ecosystem.",
-  "author": "Wolf Vollprecht",
+  "homepage": "https://github.com/wolfv/jupyter-ros.git",
+  "author": {
+    "name": "Wolf Vollprecht",
+    "email": "w.vollprecht@gmail.com"
+  },
+  "license": "BSD-3-Clause",
   "main": "lib/labplugin.js",
   "repository": {
     "type": "git",
@@ -21,8 +26,12 @@
   ],
   "scripts": {
     "clean": "rimraf dist/ ../jupyros/nbextension ../jupyros/labextension",
-    "build": "jlpm run clean && webpack",
-    "build:labextension": "jlpm run build && jupyter labextension build .",
+    "build": "jlpm run build:lib && jlpm run build:labextension:dev",
+    "build:lib": "webpack",
+    "build:prod": "jlpm run clean && jlpm run build:lib && jlpm run build:labextension",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "install:extension": "jlpm run build",
     "watch": "run-p watch:src && watch:labextension",
     "watch:src": "webpack --watch",
     "watch:labextension": "jupyter labextension watch .",
