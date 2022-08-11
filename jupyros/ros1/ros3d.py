@@ -11,9 +11,9 @@ import os
 from traitlets import *
 import ipywidgets as widgets
 
-from .._version import version_info
+from .._version import _fetchJSVersion
 
-js_version = '^' + '.'.join([str(x) for x in version_info[:3]])
+js_version = '^' + _fetchJSVersion()
 
 
 def _quick_widget(package_name, version, has_view=True):
