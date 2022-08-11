@@ -13,6 +13,7 @@ from .._version import __version__
 #from ..ros1.server_extension import *
 #from ..ros1.turtle_sim import *
 
-from ..ros2.publisher import *
 from ..ros2.ros_widgets import *
+from ..ros2.publisher import *
+
 from ..ros2.subscriber import *
