@@ -13,18 +13,21 @@ try:
     ros_version = os.environ['ROS_VERSION']
     ros_distro = os.environ['ROS_DISTRO']
 except KeyError:
-    print('No ROS environment detected.')
-    print('Defaulting to ROS noetic.')
+    # print('No ROS environment detected.')
+    # print('Defaulting to ROS noetic.')
     ros_version = '1'
     ros_distro = 'noetic'
 
 if ros_version == '2':
     # Import ROS2 modules
-    print(f'ROS2 {ros_distro} environment detected.')
-    # TODO: import modules once created
+    # print(f'ROS2 {ros_distro} environment detected.')
+    from .ros2.publisher import *
+    from .ros2.ros_widgets import *
+    from .ros2.subscriber import *
+
 else:
     # Default to ROS1
-    print(f'ROS {ros_distro} environment detected.')
+    # print(f'ROS {ros_distro} environment detected.')
     from .ros1.ipy import *
     from .ros1.pubsub import *
     from .ros1.ros_widgets import *
