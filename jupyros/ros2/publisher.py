@@ -11,7 +11,7 @@ from typing import TypeVar
 import threading
 import time
 import ipywidgets as widgets
-from . import add_widgets
+from .ros_widgets import add_widgets
 import functools
 
 def rsetattr(obj, attr, val):
