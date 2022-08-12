@@ -1,4 +1,14 @@
 ## Keyboard input for Jupyter Ros 2
+"""
+Author:         Luigi Dania
+Email:          Luigi@dobots.nl
+Github:         https://github.com/ldania
+
+Company:        Dobots
+Company Repo:   https://github.com/dobots/ 
+
+
+"""
 
 import sys
 sys.path.append("./../jupyter-ros")
@@ -28,10 +38,11 @@ class key_input:
         self.canvas.fill_rect(0, 0, self.width , self.height)
                      
         self.out = Output()
-        
-        
+        self.msg_inst = msg_type()
+        self.node = node
+        self.__publisher = self.node.create_publisher(msg_type, topic, 10)
         #Using the Ros2 Jupyros Publisher module, create 
-        self.key_in = jr2.Publisher(node, msg_type, topic)
+        #self.key_in = jr2.Publisher(node, msg_type, topic)
         
     # Method to change the window color
     def set_color(self, color):
@@ -63,9 +74,10 @@ class key_input:
         @self.out.capture()
         def on_keyboard_event(key, shift_key, ctrl_key, meta_key):
             if (key):
-                if(print_outgoing_msg ==  True):
-                    print("Keyboard event:", key)
-                self.key_in.send_msg(str(key), print_msg = print_outgoing_msg)
+                #if(print_outgoing_msg ==  True):
+                print("Keyboard event:", key)
+                self.msg_inst.data = str(key)
+                self.__publisher.publish(self.msg_inst)
                 
         self.canvas.on_key_down(on_keyboard_event)
         display(self.canvas)

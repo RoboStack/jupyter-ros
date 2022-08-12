@@ -1,13 +1,12 @@
 """
 Publisher class for jupyter-ros2 Project
 
-Modified by: Luigi Dania
-Date:        12 August 2022
-Email:       Luigi@dobots.nl
-Github:      https://github.com/ldania
+Modified by:    Luigi Dania
+Email:          Luigi@dobots.nl
+Github:         https://github.com/ldania
 
-Company:     Dobots
-Company Repo:https://github.com/dobots/ 
+Company:        Dobots
+Company Repo:   https://github.com/dobots/ 
 
 
 
@@ -77,6 +76,7 @@ class Publisher():
         self.msg_type = msg_type
         self.__publisher = self.node.create_publisher(msg_type, topic, 10)
         self.__thread_map = {}
+        self.__thread_map[self.topic] = False
         self.__widget_list = []
         self.__widget_dict = {}
         self.__widgets = {
@@ -134,23 +134,21 @@ class Publisher():
         
         """ Generic call to send message. """
         self.msg_inst =  self.msg_type()
-        self.widget_dict_to_msg()
-        self.__publisher.publish(self.msg_inst)
+        if(self.widget_list):
+            self.widget_dict_to_msg()
+            self.__publisher.publish(self.msg_inst)
         #self.__publisher.publish()
     
-    
+
 
     def __thread_target(self) -> None:
-        d = 1.0 / float(self.__widgets["rate_field"].value)
+        d = 10.0 / float(self.__widgets["rate_field"].value)
         while self.__thread_map[self.topic]:
             self.__send_msg(None)
             time.sleep(d)
 
     def __start_thread(self, _) -> None:
-        try:
-            self.__thread_map[self.topic] = not self.__thread_map[self.topic]
-        except:
-            self.__thread_map[self.topic] = self.node
+        self.__thread_map[self.topic] = not self.__thread_map[self.topic]
         if self.__thread_map[self.topic]:
             local_thread = threading.Thread(target=self.__thread_target)
             local_thread.start()

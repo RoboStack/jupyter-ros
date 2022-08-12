@@ -44,18 +44,28 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
             msg_inst = msg_instance()
         except:
             msg_inst = msg_instance
+            
         attr = getattr(msg_inst, slot)
+
         
-        #s_t = msg_instance._fields_and_field_types[slot]
         
-        try:
+## Determine if the Message is the a basic form of Messages such as Point, String etc        
+        if(type(attr) in [int, str, float]):
+            msg_attr = msg_inst.get_fields_and_field_types()
+            basic_flag = 1
+            if(idx != 0):
+                continue
+            
+        else:
             msg_attr = attr.get_fields_and_field_types()
-        except:
-            next
+            basic_flag = 0
+        
             
         w = None
         
         if(rut.is_message(msg_instance)):
+            if(basic_flag == 1):
+                slot = type(msg_inst).__name__
             widget_list.append(widgets.Label(value=slot))
 
             widget_dict[slot] = {}

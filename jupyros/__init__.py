@@ -8,6 +8,7 @@
 
 from ._version import __version__
 import os
+import rclpy
 
 try:
     ros_version = os.environ['ROS_VERSION']
@@ -32,7 +33,11 @@ else:
     from .ros1.server_extension import *
     from .ros1.turtle_sim import *
 
-
+if(rclpy.ok() == True):
+    print("Rclpy already initiated")
+else:
+    print("Rclpy not yet initiated")
+    
 def _jupyter_nbextension_paths():
     return [{
         'section': 'notebook',

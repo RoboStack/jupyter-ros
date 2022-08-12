@@ -1,8 +1,14 @@
 """
-Subscription class for jupyter-ros2 Project
+Subscriber class for jupyter-ros2 Project
 
-Modified by: ldania (Luigi Dania)
-Date: 22-July-2022
+Modified by:    Luigi Dania
+Email:          Luigi@dobots.nl
+Github:         https://github.com/ldania
+
+Company:        Dobots
+Company Repo:   https://github.com/dobots/ 
+
+
 
 
 Original Author: zmk5 (Zahi Kakish)
