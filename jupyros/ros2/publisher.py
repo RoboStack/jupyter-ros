@@ -20,7 +20,8 @@ from typing import TypeVar
 import threading
 import time
 import ipywidgets as widgets
-from . import add_widgets, rsetattr, rgetattr
+from .ros_widgets import add_widgets, rsetattr, rgetattr
+import functools
 
 
 
