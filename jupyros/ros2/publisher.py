@@ -1,29 +1,29 @@
 """
 Publisher class for jupyter-ros2 Project
 
+Modified by: Luigi Dania
+Date:        12 August 2022
+Email:       Luigi@dobots.nl
+Github:      https://github.com/ldania
+
+Company:     Dobots
+Company Repo:https://github.com/dobots/ 
+
+
+
+
 Original Author: zmk5 (Zahi Kakish)
 
-Adjusted by: ldania (Luigi Dania)
-Date: 19 July 2022
+
 
 """
 from typing import TypeVar
 import threading
 import time
 import ipywidgets as widgets
-from . import add_widgets
-import functools
+from . import add_widgets, rsetattr, rgetattr
 
-def rsetattr(obj, attr, val):
-    pre, _, post = attr.rpartition('.')
-    return setattr(rgetattr(obj, pre) if pre else obj, post, val)
 
-# using wonder's beautiful simplification: https://stackoverflow.com/questions/31174295/getattr-and-setattr-on-nested-objects/31174427?noredirect=1#comment86638618_31174427
-
-def rgetattr(obj, attr, *args):
-    def _getattr(obj, attr):
-        return getattr(obj, attr, *args)
-    return functools.reduce(_getattr, [obj] + attr.split('.'))
 
 
 try:
@@ -107,10 +107,6 @@ class Publisher():
                 head_class = key.value
             
             
-            #submsg = getattr(msg_instance, key)
-            #self._sub_msg[key] =
-            #widget_dict_to_msg(submsg, d[key])
-
                 
                 
     def display(self) -> widgets.VBox:

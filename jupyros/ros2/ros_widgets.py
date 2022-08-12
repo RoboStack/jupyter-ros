@@ -2,7 +2,7 @@ import rosidl_runtime_py.utilities as rut
 import ipywidgets as widgets
 from ament_index_python.packages import get_package_share_directory
 import rosidl_runtime_py.utilities as rut
-
+import functools
 
 
 
@@ -96,3 +96,14 @@ def add_widgets(msg_instance, widget_dict, widget_list, prefix=''):
             else:
                 print("No inst")
 """
+
+def rsetattr(obj, attr, val):
+    pre, _, post = attr.rpartition('.')
+    return setattr(rgetattr(obj, pre) if pre else obj, post, val)
+
+# using wonder's beautiful simplification: https://stackoverflow.com/questions/31174295/getattr-and-setattr-on-nested-objects/31174427?noredirect=1#comment86638618_31174427
+
+def rgetattr(obj, attr, *args):
+    def _getattr(obj, attr):
+        return getattr(obj, attr, *args)
+    return functools.reduce(_getattr, [obj] + attr.split('.'))
