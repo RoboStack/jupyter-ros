@@ -74,8 +74,8 @@ class key_input:
         @self.out.capture()
         def on_keyboard_event(key, shift_key, ctrl_key, meta_key):
             if (key):
-                #if(print_outgoing_msg ==  True):
-                print("Keyboard event:", key)
+                if(print_outgoing_msg ==  True):
+                    print("Keyboard event:", key)
                 self.msg_inst.data = str(key)
                 self.__publisher.publish(self.msg_inst)
                 
