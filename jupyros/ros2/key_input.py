@@ -16,6 +16,7 @@ import jupyros.ros2 as jr2
 from ipywidgets import Output
 from ipycanvas import Canvas
 import rclpy
+from time import time
 
 
 ## Method to receive keyboard input commands and send a String message to a Subcriber
@@ -29,12 +30,12 @@ class key_input:
         # Set default Window size and colors
         self.width = 400
         self.height = 400
-        self.color = "gray"
+        self.color = "blue"
     
         
         ## Initiate values for Ipycanvas to
         self.canvas = Canvas() 
-        self.canvas.fill_style = "gray"
+        self.canvas.fill_style = self.color 
         self.canvas.fill_rect(0, 0, self.width , self.height)
                      
         self.out = Output()
@@ -44,7 +45,14 @@ class key_input:
         
         self.print_outgoing_msg = True
         self.canvas.text_align = "center"
+        
+        
         self.key_bindings = key_bindings
+        
+        self.smallest_size = min(self.width, self.height)
+        
+        
+        
         #Using the Ros2 Jupyros Publisher module, create 
         #self.key_in = jr2.Publisher(node, msg_type, topic)
         
@@ -65,21 +73,40 @@ class key_input:
     def print_outgoing(Var: bool):
         self.print_outgoing_msg = Var
 
-    
+    def update(self):
+        self.canvas.fill_rect(0, 0, self.width , self.height)
         
 
   
 
     # method to display the screen and to receive keyboard inputs
     def display(self):
-        
+        self.update()
                   
         @self.out.capture()
         def on_keyboard_event(key, shift_key, ctrl_key, meta_key):
             if (key):
                 if(self.print_outgoing_msg):
-                    self.canvas.stroke_text(key,self.width/2, self.height/2)
-                    print("Keyboard event:", key)
+                    self.canvas.fill_rect(0, 0, self.width , self.height)
+                    if(str(key) == "ArrowRight"):
+                        key = "⇒"
+                    elif(str(key) == "ArrowDown"):
+                        key = "⇓"
+                    elif(str(key) == "ArrowLeft"):
+                        key = "⇐"
+                    elif(str(key) == "ArrowUp"):
+                        key = "⇑"
+                        
+                    if(len(str(key))>2):
+                        factor = 5.5
+                    else:
+                        factor = 3
+                    self.canvas.fill_style = "red"  
+                    self.font_size = self.smallest_size/factor
+                    self.canvas.font = "{}px sans-serif".format(self.font_size)
+                    self.canvas.fill_text(key,self.width/2, self.height/2+self.font_size/3)
+                    self.canvas.fill_style = "blue"
+
                 self.msg_inst.data = str(key)
                 self.__publisher.publish(self.msg_inst)
                 
