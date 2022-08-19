@@ -25,6 +25,7 @@ if ros_version == '2':
     from .ros2.publisher import *
     from .ros2.ros_widgets import *
     from .ros2.subscriber import *
+    from .ros2.key_input import *
 
 else:
     # Default to ROS1
@@ -36,11 +37,7 @@ else:
     from .ros1.server_extension import *
     from .ros1.turtle_sim import *
 
-if(rclpy.ok() == True):
-    print("Rclpy already initiated")
-else:
-    print("Rclpy not yet initiated")
-    
+
 def _jupyter_nbextension_paths():
     return [{
         'section': 'notebook',
