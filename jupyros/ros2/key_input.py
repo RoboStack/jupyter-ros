@@ -89,22 +89,24 @@ class key_input:
                 if(self.print_outgoing_msg):
                     self.canvas.fill_rect(0, 0, self.width , self.height)
                     if(str(key) == "ArrowRight"):
-                        key = "⇒"
+                        print_key = "⇒"
                     elif(str(key) == "ArrowDown"):
-                        key = "⇓"
+                        print_key = "⇓"
                     elif(str(key) == "ArrowLeft"):
-                        key = "⇐"
+                        print_key = "⇐"
                     elif(str(key) == "ArrowUp"):
-                        key = "⇑"
-                        
-                    if(len(str(key))>2):
+                        print_key = "⇑"
+                    else:
+                        print_key = key
+                    
+                    if(len(str(print_key))>2):
                         factor = 5.5
                     else:
                         factor = 3
                     self.canvas.fill_style = "red"  
                     self.font_size = self.smallest_size/factor
                     self.canvas.font = "{}px sans-serif".format(self.font_size)
-                    self.canvas.fill_text(key,self.width/2, self.height/2+self.font_size/3)
+                    self.canvas.fill_text(print_key,self.width/2, self.height/2+self.font_size/3)
                     self.canvas.fill_style = "blue"
 
                 self.msg_inst.data = str(key)
