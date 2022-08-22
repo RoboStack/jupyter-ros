@@ -8,7 +8,6 @@
 
 from ._version import __version__
 import os
-import rclpy
 
 try:
     ros_version = os.environ['ROS_VERSION']
