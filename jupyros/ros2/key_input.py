@@ -22,12 +22,13 @@ class KeyInput:
     
     # Initiate values
     def __init__(self, node, msg_type, topic, key_bindings=None):
-        # Set default Window size and colors
+        # Set default window size and colors
         self.width = 400
         self.height = 400
         self.color = "#1E3888"
+        self.font_color = "#E3DFFF"
 
-        # Initiate values for Ipycanvas to
+        # Initiate values for ipycanvas to
         self.canvas = Canvas() 
         self.canvas.fill_style = self.color 
         self.canvas.fill_rect(0, 0, self.width, self.height)
@@ -39,27 +40,32 @@ class KeyInput:
         
         self.print_outgoing_msg = True
         self.canvas.text_align = "center"
-
         self.key_bindings = key_bindings
-        
         self.smallest_size = min(self.width, self.height)
         
     # Method to change the window color
     def set_color(self, color):
         self.color = color
+        self.canvas.fill_style = self.color
+        self.update()
 
     # Method to change the window width
     def set_width(self, width):
         self.width = width
+        self.smallest_size = min(self.width, self.height)
+        self.update()
     
     # Method to change the window height
     def set_height(self, height):
         self.height = height
+        self.smallest_size = min(self.width, self.height)
+        self.update()
 
     def print_outgoing(self, var: bool):
         self.print_outgoing_msg = var
 
     def update(self):
+        self.canvas.clear()
         self.canvas.fill_rect(0, 0, self.width, self.height)
 
     # Method to display the screen and to receive keyboard inputs
@@ -86,7 +92,8 @@ class KeyInput:
                         factor = 5.5
                     else:
                         factor = 3
-                    self.canvas.fill_style = "#E3DFFF"
+
+                    self.canvas.fill_style = self.font_color
                     self.font_size = self.smallest_size/factor
                     self.canvas.font = "{}px sans-serif".format(self.font_size)
                     self.canvas.fill_text(print_key, self.width/2, self.height/2+self.font_size/3)
