@@ -1,0 +1,105 @@
+
+
+{
+    "_comment"  : "Use arrow keys to move the turtle.
+    Use G|B|V|C|D|E|R|T keys to rotate to absolute orientations. 'F' to cancel a rotation.",
+
+    "ArrowLeft" :       {
+                            "linear":   "-1"   
+                            }, 
+
+    "ArrowRight":      {
+                            "linear":   "1"
+                            },
+
+    "ArrowUp"   :       {
+                            "angular":  "-1"
+                            },
+
+    "ArrowDown" :       {
+                            "angular":  "1"
+                            },
+ 
+    "g"         :       {
+                            "goal":     "1"
+                            },
+
+    "G"         :       {
+                            "goal":     "1"
+                            },
+
+    "t"         :       {   
+                            "goal":    "0.7854"
+                        },
+
+    "T"         :       {   
+                            "goal":    "0.7854"
+                        },          
+
+    "r"         :       {   
+                            "goal":    "1.5708"
+                        },
+
+    "R"         :       {   
+                            "goal":    "1.5708"
+                        },
+
+    "e"         :       {   
+                            "goal":    "2.3562"
+                        },
+
+    "E"         :       {   
+                            "goal":    "2.3562"
+                        },
+
+    "d"         :       {   
+                            "goal":    "3.1416"
+                        },
+
+    "D"         :       {   
+                            "goal":    "3.1416"
+                        },
+
+    "c"         :       {   
+                            "goal":    "-2.3562"
+                        },
+
+    "C"         :       {   
+                            "goal":    "-2.3562"
+                        },                        
+
+    "v"         :       {   
+                            "goal":    "-1.5708"
+                        },
+
+    "V"         :       {   
+                            "goal":    "-1.5708"
+                        },
+
+    "b"         :       {   
+                            "goal":    "-0.7854"
+                        },
+
+    "B"         :       {   
+                            "goal":    "-0.7854"
+                        },
+
+    "f"         :       {   
+                            "cancel":    "1"
+                        },
+
+    "F"         :       {   
+                            "cancel":    "1"
+                        },
+
+    "q"         :       {   
+                            "quit":    "1"
+                        },
+
+    "Q"         :       {   
+                            "quit":    "1"
+                        }
+
+
+}
+    
