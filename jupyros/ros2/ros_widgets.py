@@ -3,9 +3,15 @@ import ipywidgets as widgets
 from ament_index_python.packages import get_package_share_directory
 import rosidl_runtime_py.utilities as rut
 import functools
+import json
+from collections import namedtuple
+from json import JSONEncoder
 
 
+"""
+Contains relevant functions/methods to allow Jupyros to function
 
+"""
 
 
 
@@ -117,3 +123,6 @@ def rgetattr(obj, attr, *args):
     def _getattr(obj, attr):
         return getattr(obj, attr, *args)
     return functools.reduce(_getattr, [obj] + attr.split('.'))
+
+def keybindingsDecoder(keyBindings):
+    return namedtuple('X', keyBindings.keys())(*keyBindings.values())

@@ -70,7 +70,7 @@ class key_input:
         self.height = height
     
     
-    def print_outgoing(Var: bool):
+    def print_outgoing(self, Var: bool):
         self.print_outgoing_msg = Var
 
     def update(self):
