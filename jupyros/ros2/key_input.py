@@ -61,6 +61,11 @@ class KeyInput:
         self.smallest_size = min(self.width, self.height)
         self.update()
 
+    
+    
+    def print_outgoing(self, Var: bool):
+        self.print_outgoing_msg = Var
+
     def print_outgoing(self, var: bool):
         self.print_outgoing_msg = var
 
