@@ -52,7 +52,7 @@ setup_args = dict(
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
     install_requires = [
-        'ipywidgets>=7.0.0',
+        'ipywidgets>=7.7.2,<8.0.0',
         'bqplot',
         'numpy',
         'rospkg',
