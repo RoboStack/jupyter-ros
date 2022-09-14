@@ -18,20 +18,6 @@
 
 <!-- <END NEW CHANGELOG ENTRY> -->
 
-## 0.6.0a1
-
-([Full Changelog](https://github.com/RoboStack/jupyter-ros/compare/v0.6.0a0...2cb89497beb91ca107ea0c837a518c88e53ab64e))
-
-### Bugs fixed
-
-- Fix error when building the extension [#127](https://github.com/RoboStack/jupyter-ros/pull/127) ([@ihuicatl](https://github.com/ihuicatl))
-
-### Contributors to this release
-
-([GitHub contributors page for this release](https://github.com/RoboStack/jupyter-ros/graphs/contributors?from=2022-08-11&to=2022-09-13&type=c))
-
-[@ihuicatl](https://github.com/search?q=repo%3ARoboStack%2Fjupyter-ros+involves%3Aihuicatl+updated%3A2022-08-11..2022-09-13&type=Issues)
-
 ## 0.6.0a0
 
 ([Full Changelog](https://github.com/RoboStack/jupyter-ros/compare/0.5.0...1f6c46c9d24768a30817996445140d8ce956106d))
