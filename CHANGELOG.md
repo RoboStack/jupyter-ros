@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.6.0
+
+([Full Changelog](https://github.com/RoboStack/jupyter-ros/compare/v0.6.0a0...8d7849492ab7da88e6831e5e78cdae7ae9a0a8e0))
+
+### Bugs fixed
+
+- Fix error when building the extension [#127](https://github.com/RoboStack/jupyter-ros/pull/127) ([@ihuicatl](https://github.com/ihuicatl))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/RoboStack/jupyter-ros/graphs/contributors?from=2022-08-11&to=2022-09-14&type=c))
+
+[@hbcarlos](https://github.com/search?q=repo%3ARoboStack%2Fjupyter-ros+involves%3Ahbcarlos+updated%3A2022-08-11..2022-09-14&type=Issues) | [@ihuicatl](https://github.com/search?q=repo%3ARoboStack%2Fjupyter-ros+involves%3Aihuicatl+updated%3A2022-08-11..2022-09-14&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.6.0a1
 
 ([Full Changelog](https://github.com/RoboStack/jupyter-ros/compare/v0.6.0a0...2cb89497beb91ca107ea0c837a518c88e53ab64e))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/RoboStack/jupyter-ros/graphs/contributors?from=2022-08-11&to=2022-09-13&type=c))
 
 [@ihuicatl](https://github.com/search?q=repo%3ARoboStack%2Fjupyter-ros+involves%3Aihuicatl+updated%3A2022-08-11..2022-09-13&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.6.0a0
 
