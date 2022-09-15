@@ -10,15 +10,9 @@ from __future__ import print_function
 
 import sys
 import threading
-
 import ipywidgets as widgets
+import rospy
 
-try:
-    import rospy
-except:
-    print("The actionlib package is not found in your $PYTHONPATH. Action clients are not going to work.")
-    print("Do you need to activate your ROS environment?")
-    pass
 
 output_registry = {}
 subscriber_registry = {}

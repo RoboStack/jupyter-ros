@@ -32,7 +32,8 @@ environment and install the package in development mode.
             'bqplot',
             'numpy',
             'rospkg',
-            'ipycanvas'
+            'ipycanvas',
+            'notebook'
         ],
       }
 

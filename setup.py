@@ -1,5 +1,7 @@
 import json
 import sys
+import os
+import logging
 from pathlib import Path
 
 import setuptools
@@ -52,11 +54,12 @@ setup_args = dict(
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
     install_requires = [
-        'ipywidgets>=7.7.2,<8.0.0',
+        'ipywidgets>=7.7.2',
         'bqplot',
         'numpy',
         'rospkg',
-        'ipycanvas'
+        'ipycanvas',
+        'notebook'
     ],
     extras_require = {
         'dev': ['click','jupyter_releaser==0.22']
@@ -94,11 +97,27 @@ try:
     setup_args["cmdclass"] = wrap_installers(post_develop=post_develop, ensured_targets=ensured_targets)
     setup_args["data_files"] = get_data_files(data_files_spec)
 except ImportError as e:
-    import logging
     logging.basicConfig(format="%(levelname)s: %(message)s")
     logging.warning("Build tool `jupyter-packaging` is missing. Install it with pip or conda.")
     if not ("--name" in sys.argv or "--version" in sys.argv):
         raise e
+
+# Check for ROS environment
+try:
+    ros_version = os.environ['ROS_VERSION']
+except KeyError:
+    logging.error("No ROS environment detected. Please install ROS or ROS2.")
+
+# Check requirements for corresponding ROS distro
+try:
+    if ros_version == '2':
+        import rclpy
+    else:
+        import rospy
+        import actionlib
+        import rospkg
+except ImportError as e:
+    raise e
 
 if __name__ == "__main__":
     setuptools.setup(**setup_args)

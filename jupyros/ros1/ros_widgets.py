@@ -10,22 +10,11 @@ import yaml
 import threading
 import subprocess
 import numpy as np
-
+import rospy
+import actionlib
 import bqplot as bq
 import ipywidgets as widgets
 
-
-try:
-    import rospy
-except:
-    print("The rospy package is not found in your $PYTHONPATH. Subscribe and publish are not going to work.")
-    print("Do you need to activate your ROS environment?")
-
-try: 
-    import actionlib
-except:
-    print("The actionlib package is not found in your $PYTHONPATH. Action clients are not going to work.")
-    print("Do you need to activate your ROS environment?")
 
 try:
     from cv_bridge import CvBridge
