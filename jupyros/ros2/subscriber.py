@@ -17,6 +17,7 @@ Original Author: zmk5 (Zahi Kakish)
 """
 from typing import TypeVar
 from typing import Callable
+import time
 import threading
 import functools
 import ipywidgets as widgets
@@ -78,6 +79,18 @@ class Subscriber():
         self.msg_type = msg_type
         self.data = None
         self.__thread_state = False
+        self.callback= callback
+        
+        
+        
+        
+        """
+        Different than Ros1, in Ros2 an Multithreadedexecutor is needed for multiple silmultaneous nodes
+        """
+        self.executor = rclpy.executors.MultiThreadedExecutor()
+        self.executor.add_node(self.node)
+        self.rate = self.node.create_rate(2)
+        
         self.__widgets = {
             "start_btn": widgets.Button(description='Start'),
             "stop_btn": widgets.Button(description='Stop'),
@@ -108,18 +121,17 @@ class Subscriber():
         return vbox
 
 
-    def __thread_target(self) -> None:
-        while self.__thread_state:
-            rclpy.spin_once(self.node, timeout_sec=1)
-        self.__widgets["out"].append_stdout("Done!\n")
 
     def _stop_subscription(self, _) -> None:
         self.__thread_state = False
 
     def _start_subscription(self, _) -> None:
         self.__thread_state = True
-        local_thread = threading.Thread(target=self.__thread_target)
+        
+        print("started")
+        local_thread = threading.Thread( target = self.executor.spin, daemon = True)
         local_thread.start()
+        self.rate.sleep()
 
     def __data_msg(self, func: Callable) -> Callable:
         """

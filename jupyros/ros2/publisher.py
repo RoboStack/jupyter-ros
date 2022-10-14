@@ -54,7 +54,7 @@ class Publisher():
     :param topic: The topic name on which to publish the message.
 
     """
-    def __init__(self, node: Node, msg_type: MsgType, topic: str) -> None:
+    def __init__(self, node: Node, msg_type: MsgType, topic: str, rate = None ) -> None:
         # Check if a ros2 node is provided.
         if (not isinstance(node, Node) or not issubclass(type(node), Node)):
             raise TypeError(
@@ -86,7 +86,8 @@ class Publisher():
             "send_btn": widgets.Button(description="Send Message"),
             "txt_input": widgets.Text(description="Message", value="Something")
             }
-       
+        if(rate):
+            self.node.create_timer(rate, self.__send_msg)
         self.widget_dict, self.widget_list = add_widgets(self.msg_type, self.__widget_dict, self.__widget_list)
     
     def widget_dict_to_msg(self):
@@ -128,6 +129,9 @@ class Publisher():
 
         return vbox
 
+    def send_msg(self, args):
+        """Call to send message directly"""
+        self._send_msg(args)
         
     
     def __send_msg(self, args):
@@ -138,12 +142,15 @@ class Publisher():
         if(self.widget_list):
             self.widget_dict_to_msg()
             self.__publisher.publish(self.msg_inst)
-        #self.__publisher.publish()
+        else:
+            self.__publisher.publish(args)
     
-
+    def send_msg(self, args):
+        """Call to send message directly"""
+        self.__send_msg(args)
 
     def __thread_target(self) -> None:
-        d = 10.0 / float(self.__widgets["rate_field"].value)
+        d = 1.0 / float(self.__widgets["rate_field"].value)
         while self.__thread_map[self.topic]:
             self.__send_msg(None)
             time.sleep(d)
