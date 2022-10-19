@@ -39,6 +39,10 @@ To install use conda or mamba:
     conda install jupyter-ros -c robostack
 
 ##### Development installation
+You can create a dev environment with:
+```bash
+conda create -n jupyros -c conda-forge python nodejs=14 jupyterlab=3 jupyter bqplot pyyaml ipywidgets ipycanvas
+```
 
 For a development installation (requires npm),
 
