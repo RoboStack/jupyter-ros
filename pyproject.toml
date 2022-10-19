@@ -19,7 +19,7 @@ npm = ["jlpm"]
 ignore = ["jupyros/labextension/**", "jupyros/nbextension/**", "notebooks/**", "scripts/**", "docs/**", "js/dist/**", ".*"]
 
 [tool.jupyter-releaser.hooks]
-before-bump-version = ["python -m pip install jupyterlab", "cd js && jlpm clean"]
+before-bump-version = ["python -m pip install jupyterlab"]
 before-build-npm = ["python -m pip install jupyterlab", "cd js && jlpm clean && jlpm"]
 before-build-python = ["cd js && jlpm clean"]
 
