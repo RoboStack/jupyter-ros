@@ -12,7 +12,7 @@ from pathlib import Path
 __all__ = ["__version__"]
 
 def _fetchVersion():
-    HERE = Path(__file__).parent.parent.resolve()
+    HERE = Path(__file__).parent.resolve()
 
     for settings in HERE.rglob("package.json"):
         try:
@@ -29,7 +29,7 @@ def _fetchVersion():
     raise FileNotFoundError(f"Could not find package.json under dir {HERE!s}")
 
 def _fetchJSVersion():
-    HERE = Path(__file__).parent.parent.resolve()
+    HERE = Path(__file__).parent.resolve()
 
     for settings in HERE.rglob("package.json"):
         try:
