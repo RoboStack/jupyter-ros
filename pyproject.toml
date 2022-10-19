@@ -16,7 +16,7 @@ source_dir="lib"
 npm = ["jlpm"]
 
 [tool.check-manifest]
-ignore = ["jupyros/labextension/**", "jupyros/nbextension/**", "notebooks/**", "scripts/**", "docs/**", "js/**", ".*"]
+ignore = ["jupyros/labextension/**", "jupyros/nbextension/**", "notebooks/**", "scripts/**", "docs/**", ".*"]
 
 [tool.jupyter-releaser.hooks]
 before-bump-version = ["python -m pip install jupyterlab", "cd js && jlpm clean"]

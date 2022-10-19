@@ -8,6 +8,7 @@ include jupyros/_version.py
 include jupyros/__init__.py
 
 # Extensions
+graft js
 graft jupyros/nbextension
 graft jupyros/labextension
 include install.json
