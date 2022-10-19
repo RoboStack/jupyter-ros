@@ -11,7 +11,7 @@ import os
 from traitlets import *
 import ipywidgets as widgets
 
-from .._version import _fetchJSVersion
+from jupyros._version import _fetchJSVersion
 
 js_version = '^' + _fetchJSVersion()
 
@@ -539,5 +539,5 @@ if __name__ == "__main__":
     filedir = os.path.dirname(os.path.realpath(__file__))
 
     defaults_js = js_extract()
-    with open(os.path.join(filedir, "../js/lib/defaults.js"), "w") as fo:
+    with open(os.path.join(filedir, "../../js/lib/defaults.js"), "w") as fo:
         fo.write(defaults_js)

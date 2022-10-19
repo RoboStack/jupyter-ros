@@ -11,21 +11,24 @@ from pathlib import Path
 
 __all__ = ["__version__"]
 
-def _fetchVersion():
+def _fetchJSVersion():
     HERE = Path(__file__).parent.parent.resolve()
 
     for settings in HERE.rglob("package.json"):
         try:
             with settings.open() as f:
-                version = json.load(f)["version"]
-                return (
-                    version.replace("-alpha.", "a")
-                    .replace("-beta.", "b")
-                    .replace("-rc.", "rc")
-                )
+                return json.load(f)["version"]
         except FileNotFoundError:
             pass
 
     raise FileNotFoundError(f"Could not find package.json under dir {HERE!s}")
+
+def _fetchVersion():
+    version = _fetchJSVersion()
+    return (
+        version.replace("-alpha.", "a")
+            .replace("-beta.", "b")
+            .replace("-rc.", "rc")
+    )
 
 __version__ = _fetchVersion()
