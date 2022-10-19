@@ -1,6 +1,6 @@
 {
   "name": "@robostack/jupyter-ros",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Jupyter widgets for the ROS ecosystem.",
   "homepage": "https://github.com/wolfv/jupyter-ros.git",
   "author": {

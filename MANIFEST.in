@@ -8,15 +8,12 @@ include jupyros/_version.py
 include jupyros/__init__.py
 
 # Extensions
+graf js
 graft jupyros/nbextension
 graft jupyros/labextension
 include install.json
 include jupyros/jupyter-ros.json
 include jupyros/jupyros_server_extension.json
-
-# Javascript files
-include js/package.json
-include js/webpack.config.js
 
 prune **/node_modules
 
