@@ -19,7 +19,7 @@ npm = ["jlpm"]
 ignore = ["jupyros/labextension/**", "jupyros/nbextension/**", "notebooks/**", "scripts/**", "docs/**", "js/dist/**", ".*"]
 
 [tool.jupyter-releaser]
-skip = ["draft-changelog"]
+skip = []
 
 [tool.jupyter-releaser.hooks]
 before-bump-version = ["python -m pip install jupyterlab"]
