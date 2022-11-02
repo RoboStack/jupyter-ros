@@ -16,3 +16,4 @@ from .._version import __version__
 from ..ros2.publisher import *
 from ..ros2.ros_widgets import *
 from ..ros2.subscriber import *
+from ..ros2.key_input import *

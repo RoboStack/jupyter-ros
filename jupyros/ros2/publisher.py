@@ -1,29 +1,29 @@
 """
 Publisher class for jupyter-ros2 Project
 
+Modified by:    Luigi Dania
+Email:          Luigi@dobots.nl
+Github:         https://github.com/ldania
+
+Company:        Dobots
+Company Repo:   https://github.com/dobots/ 
+
+
+
+
 Original Author: zmk5 (Zahi Kakish)
 
-Adjusted by: ldania (Luigi Dania)
-Date: 19 July 2022
+
 
 """
 from typing import TypeVar
 import threading
 import time
 import ipywidgets as widgets
-from .ros_widgets import add_widgets
+from .ros_widgets import add_widgets, rsetattr, rgetattr
 import functools
 
-def rsetattr(obj, attr, val):
-    pre, _, post = attr.rpartition('.')
-    return setattr(rgetattr(obj, pre) if pre else obj, post, val)
 
-# using wonder's beautiful simplification: https://stackoverflow.com/questions/31174295/getattr-and-setattr-on-nested-objects/31174427?noredirect=1#comment86638618_31174427
-
-def rgetattr(obj, attr, *args):
-    def _getattr(obj, attr):
-        return getattr(obj, attr, *args)
-    return functools.reduce(_getattr, [obj] + attr.split('.'))
 
 
 try:
@@ -54,7 +54,7 @@ class Publisher():
     :param topic: The topic name on which to publish the message.
 
     """
-    def __init__(self, node: Node, msg_type: MsgType, topic: str) -> None:
+    def __init__(self, node: Node, msg_type: MsgType, topic: str, rate = None ) -> None:
         # Check if a ros2 node is provided.
         if (not isinstance(node, Node) or not issubclass(type(node), Node)):
             raise TypeError(
@@ -77,6 +77,7 @@ class Publisher():
         self.msg_type = msg_type
         self.__publisher = self.node.create_publisher(msg_type, topic, 10)
         self.__thread_map = {}
+        self.__thread_map[self.topic] = False
         self.__widget_list = []
         self.__widget_dict = {}
         self.__widgets = {
@@ -85,7 +86,8 @@ class Publisher():
             "send_btn": widgets.Button(description="Send Message"),
             "txt_input": widgets.Text(description="Message", value="Something")
             }
-       
+        if(rate):
+            self.node.create_timer(rate, self.__send_msg)
         self.widget_dict, self.widget_list = add_widgets(self.msg_type, self.__widget_dict, self.__widget_list)
     
     def widget_dict_to_msg(self):
@@ -107,10 +109,6 @@ class Publisher():
                 head_class = key.value
             
             
-            #submsg = getattr(msg_instance, key)
-            #self._sub_msg[key] =
-            #widget_dict_to_msg(submsg, d[key])
-
                 
                 
     def display(self) -> widgets.VBox:
@@ -131,6 +129,9 @@ class Publisher():
 
         return vbox
 
+    def send_msg(self, args):
+        """Call to send message directly"""
+        self._send_msg(args)
         
     
     def __send_msg(self, args):
@@ -138,11 +139,15 @@ class Publisher():
         
         """ Generic call to send message. """
         self.msg_inst =  self.msg_type()
-        self.widget_dict_to_msg()
-        self.__publisher.publish(self.msg_inst)
-        #self.__publisher.publish()
+        if(self.widget_list):
+            self.widget_dict_to_msg()
+            self.__publisher.publish(self.msg_inst)
+        else:
+            self.__publisher.publish(args)
     
-    
+    def send_msg(self, args):
+        """Call to send message directly"""
+        self.__send_msg(args)
 
     def __thread_target(self) -> None:
         d = 1.0 / float(self.__widgets["rate_field"].value)
@@ -151,10 +156,7 @@ class Publisher():
             time.sleep(d)
 
     def __start_thread(self, _) -> None:
-        try:
-            self.__thread_map[self.topic] = not self.__thread_map[self.topic]
-        except:
-            self.__thread_map[self.topic] = self.node
+        self.__thread_map[self.topic] = not self.__thread_map[self.topic]
         if self.__thread_map[self.topic]:
             local_thread = threading.Thread(target=self.__thread_target)
             local_thread.start()
