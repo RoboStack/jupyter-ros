@@ -139,7 +139,7 @@ class Publisher():
         
         """ Generic call to send message. """
         self.msg_inst =  self.msg_type()
-        if(self.widget_list):
+        if(self.__widget_list):
             self.widget_dict_to_msg()
             self.__publisher.publish(self.msg_inst)
         else:
