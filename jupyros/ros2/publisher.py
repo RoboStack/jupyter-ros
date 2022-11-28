@@ -86,6 +86,7 @@ class Publisher():
             "send_btn": widgets.Button(description="Send Message"),
             "txt_input": widgets.Text(description="Message", value="Something")
             }
+        self.vbox =  None
         if(rate):
             self.node.create_timer(rate, self.__send_msg)
         self.widget_dict, self.widget_list = add_widgets(self.msg_type, self.__widget_dict, self.__widget_list)
@@ -126,7 +127,7 @@ class Publisher():
             ))
         self.__widget_list.append(btm_box)
         vbox = widgets.VBox(children=self.__widget_list)
-
+        self.vbox = vbox
         return vbox
 
     def send_msg(self, args):
@@ -139,7 +140,7 @@ class Publisher():
         
         """ Generic call to send message. """
         self.msg_inst =  self.msg_type()
-        if(self.__widget_list):
+        if(self.vbox):
             self.widget_dict_to_msg()
             self.__publisher.publish(self.msg_inst)
         else:
