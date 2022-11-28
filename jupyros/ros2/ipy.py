@@ -5,17 +5,22 @@
 #                                                                           #
 # The full license is in the file LICENSE, distributed with this software.  #
 #############################################################################
+import sys
+from threading import Thread
 
-from .._version import __version__
+import ipywidgets as widgets
+from IPython.core.magic import register_cell_magic
 
-#from ..ros1.ipy import *
-#from ..ros1.ros3d import *
-#from ..ros1.server_extension import *
-#from ..ros1.turtle_sim import *
+def executor(cell, gbls, lcls):
+    exec(cell, gbls, lcls)
 
-from ..ros2.publisher import *
-from ..ros2.ros_widgets import *
-from ..ros2.subscriber import *
-from ..ros2.key_input import *
-from ..ros2.turtle_sim import *
-from ..ros2.ipy import *
+# @register_cell_magic is not available during jupyter nbextension enable ...
+try:
+    @register_cell_magic
+    def thread_cell(line, cell, local_ns=None):
+        t = Thread(target=executor, args=(cell, globals(), sys._getframe(2).f_locals))
+        out = widgets.Output(layout={'border': '1px solid gray'})
+        t.start()
+        return out
+except:
+    pass
