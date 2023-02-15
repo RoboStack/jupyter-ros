@@ -6,6 +6,7 @@ graft jupyros/ros1
 graft jupyros/ros2
 include jupyros/_version.py
 include jupyros/__init__.py
+include js/package.json
 
 # Extensions
 graf js

@@ -38,7 +38,7 @@ class ROSStaticHandler(IPythonHandler):
             self.write("Error opening file %s" % file)
         self.finish()
 
-def load_jupyter_server_extension(nb_server_app):
+def _load_jupyter_server_extension(nb_server_app):
     """
     Called when the extension is loaded.
 
@@ -49,3 +49,6 @@ def load_jupyter_server_extension(nb_server_app):
     host_pattern = '.*$'
     route_pattern = url_path_join(web_app.settings['base_url'], '/rospkg/(.*)')
     web_app.add_handlers(host_pattern, [(route_pattern, ROSStaticHandler)])
+
+# For backward compatibility with notebook server - useful for Binder/JupyterHub
+load_jupyter_server_extension = _load_jupyter_server_extension
