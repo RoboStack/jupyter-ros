@@ -91,7 +91,7 @@ version_cmd = "hatch version"
 [tool.jupyter-releaser.hooks]
 before-bump-version = ["python -m pip install --pre -U 'jupyterlab>=3.0,<3.6'", "cd js && jlpm"]
 before-build-npm = ["cd js && jlpm build:prod"]
-before-build-python = ["ls -la", "cd js && jlpm clean", "ls -la", "cd js && jlpm build:prod"]
+before-build-python = ["cd js && jlpm build:prod"]
 
 [tool.check-wheel-contents]
 ignore = ["W002"]

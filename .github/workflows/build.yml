@@ -2,46 +2,49 @@ name: Build
 
 on:
   push:
-    branches: master
+    branches: main
   pull_request:
     branches: '*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Base Setup
       uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
     - name: Install dependencies
-      run: python -m pip install -U check-manifest jupyterlab
+      run: python -m pip install -U "jupyterlab>=3.0,<3.6"
 
     - name: Build the extension
       run: |
         set -eux
-        # TODO: add lint check
-        #pushd js
-        #jlpm
-        #jlpm run eslint:check
-        #popd
-        
         python -m pip install .
+
+        #jupyter server extension list
+        #jupyter server extension list 2>&1 | grep -ie "jupyros.*OK"
+
         jupyter labextension list
         jupyter labextension list 2>&1 | grep -ie "@robostack/jupyter-ros.*OK"
         python -m jupyterlab.browser_check
-        check-manifest -v
+
+    - name: Package the extension
+      run: |
+        set -eux
         pip install build
-        python -m build --sdist
-        cp dist/*.tar.gz myextension.tar.gz
+        python -m build
         pip uninstall -y "jupyros" jupyterlab
-        rm -rf myextension
-    - uses: actions/upload-artifact@v2
+    
+    - name: Upload extension packages
+      uses: actions/upload-artifact@v3
       with:
-        name: myextension-sdist
-        path: myextension.tar.gz
+        name: extension-artifacts
+        path: dist/jupyros*
+        if-no-files-found: error
 
   test_isolated:
     needs: build
@@ -49,22 +52,26 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Install Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.8'
+        python-version: '3.9'
         architecture: 'x64'
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
-        name: myextension-sdist
+        name: extension-artifacts
     - name: Install and Test
       run: |
         set -eux
         # Remove NodeJS, twice to take care of system and locally installed node versions.
         sudo rm -rf $(which node)
         sudo rm -rf $(which node)
-        pip install myextension.tar.gz
-        pip install jupyterlab
+        pip install "jupyterlab>=3.0,<3.6" jupyros*.whl
+
+        #jupyter server extension list
+        #jupyter server extension list 2>&1 | grep -ie "jupyros.*OK"
+
+        jupyter labextension list
         jupyter labextension list 2>&1 | grep -ie "@robostack/jupyter-ros.*OK"
-        python -m jupyterlab.browser_check --no-browser-test
+        python -m jupyterlab.browser_check --no-chrome-test
