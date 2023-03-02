@@ -1,27 +1,97 @@
 [build-system]
-requires = ["jupyter_packaging~=0.10,!=0.12,<2", "jupyterlab>=3,<4"]
-build-backend = "jupyter_packaging.build_api"
+build-backend = "hatchling.build"
+requires = ["hatchling>=1.4.0", "hatch-nodejs-version", "jupyterlab>=3.0,<3.6"]
 
-[tool.jupyter-packaging.options]
-skip-if-exists = ["jupyros/labextension/static/style.js", "jupyros/nbextension/extension.js", "jupyros/nbextension/index.js"]
-ensured-targets = ["jupyros/labextension/static/style.js", "jupyros/labextension/package.json", "jupyros/nbextension/extension.js", "jupyros/nbextension/index.js"]
+[project]
+name = "jupyros"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Framework :: Jupyter",
+    "Framework :: Jupyter :: JupyterLab",
+    "Framework :: Jupyter :: JupyterLab :: 4",
+    "Framework :: Jupyter :: JupyterLab :: Extensions",
+    "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
+]
+dependencies = [
+    "ipywidgets>=7.7.2,<8.0.0",
+    "bqplot",
+	"numpy",
+    "rospkg",
+    "ipycanvas"
+]
+dynamic = ["version", "description", "authors", "urls", "keywords"]
 
-[tool.jupyter-packaging.builder]
-factory = "jupyter_packaging.npm_builder"
+[project.optional-dependencies]
+dev = [
+    "click",
+    "pre-commit",
+	"jupyter_releaser==0.22"
+]
 
-[tool.jupyter-packaging.build-args]
+[tool.hatch.version]
+path = "js/package.json"
+source = "nodejs"
+
+[tool.hatch.build.hooks.version]
+path = "jupyros/_version.py"
+
+[tool.hatch.metadata.hooks.nodejs]
+path = "js/package.json"
+fields = ["description", "authors", "urls"]
+
+[tool.hatch.build.targets.sdist]
+artifacts = ["/jupyros/labextension", "/jupyros/nbextension"]
+exclude = ["/.github", "js/node_modules"]
+
+[tool.hatch.build.targets.sdist.force-include]
+"./js" = "js"
+
+[tool.hatch.build.targets.wheel.shared-data]
+"jupyros/labextension" = "share/jupyter/labextensions/@robostack/jupyter-ros"
+"jupyros/nbextension" = "share/jupyter/nbextensions/@robostack/jupyter-ros"
+"install.json" = "share/jupyter/labextensions/@robostack/jupyter-ros/install.json"
+"jupyter-config/jupyter-ros.json" = "etc/jupyter/nbconfig/notebook.d/jupyter-ros.json"
+"jupyter-config/jupyros_server_extension.json" = "etc/jupyter/jupyter_server_config.d/jupyros_server_extension.json"
+"jupyter-config/jupyros_nbserver_extension.json" = "etc/jupyter/jupyter_notebook_config.d/jupyros_nbserver_extension.json"
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.5"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "jupyros/labextension/static/style.js",
+    "jupyros/labextension/package.json",
+	"jupyros/nbextension/index.js",
+]
+skip-if-exists = ["jupyros/labextension/static/style.js", "jupyros/nbextension/index.js"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 path="js"
-build_cmd = "build:prod"
-source_dir="lib"
 npm = ["jlpm"]
+source_dir="lib"
+build_cmd = "build:prod"
+editable_build_cmd = "install:extension"
 
-[tool.check-manifest]
-ignore = ["jupyros/labextension/**", "jupyros/nbextension/**", "notebooks/**", "scripts/**", "docs/**", "js/**", ".*"]
-
-[tool.jupyter-releaser.hooks]
-before-bump-version = ["python -m pip install jupyterlab", "cd js && jlpm clean"]
-before-build-npm = ["python -m pip install jupyterlab", "cd js && jlpm clean && jlpm"]
-before-build-python = ["cd js && jlpm clean"]
+[tool.jupyter-releaser]
+skip = ["check-links"]
 
 [tool.jupyter-releaser.options]
-version-cmd = "python scripts/bump-version.py"
+version_cmd = "hatch version"
+
+[tool.jupyter-releaser.hooks]
+before-bump-version = ["python -m pip install --pre -U 'jupyterlab>=3.0,<3.6'", "cd js && jlpm"]
+before-build-npm = ["cd js && jlpm build:prod"]
+before-build-python = ["cd js && jlpm build:prod"]
+
+[tool.check-wheel-contents]
+ignore = ["W002"]

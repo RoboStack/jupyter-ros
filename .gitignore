@@ -2,6 +2,8 @@
 __pycache__
 *.egg-info/
 
+jupyros/_version.py
+
 # JS deps
 node_modules/
 

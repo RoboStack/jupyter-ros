@@ -55,3 +55,8 @@ def _jupyter_server_extension_paths():
     return [{
         "module": "jupyros"
     }]
+
+def _jupyter_server_extension_points():
+    return [{
+        "module": "jupyros"
+    }]
