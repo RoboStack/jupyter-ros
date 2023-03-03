@@ -8,7 +8,7 @@
 
 import os
 
-from traitlets import *
+from traitlets.traitlets import *
 import ipywidgets as widgets
 
 from .._version import __version__
