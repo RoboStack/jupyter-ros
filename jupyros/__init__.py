@@ -25,6 +25,7 @@ if ros_version == '2':
     from .ros2.ros_widgets import *
     from .ros2.subscriber import *
     from .ros2.key_input import *
+    from .ros2.turtle_sim import *
 
 else:
     # Default to ROS1
