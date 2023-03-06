@@ -2,12 +2,29 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.7.0a0
+
+([Full Changelog](https://github.com/RoboStack/jupyter-ros/compare/0.6.0...8f5627b7a554d1045a7332634bdf895ba5687e1b))
+
+### Enhancements made
+
+- Turtle [#142](https://github.com/RoboStack/jupyter-ros/pull/142) ([@ldania](https://github.com/ldania))
+
+### Other merged PRs
+
+- Fix #144 [#145](https://github.com/RoboStack/jupyter-ros/pull/145) ([@Andor233](https://github.com/Andor233))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/RoboStack/jupyter-ros/graphs/contributors?from=2022-09-14&to=2023-03-06&type=c))
+
+[@Andor233](https://github.com/search?q=repo%3ARoboStack%2Fjupyter-ros+involves%3AAndor233+updated%3A2022-09-14..2023-03-06&type=Issues) | [@hbcarlos](https://github.com/search?q=repo%3ARoboStack%2Fjupyter-ros+involves%3Ahbcarlos+updated%3A2022-09-14..2023-03-06&type=Issues) | [@ihuicatl](https://github.com/search?q=repo%3ARoboStack%2Fjupyter-ros+involves%3Aihuicatl+updated%3A2022-09-14..2023-03-06&type=Issues) | [@ldania](https://github.com/search?q=repo%3ARoboStack%2Fjupyter-ros+involves%3Aldania+updated%3A2022-09-14..2023-03-06&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.6.1
 
 ([Full Changelog](https://github.com/RoboStack/jupyter-ros/compare/v0.6.0...e9b3c9bbc85cc12944f487fb447b41e080f08cbc))
-
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.6.0
 
