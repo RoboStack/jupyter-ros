@@ -34,9 +34,9 @@ jobs:
     - name: Package the extension
       run: |
         set -eux
-        pip install build
-        python -m build
-        pip uninstall -y "jupyros" jupyterlab
+        pip install hatch
+        python -m hatch build
+        pip uninstall -y jupyros jupyterlab
 
     - name: Upload extension packages
       uses: actions/upload-artifact@v3
