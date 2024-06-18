@@ -415,8 +415,9 @@ def action_client(action_name, action_msg, goal_msg, callbacks=None):
     thread_map[action_name] = False
 
     def send_goal(arg):
-        widget_dict_to_msg(goal_msg, widget_dict)
-        a_client.send_goal(goal_msg,
+        goal_msg_instance = goal_msg()
+        widget_dict_to_msg(goal_msg_instance, widget_dict)
+        a_client.send_goal(goal_msg_instance,
                            done_cb=done_handle,
                            active_cb=active_handle,
                            feedback_cb=feedback_handle
